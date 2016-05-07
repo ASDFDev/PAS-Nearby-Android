@@ -19,8 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/label_username"
-            android:id="@+id/label_userID" />
+            android:text="@string/label_username" />
 
         <EditText
             android:layout_width="match_parent"
@@ -33,8 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/label_password"
-            android:id="@+id/label_password" />
+            android:text="@string/label_password" />
 
         <EditText
             android:layout_width="match_parent"
