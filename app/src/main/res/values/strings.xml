@@ -1,3 +1,9 @@
 <resources>
+
     <string name="app_name">Attendance Taking</string>
+    <string name="title_login">Login to SPICE</string>
+    <string name="title_broadcast">Broadcasting Code</string>
+    <string name="title_receive">Receiving Code</string>
+    <string name="action_connecting">Connecting...</string>
+
 </resources>

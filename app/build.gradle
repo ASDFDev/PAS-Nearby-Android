@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-        applicationId "org.sp.ats2"
+        applicationId "org.sp.attendance"
         minSdkVersion 19
         targetSdkVersion 23
         versionCode 1
