@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 /**
- * Created by justin on 7/5/16.
+ * Created by HexGate on 7/5/16.
  */
 public class CodeReceiveActivity extends AppCompatActivity {
 
