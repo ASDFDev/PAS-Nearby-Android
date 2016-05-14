@@ -1,12 +1,45 @@
-*.iml
-.gradle
-/local.properties
-/.idea/workspace.xml
-/.idea/libraries
-.DS_Store
-/build
-/captures
-/app/build
-*.apk
+# svn
+*.svn*
 
-.idea/misc.xml
+# built application files
+*.apk
+*.ap_
+
+# files for the dex VM
+*.dex
+
+# Java class files
+*.class
+
+# generated GUI files
+*/R.java
+
+# generated folder
+bin
+gen
+
+# local
+local.properties
+
+proguard_logs/
+
+# log files
+log*.txt
+
+# archives
+*.gz
+*.tar
+*.zip
+
+# eclipse
+*.metadata
+*.settings
+*.prefs
+
+#idea
+*.idea
+*.iml
+out/
+
+build/
+.gradle/
