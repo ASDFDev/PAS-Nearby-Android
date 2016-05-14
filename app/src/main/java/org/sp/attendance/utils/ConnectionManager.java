@@ -1,4 +1,4 @@
-package org.sp.attendance.util;
+package org.sp.attendance.utils;
 
 /**
  * Created by HexGate on 7/5/16.
