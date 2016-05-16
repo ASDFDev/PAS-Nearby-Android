@@ -1,2 +1,2 @@
 # ATS_Nearby
-Nearby API implementation with SP ATS
+Presence checking with Nearby API for SP ATS
