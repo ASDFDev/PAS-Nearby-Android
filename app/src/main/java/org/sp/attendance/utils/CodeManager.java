@@ -69,7 +69,7 @@ public class CodeManager {
             public void onLost(final Message message) {
                 final String nearbyMessageString = new String(message.getContent());
             }
-        }
+        };
     }
 
     public void broadcastCode(String code) {
