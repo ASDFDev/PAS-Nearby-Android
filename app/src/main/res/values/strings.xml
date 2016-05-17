@@ -18,5 +18,5 @@
     <string name="error_invalid">The user ID or password is incorrect</string>
     <string name="dismiss">Dismiss</string>
     <string name="error_network_disappeared">No Wi-Fi detected. </string>
-
+    <string name="service_id">org.sp.attendance</string>
 </resources>
