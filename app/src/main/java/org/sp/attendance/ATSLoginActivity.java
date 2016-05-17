@@ -13,6 +13,10 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+
 import org.sp.attendance.utils.ConnectionManager;
 
 import java.net.CookieHandler;
@@ -36,7 +40,6 @@ public class ATSLoginActivity extends AppCompatActivity {
         if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
             ssid = wifiInfo.getSSID();
             if (ssid.equals("\"SPStudent\"") || ssid.equals("\"SPStaff\"") || ssid.equals("\"SPGuest\"")) {
-            
             } else {
                 new AlertDialog.Builder(ATSLoginActivity.this)
                         .setTitle(R.string.title_sp_wifi)
@@ -65,7 +68,25 @@ public class ATSLoginActivity extends AppCompatActivity {
                     .create()
                     .show();
         }
+        checkGooglePlayServices();
     }
+
+
+    private boolean checkGooglePlayServices(){
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, 9000)
+                        .show();
+            } else {
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
+
 
 
     public void signIn(View view) {
