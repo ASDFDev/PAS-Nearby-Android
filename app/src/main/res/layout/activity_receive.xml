@@ -1,32 +1,72 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    >
 
-
-    <ProgressBar
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/layout_message"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal" />
+        android:layout_marginBottom="20dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <EditText
+            android:id="@+id/edittext_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Message" />
+
+        <Button
+            android:id="@+id/button_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Send" />
+
+    </LinearLayout>
+
 
     <TextView
+        android:id="@+id/debug_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout_message"
+        android:text="Debugging Text" />
+
+    <TextView
+        android:id="@+id/debug_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/action_receiving"
-        android:id="@+id/label_receive_devices"
-        android:layout_gravity="center_horizontal"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp" />
+        android:layout_below="@+id/debug_label"
+        android:padding="5dp"
+        android:scrollbars="vertical"
+        android:fadeScrollbars="false"
+        android:lines="10"
+        android:maxLines="10"
+        android:gravity="bottom"
+        android:background="#FFFFFF" />
 
-    <Button
-        android:layout_width="match_parent"
+
+    <LinearLayout
+        android:id="@+id/layout_nearby_buttons"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/label_cancel"
-        android:id="@+id/button_cancel_receive"
-        android:layout_gravity="center_horizontal"
-        android:onClick="cancelReceive" />
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        tools:visibility="visible">
 
-</LinearLayout>
+
+        <Button
+            android:id="@+id/button_discover"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Discover" />
+
+    </LinearLayout>
+
+</RelativeLayout>
