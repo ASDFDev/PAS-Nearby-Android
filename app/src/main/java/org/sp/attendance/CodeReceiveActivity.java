@@ -29,14 +29,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 /**
- * Created by Daniel Quah on 21/5/2016.
- *
+ * Created by Daniel Quah on 21/5/2016
  */
 public class CodeReceiveActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        View.OnClickListener,
-        Connections.ConnectionRequestListener,
         Connections.MessageListener,
         Connections.EndpointDiscoveryListener {
 
@@ -49,7 +46,7 @@ public class CodeReceiveActivity extends AppCompatActivity implements
      * To set advertising or discovery to run indefinitely, use 0L where timeouts are required.
      */
 
-    private static final long TIMEOUT_DISCOVER = 1000L * 30L;
+    private static final long TIMEOUT_DISCOVER = 900000L;
 
     /**
      * Possible states for this application:
@@ -72,8 +69,6 @@ public class CodeReceiveActivity extends AppCompatActivity implements
 
     /** Views and Dialogs **/
     private TextView mDebugInfo;
-    private EditText mMessageText;
-    private AlertDialog mConnectionRequestDialog;
     private MyListDialog mMyListDialog;
 
     /** The current state of the application **/
@@ -88,12 +83,6 @@ public class CodeReceiveActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receive);
 
-        // Button listeners
-        findViewById(R.id.button_discover).setOnClickListener(this);
-        findViewById(R.id.button_send).setOnClickListener(this);
-
-        // EditText
-        mMessageText = (EditText) findViewById(R.id.edittext_message);
 
         // Debug text view
         mDebugInfo = (TextView) findViewById(R.id.debug_text);
@@ -165,7 +154,6 @@ public class CodeReceiveActivity extends AppCompatActivity implements
                         if (status.isSuccess()) {
                             debugLog("startDiscovery:onResult: SUCCESS");
 
-                            updateViewVisibility(STATE_DISCOVERING);
                         } else {
                             debugLog("startDiscovery:onResult: FAILURE");
 
@@ -175,27 +163,10 @@ public class CodeReceiveActivity extends AppCompatActivity implements
                             if (statusCode == ConnectionsStatusCodes.STATUS_ALREADY_DISCOVERING) {
                                 debugLog("STATUS_ALREADY_DISCOVERING");
                             } else {
-                                updateViewVisibility(STATE_READY);
                             }
                         }
                     }
                 });
-    }
-
-    /**
-     * Send a reliable message to the connected peer. Takes the contents of the EditText and
-     * sends the message as a byte[].
-     */
-    private void sendMessage() {
-        // Sends a reliable message, which is guaranteed to be delivered eventually and to respect
-        // message ordering from sender to receiver. Nearby.Connections.sendUnreliableMessage
-        // should be used for high-frequency messages where guaranteed delivery is not required, such
-        // as showing one player's cursor location to another. Unreliable messages are often
-        // delivered faster than reliable messages.
-        String msg = mMessageText.getText().toString();
-        Nearby.Connections.sendReliableMessage(mGoogleApiClient, mOtherEndpointId, msg.getBytes());
-
-        mMessageText.setText(null);
     }
 
     /**
@@ -224,7 +195,6 @@ public class CodeReceiveActivity extends AppCompatActivity implements
                                     Toast.LENGTH_SHORT).show();
 
                             mOtherEndpointId = endpointId;
-                            updateViewVisibility(STATE_CONNECTED);
                         } else {
                             debugLog("onConnectionResponse: " + endpointName + " FAILURE");
                         }
@@ -232,47 +202,6 @@ public class CodeReceiveActivity extends AppCompatActivity implements
                 }, this);
     }
 
-    @Override
-    public void onConnectionRequest(final String endpointId, String deviceId, String endpointName,
-                                    byte[] payload) {
-        debugLog("onConnectionRequest:" + endpointId + ":" + endpointName);
-
-        // This device is advertising and has received a connection request. Show a dialog asking
-        // the user if they would like to connect and accept or reject the request accordingly.
-        mConnectionRequestDialog = new AlertDialog.Builder(this)
-                .setTitle("Connection Request")
-                .setMessage("Do you want to connect to " + endpointName + "?")
-                .setCancelable(false)
-                .setPositiveButton("Connect", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        byte[] payload = null;
-                        Nearby.Connections.acceptConnectionRequest(mGoogleApiClient, endpointId,
-                                payload, CodeReceiveActivity.this)
-                                .setResultCallback(new ResultCallback<Status>() {
-                                    @Override
-                                    public void onResult(Status status) {
-                                        if (status.isSuccess()) {
-                                            debugLog("acceptConnectionRequest: SUCCESS");
-
-                                            mOtherEndpointId = endpointId;
-                                            updateViewVisibility(STATE_CONNECTED);
-                                        } else {
-                                            debugLog("acceptConnectionRequest: FAILURE");
-                                        }
-                                    }
-                                });
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Nearby.Connections.rejectConnectionRequest(mGoogleApiClient, endpointId);
-                    }
-                }).create();
-
-        mConnectionRequestDialog.show();
-    }
 
     @Override
     public void onMessageReceived(String endpointId, byte[] payload, boolean isReliable) {
@@ -284,7 +213,6 @@ public class CodeReceiveActivity extends AppCompatActivity implements
     public void onDisconnected(String endpointId) {
         debugLog("onDisconnected:" + endpointId);
 
-        updateViewVisibility(STATE_READY);
     }
 
     @Override
@@ -338,13 +266,12 @@ public class CodeReceiveActivity extends AppCompatActivity implements
     @Override
     public void onConnected(Bundle bundle) {
         debugLog("onConnected");
-        updateViewVisibility(STATE_READY);
+        startDiscovery();
     }
 
     @Override
     public void onConnectionSuspended(int i) {
         debugLog("onConnectionSuspended: " + i);
-        updateViewVisibility(STATE_IDLE);
 
         // Try to re-connect
         mGoogleApiClient.reconnect();
@@ -353,49 +280,7 @@ public class CodeReceiveActivity extends AppCompatActivity implements
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         debugLog("onConnectionFailed: " + connectionResult);
-        updateViewVisibility(STATE_IDLE);
-    }
 
-    @Override
-    public void onClick(View v) {
-        switch(v.getId()) {
-            case R.id.button_discover:
-                startDiscovery();
-                break;
-            case R.id.button_send:
-                sendMessage();
-                break;
-        }
-    }
-
-    /**
-     * Change the application state and update the visibility on on-screen views '
-     * based on the new state of the application.
-     * @param newState the state to move to (should be NearbyConnectionState)
-     */
-    private void updateViewVisibility(@NearbyConnectionState int newState) {
-        mState = newState;
-        switch (mState) {
-            case STATE_IDLE:
-                // The GoogleAPIClient is not connected, we can't yet start advertising or
-                // discovery so hide all buttons
-                findViewById(R.id.layout_nearby_buttons).setVisibility(View.GONE);
-                findViewById(R.id.layout_message).setVisibility(View.GONE);
-                break;
-            case STATE_READY:
-                // The GoogleAPIClient is connected, we can begin advertising or discovery.
-                findViewById(R.id.layout_nearby_buttons).setVisibility(View.VISIBLE);
-                findViewById(R.id.layout_message).setVisibility(View.GONE);
-                break;
-            case STATE_DISCOVERING:
-                break;
-            case STATE_CONNECTED:
-                // We are connected to another device via the Connections API, so we can
-                // show the message UI.
-                findViewById(R.id.layout_nearby_buttons).setVisibility(View.VISIBLE);
-                findViewById(R.id.layout_message).setVisibility(View.VISIBLE);
-                break;
-        }
     }
 
     /**
@@ -406,4 +291,5 @@ public class CodeReceiveActivity extends AppCompatActivity implements
         Log.d(TAG, msg);
         mDebugInfo.append("\n" + msg);
     }
+
 }

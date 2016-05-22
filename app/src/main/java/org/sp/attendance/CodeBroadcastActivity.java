@@ -25,6 +25,9 @@ import com.google.android.gms.nearby.connection.AppMetadata;
 import com.google.android.gms.nearby.connection.Connections;
 import com.google.android.gms.nearby.connection.ConnectionsStatusCodes;
 
+import org.sp.attendance.R;
+import org.sp.attendance.utils.CodeManager;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
@@ -34,6 +37,14 @@ import java.util.List;
 /**
  * Created by Daniel Quah on 21/5/2016
  */
+
+
+/**
+ * Main class for the Nearby Connections demo application.  This implements both ends of a two-
+ * sided connection where one device advertises and the other discovers. Once the devices are
+ * connected, they can send messages to each other.
+ */
+
 public class CodeBroadcastActivity extends Activity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -50,7 +61,7 @@ public class CodeBroadcastActivity extends Activity implements
      *
      * To set advertising or discovery to run indefinitely, use 0L where timeouts are required.
      */
-    private static final long TIMEOUT_ADVERTISE = 1000L * 30L;
+    private static final long TIMEOUT_ADVERTISE = 900000L;
 
     /**
      * Possible states for this application:
@@ -74,7 +85,6 @@ public class CodeBroadcastActivity extends Activity implements
     /** Views and Dialogs **/
     private TextView mDebugInfo;
     private EditText mMessageText;
-    private AlertDialog mConnectionRequestDialog;
     private MyListDialog mMyListDialog;
 
     /** The current state of the application **/
@@ -90,7 +100,7 @@ public class CodeBroadcastActivity extends Activity implements
         setContentView(R.layout.activity_broadcast);
 
         // Button listeners
-        findViewById(R.id.button_advertise).setOnClickListener(this);
+        //findViewById(R.id.button_advertise).setOnClickListener(this);
         findViewById(R.id.button_send).setOnClickListener(this);
 
         // EditText
@@ -117,6 +127,7 @@ public class CodeBroadcastActivity extends Activity implements
         super.onStart();
         Log.d(TAG, "onStart");
         mGoogleApiClient.connect();
+
     }
 
     @Override
@@ -171,7 +182,7 @@ public class CodeBroadcastActivity extends Activity implements
                 if (result.getStatus().isSuccess()) {
                     debugLog("startAdvertising:onResult: SUCCESS");
 
-                    updateViewVisibility(STATE_ADVERTISING);
+
                 } else {
                     debugLog("startAdvertising:onResult: FAILURE ");
 
@@ -181,16 +192,12 @@ public class CodeBroadcastActivity extends Activity implements
                     if (statusCode == ConnectionsStatusCodes.STATUS_ALREADY_ADVERTISING) {
                         debugLog("STATUS_ALREADY_ADVERTISING");
                     } else {
-                        updateViewVisibility(STATE_READY);
+
                     }
                 }
             }
         });
     }
-
-    /**
-     * Begin discovering devices advertising Nearby Connections, if possible.
-     */
 
     /**
      * Send a reliable message to the connected peer. Takes the contents of the EditText and
@@ -208,40 +215,6 @@ public class CodeBroadcastActivity extends Activity implements
         mMessageText.setText(null);
     }
 
-    /**
-     * Send a connection request to a given endpoint.
-     * @param endpointId the endpointId to which you want to connect.
-     * @param endpointName the name of the endpoint to which you want to connect. Not required to
-     *                     make the connection, but used to display after success or failure.
-     */
-    private void connectTo(String endpointId, final String endpointName) {
-        debugLog("connectTo:" + endpointId + ":" + endpointName);
-
-        // Send a connection request to a remote endpoint. By passing 'null' for the name,
-        // the Nearby Connections API will construct a default name based on device model
-        // such as 'LGE Nexus 5'.
-        String myName = null;
-        byte[] myPayload = null;
-        Nearby.Connections.sendConnectionRequest(mGoogleApiClient, myName, endpointId, myPayload,
-                new Connections.ConnectionResponseCallback() {
-                    @Override
-                    public void onConnectionResponse(String endpointId, Status status,
-                                                     byte[] bytes) {
-                        Log.d(TAG, "onConnectionResponse:" + endpointId + ":" + status);
-                        if (status.isSuccess()) {
-                            debugLog("onConnectionResponse: " + endpointName + " SUCCESS");
-                            Toast.makeText(CodeBroadcastActivity.this, "Connected to " + endpointName,
-                                    Toast.LENGTH_SHORT).show();
-
-                            mOtherEndpointId = endpointId;
-                            updateViewVisibility(STATE_CONNECTED);
-                        } else {
-                            debugLog("onConnectionResponse: " + endpointName + " FAILURE");
-                        }
-                    }
-                }, this);
-    }
-
     @Override
     public void onConnectionRequest(final String endpointId, String deviceId, String endpointName,
                                     byte[] payload) {
@@ -249,39 +222,22 @@ public class CodeBroadcastActivity extends Activity implements
 
         // This device is advertising and has received a connection request. Show a dialog asking
         // the user if they would like to connect and accept or reject the request accordingly.
-        mConnectionRequestDialog = new AlertDialog.Builder(this)
-                .setTitle("Connection Request")
-                .setMessage("Do you want to connect to " + endpointName + "?")
-                .setCancelable(false)
-                .setPositiveButton("Connect", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        byte[] payload = null;
-                        Nearby.Connections.acceptConnectionRequest(mGoogleApiClient, endpointId,
-                                payload,CodeBroadcastActivity.this)
-                                .setResultCallback(new ResultCallback<Status>() {
-                                    @Override
-                                    public void onResult(Status status) {
-                                        if (status.isSuccess()) {
-                                            debugLog("acceptConnectionRequest: SUCCESS");
 
-                                            mOtherEndpointId = endpointId;
-                                            updateViewVisibility(STATE_CONNECTED);
-                                        } else {
-                                            debugLog("acceptConnectionRequest: FAILURE");
-                                        }
-                                    }
-                                });
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+        Nearby.Connections.acceptConnectionRequest(mGoogleApiClient, endpointId,
+                payload, CodeBroadcastActivity.this)
+                .setResultCallback(new ResultCallback<Status>() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Nearby.Connections.rejectConnectionRequest(mGoogleApiClient, endpointId);
-                    }
-                }).create();
+                    public void onResult(Status status) {
+                        if (status.isSuccess()) {
+                            debugLog("acceptConnectionRequest: SUCCESS");
 
-        mConnectionRequestDialog.show();
+                            mOtherEndpointId = endpointId;
+                            updateViewVisibility(STATE_CONNECTED);
+                        } else {
+                            debugLog("acceptConnectionRequest: FAILURE");
+                        }
+                    }
+                });
     }
 
     @Override
@@ -294,7 +250,6 @@ public class CodeBroadcastActivity extends Activity implements
     public void onDisconnected(String endpointId) {
         debugLog("onDisconnected:" + endpointId);
 
-        updateViewVisibility(STATE_READY);
     }
 
     @Override
@@ -304,32 +259,6 @@ public class CodeBroadcastActivity extends Activity implements
 
         // This device is discovering endpoints and has located an advertiser. Display a dialog to
         // the user asking if they want to connect, and send a connection request if they do.
-        if (mMyListDialog == null) {
-            // Configure the AlertDialog that the MyListDialog wraps
-            AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                    .setTitle("Endpoint(s) Found")
-                    .setCancelable(true)
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            mMyListDialog.dismiss();
-                        }
-                    });
-
-            // Create the MyListDialog with a listener
-            mMyListDialog = new MyListDialog(this, builder, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    String selectedEndpointName = mMyListDialog.getItemKey(which);
-                    String selectedEndpointId = mMyListDialog.getItemValue(which);
-
-                    CodeBroadcastActivity.this.connectTo(selectedEndpointId, selectedEndpointName);
-                    mMyListDialog.dismiss();
-                }
-            });
-        }
-
-        mMyListDialog.addItem(endpointName, endpointId);
         mMyListDialog.show();
     }
 
@@ -348,13 +277,12 @@ public class CodeBroadcastActivity extends Activity implements
     @Override
     public void onConnected(Bundle bundle) {
         debugLog("onConnected");
-        updateViewVisibility(STATE_READY);
+        startAdvertising();
     }
 
     @Override
     public void onConnectionSuspended(int i) {
         debugLog("onConnectionSuspended: " + i);
-        updateViewVisibility(STATE_IDLE);
 
         // Try to re-connect
         mGoogleApiClient.reconnect();
@@ -363,50 +291,29 @@ public class CodeBroadcastActivity extends Activity implements
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         debugLog("onConnectionFailed: " + connectionResult);
-        updateViewVisibility(STATE_IDLE);
     }
 
     @Override
     public void onClick(View v) {
         switch(v.getId()) {
-            case R.id.button_advertise:
-                startAdvertising();
-                break;
             case R.id.button_send:
                 sendMessage();
                 break;
         }
     }
 
-    /**
-     * Change the application state and update the visibility on on-screen views '
-     * based on the new state of the application.
-     * @param newState the state to move to (should be NearbyConnectionState)
-     */
+
     private void updateViewVisibility(@NearbyConnectionState int newState) {
         mState = newState;
         switch (mState) {
-            case STATE_IDLE:
-                // The GoogleAPIClient is not connected, we can't yet start advertising or
-                // discovery so hide all buttons
-                findViewById(R.id.layout_nearby_buttons).setVisibility(View.GONE);
-                findViewById(R.id.layout_message).setVisibility(View.GONE);
-                break;
-            case STATE_READY:
-                // The GoogleAPIClient is connected, we can begin advertising or discovery.
-                findViewById(R.id.layout_nearby_buttons).setVisibility(View.VISIBLE);
-                findViewById(R.id.layout_message).setVisibility(View.GONE);
-                break;
-            case STATE_ADVERTISING:
-                break;
             case STATE_CONNECTED:
-                // We are connected to another device via the Connections API, so we can
-                // show the message UI.
                 findViewById(R.id.layout_nearby_buttons).setVisibility(View.VISIBLE);
                 findViewById(R.id.layout_message).setVisibility(View.VISIBLE);
                 break;
         }
     }
+
+
 
     /**
      * Print a message to the DEBUG LogCat as well as to the on-screen debug panel.
