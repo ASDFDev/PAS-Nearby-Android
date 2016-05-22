@@ -103,10 +103,10 @@ public class ATSLoginActivity extends AppCompatActivity {
                     .setTitle(R.string.title_error_login)
                     .setMessage(R.string.error_invalid_credentials)
                     .setCancelable(false)
-                    .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
+                    .setPositiveButton(R.string.dismiss ,new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            finish();
+
                         }
                     })
                     .create()
