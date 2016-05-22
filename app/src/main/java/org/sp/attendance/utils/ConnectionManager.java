@@ -6,5 +6,5 @@ package org.sp.attendance.utils;
 public class ConnectionManager {
 
     public static String attendanceCode;
-
+    //TODO: Migrate ATS_NativeUI code
 }

@@ -23,6 +23,8 @@ import com.google.android.gms.nearby.messages.PublishOptions;
 import com.google.android.gms.nearby.messages.SubscribeCallback;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
 
+import org.sp.attendance.R;
+
 /**
  * Created by HexGate on 7/5/16.
  */
@@ -145,7 +147,7 @@ public class CodeManager {
         } else {
             if (status.getStatusCode() == CommonStatusCodes.NETWORK_ERROR) {
                 Toast.makeText(ctx.getApplicationContext(),
-                        "No connectivity, cannot proceed. Fix in 'Settings' and try again.",
+                        R.string.error_network_none,
                         Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(ctx.getApplicationContext(), "Unsuccessful: " +

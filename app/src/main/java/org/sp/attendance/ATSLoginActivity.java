@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -12,12 +11,10 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.EditText;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-
-import org.sp.attendance.utils.ConnectionManager;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -43,12 +40,12 @@ public class ATSLoginActivity extends AppCompatActivity {
             } else {
                 new AlertDialog.Builder(ATSLoginActivity.this)
                         .setTitle(R.string.title_sp_wifi)
-                        .setMessage(R.string.error_network_invalid)
+                        .setMessage(R.string.error_invalid_network)
                         .setCancelable(false)
                         .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                finish();
+                                //finish();
                             }
                         })
                         .create()
@@ -90,11 +87,31 @@ public class ATSLoginActivity extends AppCompatActivity {
 
 
     public void signIn(View view) {
-        //TO-DO: Check credentials
-        //Intent codeBroadcastIntent = new Intent(this, CodeBroadcastActivity.class);
-        //startActivity(codeBroadcastIntent);
-        Intent codeReceiveIntent = new Intent(this, CodeReceiveActivity.class);
-        startActivity(codeReceiveIntent);
+        if (((EditText)findViewById(R.id.textEdit_userID)).getText().toString().toLowerCase().startsWith("p")) {
+            //Found student user ID
+            //TODO: Login to student ATS
+            Intent codeReceiveIntent = new Intent(this, CodeReceiveActivity.class);
+            startActivity(codeReceiveIntent);
+        } else if (((EditText)findViewById(R.id.textEdit_userID)).getText().toString().toLowerCase().startsWith("s")) {
+            //Found staff user ID
+            //TODO: Login to staff ATS
+            Intent codeReceiveIntent = new Intent(this, CodeBroadcastActivity.class);
+            startActivity(codeReceiveIntent);
+        } else {
+            //Incorrect user ID format
+            new AlertDialog.Builder(ATSLoginActivity.this)
+                    .setTitle(R.string.title_error_login)
+                    .setMessage(R.string.error_invalid_credentials)
+                    .setCancelable(false)
+                    .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .create()
+                    .show();
+        }
     }
 
 }

@@ -13,7 +13,7 @@ public class StartupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_startup);
-        //TO-DO: Check saved credentials
+        //TODO: Check saved credentials
         Intent loginIntent = new Intent(this, ATSLoginActivity.class);
         startActivity(loginIntent);
     }

@@ -26,7 +26,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/textEdit_userID"
             android:paddingTop="8dp"
-            android:paddingBottom="16dp" />
+            android:paddingBottom="16dp"
+            android:hint="@string/hint_username" />
 
         <TextView
             android:layout_width="match_parent"

@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Message" />
+            android:hint="Code" />
 
         <Button
             android:id="@+id/button_send"
@@ -64,7 +64,7 @@
             android:id="@+id/button_advertise"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Advertise" />
+            android:text="Broadcast code" />
 
     </LinearLayout>
 

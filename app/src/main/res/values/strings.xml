@@ -1,6 +1,7 @@
 <resources>
 
     <string name="app_name">Attendance Taking</string>
+    <string name="title_error_login">Could not log in</string>
     <string name="title_login">Login to SPICE</string>
     <string name="title_broadcast">Broadcasting Code</string>
     <string name="title_receive">Receiving Code</string>
@@ -13,10 +14,12 @@
     <string name="label_end_broadcast">End Broadcast</string>
     <string name="label_cancel">Cancel</string>
     <string name="title_sign_in_failed">Sign-in failed</string>
-    <string name="error_network_invalid">You must be connected to the SPStudent Wi-Fi to be able to use ATS. </string>
     <string name="title_sp_wifi">SP Wi-Fi not found</string>
-    <string name="error_invalid">The user ID or password is incorrect</string>
-    <string name="dismiss">Dismiss</string>
     <string name="error_network_disappeared">No Wi-Fi detected. </string>
+    <string name="error_network_none">No network detected. </string>
+    <string name="error_invalid_credentials">The user ID or password is incorrect</string>
+    <string name="error_invalid_network">You must be connected to the SPStudent Wi-Fi to be able to use ATS. </string>
+    <string name="dismiss">Dismiss</string>
     <string name="service_id">org.sp.attendance</string>
+    <string name="hint_username">Your SPICE user ID (e.g. P1234567)</string>
 </resources>
