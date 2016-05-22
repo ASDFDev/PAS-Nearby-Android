@@ -303,7 +303,6 @@ public class CodeBroadcastActivity extends Activity implements
         mState = newState;
         switch (mState) {
             case STATE_CONNECTED:
-                findViewById(R.id.layout_nearby_buttons).setVisibility(View.VISIBLE);
                 findViewById(R.id.layout_message).setVisibility(View.VISIBLE);
                 break;
         }
