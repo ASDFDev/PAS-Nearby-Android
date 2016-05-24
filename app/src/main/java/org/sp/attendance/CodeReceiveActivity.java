@@ -18,7 +18,6 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.connection.Connections;
-import com.google.android.gms.nearby.connection.ConnectionsStatusCodes;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -152,17 +151,12 @@ public class CodeReceiveActivity extends AppCompatActivity implements
                         } else {
                             debugLog("startDiscovery:onResult: FAILURE");
 
-                            // If the user hits 'Discover' multiple times in the timeout window,
-                            // the error will be STATUS_ALREADY_DISCOVERING
-                            int statusCode = status.getStatusCode();
-                            if (statusCode == ConnectionsStatusCodes.STATUS_ALREADY_DISCOVERING) {
-                                debugLog("STATUS_ALREADY_DISCOVERING");
-                            } else {
                             }
+
                         }
                     }
-                });
-    }
+                );
+}
 
     /**
      * Send a connection request to a given endpoint.

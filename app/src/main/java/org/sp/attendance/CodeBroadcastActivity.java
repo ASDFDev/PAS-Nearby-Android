@@ -2,8 +2,6 @@ package org.sp.attendance;
 
 import android.app.Activity;
 
-import android.support.v7.app.AlertDialog;
-import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -22,7 +20,6 @@ import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.connection.AppIdentifier;
 import com.google.android.gms.nearby.connection.AppMetadata;
 import com.google.android.gms.nearby.connection.Connections;
-import com.google.android.gms.nearby.connection.ConnectionsStatusCodes;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -182,14 +179,6 @@ public class CodeBroadcastActivity extends Activity implements
                 } else {
                     debugLog("startAdvertising:onResult: FAILURE ");
 
-                    // If the user hits 'Advertise' multiple times in the timeout window,
-                    // the error will be STATUS_ALREADY_ADVERTISING
-                    int statusCode = result.getStatus().getStatusCode();
-                    if (statusCode == ConnectionsStatusCodes.STATUS_ALREADY_ADVERTISING) {
-                        debugLog("STATUS_ALREADY_ADVERTISING");
-                    } else {
-
-                    }
                 }
             }
         });
