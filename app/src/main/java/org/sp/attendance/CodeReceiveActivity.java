@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,9 +29,6 @@ public class CodeReceiveActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         Connections.MessageListener,
         Connections.EndpointDiscoveryListener {
-
-    private static final String TAG = CodeReceiveActivity.class.getSimpleName();
-
     /**
      * Timeouts (in millis) for startAdvertising and startDiscovery.  At the end of these time
      * intervals the app will silently stop advertising or discovering.
@@ -97,14 +93,12 @@ public class CodeReceiveActivity extends AppCompatActivity implements
     @Override
     public void onStart() {
         super.onStart();
-        Log.d(TAG, "onStart");
         mGoogleApiClient.connect();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Log.d(TAG, "onStop");
 
         // Disconnect the Google API client and stop any ongoing discovery or advertising. When the
         // GoogleAPIClient is disconnected, any connected peers will get an onDisconnected callback.
@@ -177,7 +171,6 @@ public class CodeReceiveActivity extends AppCompatActivity implements
                     @Override
                     public void onConnectionResponse(String endpointId, Status status,
                                                      byte[] bytes) {
-                        Log.d(TAG, "onConnectionResponse:" + endpointId + ":" + status);
                         if (status.isSuccess()) {
                             debugLog("onConnectionResponse: " + endpointName + " SUCCESS");
                             Toast.makeText(CodeReceiveActivity.this, "Connected to " + endpointName,
@@ -207,7 +200,6 @@ public class CodeReceiveActivity extends AppCompatActivity implements
     @Override
     public void onEndpointFound(final String endpointId, String deviceId, String serviceId,
                                 final String endpointName) {
-        Log.d(TAG, "onEndpointFound:" + endpointId + ":" + endpointName);
 
         // This device is discovering endpoints and has located an advertiser. Display a dialog to
         // the user asking if they want to connect, and send a connection request if they do.
@@ -277,7 +269,6 @@ public class CodeReceiveActivity extends AppCompatActivity implements
      * @param msg the message to print and display.
      */
     private void debugLog(String msg) {
-        Log.d(TAG, msg);
         mDebugInfo.append("\n" + msg);
     }
 

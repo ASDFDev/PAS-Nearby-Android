@@ -7,7 +7,6 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -45,8 +44,6 @@ public class CodeBroadcastActivity extends Activity implements
         Connections.ConnectionRequestListener,
         Connections.MessageListener,
         Connections.EndpointDiscoveryListener{
-
-    private static final String TAG = CodeBroadcastActivity.class.getSimpleName();
 
     /**
      * Timeouts (in millis) for startAdvertising and startDiscovery.  At the end of these time
@@ -118,7 +115,6 @@ public class CodeBroadcastActivity extends Activity implements
     @Override
     public void onStart() {
         super.onStart();
-        Log.d(TAG, "onStart");
         mGoogleApiClient.connect();
 
     }
@@ -126,7 +122,6 @@ public class CodeBroadcastActivity extends Activity implements
     @Override
     public void onStop() {
         super.onStop();
-        Log.d(TAG, "onStop");
 
         // Disconnect the Google API client and stop any ongoing discovery or advertising. When the
         // GoogleAPIClient is disconnected, any connected peers will get an onDisconnected callback.
@@ -171,7 +166,6 @@ public class CodeBroadcastActivity extends Activity implements
                 this).setResultCallback(new ResultCallback<Connections.StartAdvertisingResult>() {
             @Override
             public void onResult(Connections.StartAdvertisingResult result) {
-                Log.d(TAG, "startAdvertising:onResult:" + result);
                 if (result.getStatus().isSuccess()) {
                     debugLog("startAdvertising:onResult: SUCCESS");
 
@@ -240,8 +234,6 @@ public class CodeBroadcastActivity extends Activity implements
     @Override
     public void onEndpointFound(final String endpointId, String deviceId, String serviceId,
                                 final String endpointName) {
-        Log.d(TAG, "onEndpointFound:" + endpointId + ":" + endpointName);
-
         // This device is discovering endpoints and has located an advertiser. Display a dialog to
         // the user asking if they want to connect, and send a connection request if they do.
         mMyListDialog.show();
@@ -304,7 +296,6 @@ public class CodeBroadcastActivity extends Activity implements
      * @param msg the message to print and display.
      */
     private void debugLog(String msg) {
-        Log.d(TAG, msg);
         mDebugInfo.append("\n" + msg);
     }
 }
