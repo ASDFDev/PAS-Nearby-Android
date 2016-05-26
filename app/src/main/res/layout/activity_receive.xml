@@ -1,38 +1,39 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <TextView
-        android:id="@+id/debug_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Debugging Text" />
 
-    <TextView
-        android:id="@+id/debug_text"
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/debug_label"
-        android:padding="5dp"
-        android:scrollbars="vertical"
-        android:fadeScrollbars="false"
-        android:lines="10"
-        android:maxLines="10"
-        android:gravity="bottom"
-        android:background="#FFFFFF" />
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal">
 
-    <LinearLayout
-        android:id="@+id/layout_nearby_buttons"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        tools:visibility="visible">
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/text_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:paddingBottom="16dp"
+                android:text="Searching for lecturer device"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
-</RelativeLayout>
+            <Button
+                android:id="@+id/btn_confirm_submission"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:text="Confirm submission" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
