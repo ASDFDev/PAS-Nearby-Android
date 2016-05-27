@@ -75,7 +75,6 @@ public class CodeReceiveActivity extends AppCompatActivity implements
 
 
         // Debug text view
-        mDebugInfo = (TextView) findViewById(R.id.debug_text);
         mDebugInfo.setMovementMethod(new ScrollingMovementMethod());
 
         // Initialize Google API Client for Nearby Connections. Note: if you are using Google+

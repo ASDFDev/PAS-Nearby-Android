@@ -90,14 +90,12 @@ public class CodeBroadcastActivity extends Activity implements
         setContentView(R.layout.activity_broadcast);
 
         // Button listeners
-        //findViewById(R.id.button_advertise).setOnClickListener(this);
         findViewById(R.id.button_send).setOnClickListener(this);
 
         // EditText
         mMessageText = (EditText) findViewById(R.id.edittext_message);
 
         // Debug text view
-        mDebugInfo = (TextView) findViewById(R.id.debug_text);
         mDebugInfo.setMovementMethod(new ScrollingMovementMethod());
 
         // Initialize Google API Client for Nearby Connections. Note: if you are using Google+
@@ -209,9 +207,7 @@ public class CodeBroadcastActivity extends Activity implements
                     public void onResult(Status status) {
                         if (status.isSuccess()) {
                             debugLog("acceptConnectionRequest: SUCCESS");
-
                             mOtherEndpointId = endpointId;
-                            updateViewVisibility(STATE_CONNECTED);
                         } else {
                             debugLog("acceptConnectionRequest: FAILURE");
                         }
@@ -278,17 +274,6 @@ public class CodeBroadcastActivity extends Activity implements
                 break;
         }
     }
-
-
-    private void updateViewVisibility(@NearbyConnectionState int newState) {
-        mState = newState;
-        switch (mState) {
-            case STATE_CONNECTED:
-                findViewById(R.id.layout_message).setVisibility(View.VISIBLE);
-                break;
-        }
-    }
-
 
 
     /**
