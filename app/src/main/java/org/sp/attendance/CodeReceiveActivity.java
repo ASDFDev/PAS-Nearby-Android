@@ -189,14 +189,7 @@ public class CodeReceiveActivity extends AppCompatActivity implements
         if (mMyListDialog == null) {
             // Configure the AlertDialog that the MyListDialog wraps
             AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                    .setTitle("Endpoint(s) Found")
-                    .setCancelable(true)
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            mMyListDialog.dismiss();
-                        }
-                    });
+                    .setTitle(R.string.lecturer_broadcasting);
 
             // Create the MyListDialog with a listener
             mMyListDialog = new MyListDialog(this, builder, new DialogInterface.OnClickListener() {
