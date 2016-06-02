@@ -42,8 +42,7 @@ public class CodeBroadcastActivity extends Activity implements
         GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener,
         Connections.ConnectionRequestListener,
-        Connections.MessageListener,
-        Connections.EndpointDiscoveryListener{
+        Connections.MessageListener{
 
     /**
      * Timeouts (in millis) for startAdvertising and startDiscovery.  At the end of these time
@@ -212,25 +211,6 @@ public class CodeBroadcastActivity extends Activity implements
     @Override
     public void onDisconnected(String endpointId) {
 
-    }
-
-    @Override
-    public void onEndpointFound(final String endpointId, String deviceId, String serviceId,
-                                final String endpointName) {
-        // This device is discovering endpoints and has located an advertiser. Display a dialog to
-        // the user asking if they want to connect, and send a connection request if they do.
-        mMyListDialog.show();
-    }
-
-    @Override
-    public void onEndpointLost(String endpointId) {
-
-        // An endpoint that was previously available for connection is no longer. It may have
-        // stopped advertising, gone out of range, or lost connectivity. Dismiss any dialog that
-        // was offering a connection.
-        if (mMyListDialog != null) {
-            mMyListDialog.removeItemByValue(endpointId);
-        }
     }
 
     @Override
