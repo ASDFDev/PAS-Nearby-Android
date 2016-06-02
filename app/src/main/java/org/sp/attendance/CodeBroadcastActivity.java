@@ -9,6 +9,7 @@ import android.support.annotation.IntDef;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -253,6 +254,8 @@ public class CodeBroadcastActivity extends Activity implements
         switch(v.getId()) {
             case R.id.button_send:
                 sendMessage();
+                Toast.makeText(this, "Code sent to students!",
+                        Toast.LENGTH_LONG).show();
                 break;
         }
     }
