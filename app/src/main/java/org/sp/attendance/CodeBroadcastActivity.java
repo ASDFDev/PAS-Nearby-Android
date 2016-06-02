@@ -2,6 +2,8 @@ package org.sp.attendance;
 
 import android.app.Activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -233,10 +235,27 @@ public class CodeBroadcastActivity extends Activity implements
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.button_send:
-                sendMessage();
-                Toast.makeText(this, "Code sent to students!",
-                        Toast.LENGTH_LONG).show();
+
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.please_confirm)
+                        // TODO Fix "ATS Code is: " into string.
+                        // If  mMessageText.getText().toString is set, weird numbers will be displayed
+                        .setMessage("ATS Code is:" + mMessageText.getText())
+                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        sendMessage();
+                        Toast.makeText(getApplicationContext(),"Code sent to students!", Toast.LENGTH_LONG).show();
+                    }
+                }).create().show();
                 break;
+
         }
     }
 
