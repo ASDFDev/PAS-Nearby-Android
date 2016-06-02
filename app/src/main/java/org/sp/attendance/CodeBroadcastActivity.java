@@ -6,7 +6,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
-import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -73,7 +72,6 @@ public class CodeBroadcastActivity extends Activity implements
     private GoogleApiClient mGoogleApiClient;
 
     /** Views and Dialogs **/
-    private TextView mDebugInfo;
     private EditText mMessageText;
     private MyListDialog mMyListDialog;
 
@@ -94,9 +92,6 @@ public class CodeBroadcastActivity extends Activity implements
 
         // EditText
         mMessageText = (EditText) findViewById(R.id.edittext_message);
-
-        // Debug text view
-        mDebugInfo.setMovementMethod(new ScrollingMovementMethod());
 
         // Initialize Google API Client for Nearby Connections. Note: if you are using Google+
         // sign-in with your project or any other API that requires Authentication you may want
@@ -144,9 +139,7 @@ public class CodeBroadcastActivity extends Activity implements
      * Begin advertising for Nearby Connections, if possible.
      */
     private void startAdvertising() {
-        debugLog("startAdvertising");
         if (!isConnectedToNetwork()) {
-            debugLog("startAdvertising: not connected to WiFi network.");
             return;
         }
 
@@ -165,11 +158,9 @@ public class CodeBroadcastActivity extends Activity implements
             @Override
             public void onResult(Connections.StartAdvertisingResult result) {
                 if (result.getStatus().isSuccess()) {
-                    debugLog("startAdvertising:onResult: SUCCESS");
 
 
                 } else {
-                    debugLog("startAdvertising:onResult: FAILURE ");
 
                 }
             }
@@ -195,7 +186,6 @@ public class CodeBroadcastActivity extends Activity implements
     @Override
     public void onConnectionRequest(final String endpointId, String deviceId, String endpointName,
                                     byte[] payload) {
-        debugLog("onConnectionRequest:" + endpointId + ":" + endpointName);
 
         // This device is advertising and has received a connection request. Show a dialog asking
         // the user if they would like to connect and accept or reject the request accordingly.
@@ -206,10 +196,8 @@ public class CodeBroadcastActivity extends Activity implements
                     @Override
                     public void onResult(Status status) {
                         if (status.isSuccess()) {
-                            debugLog("acceptConnectionRequest: SUCCESS");
                             mOtherEndpointId = endpointId;
                         } else {
-                            debugLog("acceptConnectionRequest: FAILURE");
                         }
                     }
                 });
@@ -218,12 +206,10 @@ public class CodeBroadcastActivity extends Activity implements
     @Override
     public void onMessageReceived(String endpointId, byte[] payload, boolean isReliable) {
         // A message has been received from a remote endpoint.
-        debugLog("onMessageReceived:" + endpointId + ":" + new String(payload));
     }
 
     @Override
     public void onDisconnected(String endpointId) {
-        debugLog("onDisconnected:" + endpointId);
 
     }
 
@@ -237,7 +223,6 @@ public class CodeBroadcastActivity extends Activity implements
 
     @Override
     public void onEndpointLost(String endpointId) {
-        debugLog("onEndpointLost:" + endpointId);
 
         // An endpoint that was previously available for connection is no longer. It may have
         // stopped advertising, gone out of range, or lost connectivity. Dismiss any dialog that
@@ -249,13 +234,11 @@ public class CodeBroadcastActivity extends Activity implements
 
     @Override
     public void onConnected(Bundle bundle) {
-        debugLog("onConnected");
         startAdvertising();
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-        debugLog("onConnectionSuspended: " + i);
 
         // Try to re-connect
         mGoogleApiClient.reconnect();
@@ -263,7 +246,6 @@ public class CodeBroadcastActivity extends Activity implements
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        debugLog("onConnectionFailed: " + connectionResult);
     }
 
     @Override
@@ -275,12 +257,4 @@ public class CodeBroadcastActivity extends Activity implements
         }
     }
 
-
-    /**
-     * Print a message to the DEBUG LogCat as well as to the on-screen debug panel.
-     * @param msg the message to print and display.
-     */
-    private void debugLog(String msg) {
-        mDebugInfo.append("\n" + msg);
-    }
 }
