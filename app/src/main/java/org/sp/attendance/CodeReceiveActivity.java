@@ -7,8 +7,6 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.v7.app.AppCompatActivity;
-import android.text.method.ScrollingMovementMethod;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -58,7 +56,6 @@ public class CodeReceiveActivity extends AppCompatActivity implements
     private GoogleApiClient mGoogleApiClient;
 
     /** Views and Dialogs **/
-    private TextView mDebugInfo;
     private MyListDialog mMyListDialog;
 
     /** The current state of the application **/
@@ -72,10 +69,6 @@ public class CodeReceiveActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receive);
-
-
-        // Debug text view
-        mDebugInfo.setMovementMethod(new ScrollingMovementMethod());
 
         // Initialize Google API Client for Nearby Connections. Note: if you are using Google+
         // sign-in with your project or any other API that requires Authentication you may want
@@ -126,9 +119,7 @@ public class CodeReceiveActivity extends AppCompatActivity implements
      * Begin discovering devices advertising Nearby Connections, if possible.
      */
     private void startDiscovery() {
-        debugLog("startDiscovery");
         if (!isConnectedToNetwork()) {
-            debugLog("startDiscovery: not connected to WiFi network.");
             return;
         }
 
@@ -139,10 +130,8 @@ public class CodeReceiveActivity extends AppCompatActivity implements
                     @Override
                     public void onResult(Status status) {
                         if (status.isSuccess()) {
-                            debugLog("startDiscovery:onResult: SUCCESS");
 
                         } else {
-                            debugLog("startDiscovery:onResult: FAILURE");
 
                             }
 
@@ -158,7 +147,6 @@ public class CodeReceiveActivity extends AppCompatActivity implements
      *                     make the connection, but used to display after success or failure.
      */
     private void connectTo(String endpointId, final String endpointName) {
-        debugLog("connectTo:" + endpointId + ":" + endpointName);
 
         // Send a connection request to a remote endpoint. By passing 'null' for the name,
         // the Nearby Connections API will construct a default name based on device model
@@ -171,13 +159,11 @@ public class CodeReceiveActivity extends AppCompatActivity implements
                     public void onConnectionResponse(String endpointId, Status status,
                                                      byte[] bytes) {
                         if (status.isSuccess()) {
-                            debugLog("onConnectionResponse: " + endpointName + " SUCCESS");
                             Toast.makeText(CodeReceiveActivity.this, "Connected to " + endpointName,
                                     Toast.LENGTH_SHORT).show();
 
                             mOtherEndpointId = endpointId;
                         } else {
-                            debugLog("onConnectionResponse: " + endpointName + " FAILURE");
                         }
                     }
                 }, this);
@@ -187,12 +173,10 @@ public class CodeReceiveActivity extends AppCompatActivity implements
     @Override
     public void onMessageReceived(String endpointId, byte[] payload, boolean isReliable) {
         // A message has been received from a remote endpoint.
-        debugLog("onMessageReceived:" + endpointId + ":" + new String(payload));
     }
 
     @Override
     public void onDisconnected(String endpointId) {
-        debugLog("onDisconnected:" + endpointId);
 
     }
 
@@ -233,7 +217,6 @@ public class CodeReceiveActivity extends AppCompatActivity implements
 
     @Override
     public void onEndpointLost(String endpointId) {
-        debugLog("onEndpointLost:" + endpointId);
 
         // An endpoint that was previously available for connection is no longer. It may have
         // stopped advertising, gone out of range, or lost connectivity. Dismiss any dialog that
@@ -245,13 +228,11 @@ public class CodeReceiveActivity extends AppCompatActivity implements
 
     @Override
     public void onConnected(Bundle bundle) {
-        debugLog("onConnected");
         startDiscovery();
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-        debugLog("onConnectionSuspended: " + i);
 
         // Try to re-connect
         mGoogleApiClient.reconnect();
@@ -259,16 +240,7 @@ public class CodeReceiveActivity extends AppCompatActivity implements
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        debugLog("onConnectionFailed: " + connectionResult);
 
-    }
-
-    /**
-     * Print a message to the DEBUG LogCat as well as to the on-screen debug panel.
-     * @param msg the message to print and display.
-     */
-    private void debugLog(String msg) {
-        mDebugInfo.append("\n" + msg);
     }
 
 }
