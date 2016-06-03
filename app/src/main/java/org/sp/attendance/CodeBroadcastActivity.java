@@ -2,14 +2,14 @@ package org.sp.attendance;
 
 import android.app.Activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.IntDef;
-import android.util.Log;
-import android.widget.Toast;
+import android.view.View;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -46,45 +46,49 @@ public class CodeBroadcastActivity extends Activity implements
     /**
      * Timeouts (in millis) for startAdvertising and startDiscovery.  At the end of these time
      * intervals the app will silently stop advertising or discovering.
-     *
+     * <p/>
      * To set advertising or discovery to run indefinitely, use 0L where timeouts are required.
      */
     private static final long TIMEOUT_ADVERTISE = 900000L;
-    private static final String TAG = CodeBroadcastActivity.class.getSimpleName();
+
     /**
      * Possible states for this application:
-     *      IDLE - GoogleApiClient not yet connected, can't do anything.
-     *      READY - GoogleApiClient connected, ready to use Nearby Connections API.
-     *      ADVERTISING - advertising for peers to connect.
-     *      DISCOVERING - looking for a peer that is advertising.
-     *      CONNECTED - found a peer.
+     * IDLE - GoogleApiClient not yet connected, can't do anything.
+     * READY - GoogleApiClient connected, ready to use Nearby Connections API.
+     * ADVERTISING - advertising for peers to connect.
+     * DISCOVERING - looking for a peer that is advertising.
+     * CONNECTED - found a peer.
      */
     @Retention(RetentionPolicy.CLASS)
     @IntDef({STATE_IDLE, STATE_READY, STATE_ADVERTISING, STATE_CONNECTED})
-    public @interface NearbyConnectionState {}
+    public @interface NearbyConnectionState {
+    }
+
     private static final int STATE_IDLE = 1023;
     private static final int STATE_READY = 1024;
     private static final int STATE_ADVERTISING = 1025;
     private static final int STATE_CONNECTED = 1027;
 
-    /** GoogleApiClient for connecting to the Nearby Connections API **/
+    /**
+     * GoogleApiClient for connecting to the Nearby Connections API
+     **/
     private GoogleApiClient mGoogleApiClient;
 
-    /** Views and Dialogs **/
-    private MyListDialog mMyListDialog;
-
-    /** The current state of the application **/
+    /**
+     * The current state of the application
+     **/
     @NearbyConnectionState
     private int mState = STATE_IDLE;
 
-    /** The endpoint ID of the connected peer, used for messaging **/
+    /**
+     * The endpoint ID of the connected peer, used for messaging
+     **/
     private String mOtherEndpointId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.device_broadcasting);
-        Log.d(TAG, "onCreate() called");
         // Initialize Google API Client for Nearby Connections. Note: if you are using Google+
         // sign-in with your project or any other API that requires Authentication you may want
         // to use a separate Google API Client for Nearby Connections.  This API does not
@@ -101,8 +105,6 @@ public class CodeBroadcastActivity extends Activity implements
     public void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
-        //sendMessage();
-
     }
 
     @Override
@@ -118,6 +120,7 @@ public class CodeBroadcastActivity extends Activity implements
 
     /**
      * Check if the device is connected (or connecting) to a WiFi network.
+     *
      * @return true if connected or connecting, false otherwise.
      */
     private boolean isConnectedToNetwork() {
@@ -175,9 +178,6 @@ public class CodeBroadcastActivity extends Activity implements
         String msg = ats.getString("ATS Code", "");
 
         Nearby.Connections.sendReliableMessage(mGoogleApiClient, mOtherEndpointId, msg.getBytes());
-
-        Toast.makeText(this, "ATS Code is " + msg,
-                Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -205,14 +205,14 @@ public class CodeBroadcastActivity extends Activity implements
         // A message has been received from a remote endpoint.
     }
 
-    @Override
+
     public void onDisconnected(String endpointId) {
 
     }
 
     @Override
     public void onConnected(Bundle bundle) {
-       startAdvertising();
+        startAdvertising();
         sendMessage();
     }
 
@@ -227,5 +227,13 @@ public class CodeBroadcastActivity extends Activity implements
     public void onConnectionFailed(ConnectionResult connectionResult) {
     }
 
+    public void stopBroadcasting(View view) {
+        switch (view.getId()) {
+            case R.id.stopBroadcasting:
+                Intent sendCodeIntent = new Intent(this, SendCodeActivity.class);
+                startActivity(sendCodeIntent);
+                break;
+        }
 
+    }
 }

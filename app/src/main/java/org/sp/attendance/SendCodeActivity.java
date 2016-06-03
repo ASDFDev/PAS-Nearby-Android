@@ -31,8 +31,8 @@ public class SendCodeActivity extends Activity implements View.OnClickListener{
         mMessageText = (EditText) findViewById(R.id.edittext_message);
     }
     @Override
-    public void onClick(View v) {
-        switch(v.getId()) {
+    public void onClick(View view) {
+        switch(view.getId()) {
             case R.id.button_send:
 
                 new AlertDialog.Builder(this)

@@ -10,4 +10,13 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Broadcasting" />
 
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/stop_broadcast"
+        android:id="@+id/stopBroadcasting"
+        android:layout_gravity="center_horizontal"
+        android:onClick="stopBroadcasting" />
+
 </LinearLayout>
