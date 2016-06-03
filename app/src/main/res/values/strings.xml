@@ -29,4 +29,9 @@
     <string name="yes">yes</string>
     <string name="ok">OK!</string>
     <string name="stop_broadcast">Stop Broadcast</string>
+    <string name="broadcast">Broadcast</string>
+    <string name="generated_code">Enter generated code</string>
+    <string name="code_sent">Code sent to students!</string>
+    <string name="continue_confirmation">Would you like to continue?</string>
+
 </resources>

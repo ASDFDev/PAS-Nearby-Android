@@ -39,7 +39,7 @@ public class SendCodeActivity extends Activity implements View.OnClickListener{
                         .setTitle(R.string.please_confirm)
                         // TODO Fix "ATS Code is: " into string.
                         // If  mMessageText.getText().toString is set, weird numbers will be displayed
-                        .setMessage("ATS Code is:" + mMessageText.getText() + ".Would you like to continue?")
+                        .setMessage("ATS Code is: " + mMessageText.getText() + "." + R.string.continue_confirmation)
                         .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -56,7 +56,7 @@ public class SendCodeActivity extends Activity implements View.OnClickListener{
                                 editor.putString("ATS Code", mMessageText.getText().toString());
                                 editor.commit();
 
-                                Toast.makeText(getApplicationContext(),"Code sent to students!", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(),R.string.code_sent, Toast.LENGTH_LONG).show();
                                 Intent codeBroadcastActivity = new Intent(getApplicationContext(), CodeBroadcastActivity.class);
                                 startActivity(codeBroadcastActivity);
                             }

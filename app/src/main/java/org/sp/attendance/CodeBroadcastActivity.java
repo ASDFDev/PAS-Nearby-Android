@@ -1,7 +1,5 @@
 package org.sp.attendance;
 
-import android.app.Activity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -9,6 +7,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.IntDef;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -37,7 +36,7 @@ import java.util.List;
  * connected, they can send messages to each other.
  */
 
-public class CodeBroadcastActivity extends Activity implements
+public class CodeBroadcastActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         Connections.ConnectionRequestListener,
