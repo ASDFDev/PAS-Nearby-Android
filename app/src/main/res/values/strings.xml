@@ -25,7 +25,7 @@
     <string name="lecturer_broadcasting">Lecturer(s) Broadcasting: </string>
     <string name="please_confirm">Please confirm</string>
     <string name="ats_code">ATS Code is: </string>
-    <string name="cancel">Cancel</string>
+    <string name="no">No</string>
     <string name="yes">yes</string>
     <string name="ok">OK!</string>
     <string name="stop_broadcast">Stop Broadcast</string>

@@ -98,6 +98,7 @@ public class CodeBroadcastActivity extends AppCompatActivity implements
                 .addOnConnectionFailedListener(this)
                 .addApi(Nearby.CONNECTIONS_API)
                 .build();
+
     }
 
     @Override
@@ -235,4 +236,5 @@ public class CodeBroadcastActivity extends AppCompatActivity implements
         }
 
     }
+
 }

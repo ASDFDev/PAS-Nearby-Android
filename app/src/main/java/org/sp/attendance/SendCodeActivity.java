@@ -24,12 +24,10 @@ public class SendCodeActivity extends Activity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_broadcast);
 
-        // Button listeners
         findViewById(R.id.button_send).setOnClickListener(this);
-
-        // EditText
         mMessageText = (EditText) findViewById(R.id.edittext_message);
     }
+
     @Override
     public void onClick(View view) {
         switch(view.getId()) {
@@ -39,8 +37,8 @@ public class SendCodeActivity extends Activity implements View.OnClickListener{
                         .setTitle(R.string.please_confirm)
                         // TODO Fix "ATS Code is: " into string.
                         // If  mMessageText.getText().toString is set, weird numbers will be displayed
-                        .setMessage("ATS Code is: " + mMessageText.getText() + "." + R.string.continue_confirmation)
-                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        .setMessage("ATS Code is: " + mMessageText.getText() + ".Would you like to continue?")
+                        .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
