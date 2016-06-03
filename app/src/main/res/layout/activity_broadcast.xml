@@ -35,7 +35,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_weight="1"
-                    android:hint="Enter generated code" />
+                    android:hint="Enter generated code"
+                    android:digits="1234567890"
+                    />
 
                 <Button
                     android:id="@+id/button_send"
