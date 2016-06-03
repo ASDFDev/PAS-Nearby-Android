@@ -233,6 +233,13 @@ public class CodeReceiveActivity extends AppCompatActivity implements
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
+        new android.app.AlertDialog.Builder(this)
+                .setTitle("Can't connect to Lecturer device!")
+                .setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }}).create().show();
 
     }
 

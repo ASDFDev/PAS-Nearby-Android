@@ -95,8 +95,8 @@ public class ATSLoginActivity extends AppCompatActivity {
         } else if (((EditText)findViewById(R.id.textEdit_userID)).getText().toString().toLowerCase().startsWith("s")) {
             //Found staff user ID
             //TODO: Login to staff ATS
-            Intent codeReceiveIntent = new Intent(this, CodeBroadcastActivity.class);
-            startActivity(codeReceiveIntent);
+            Intent sendCodeIntent = new Intent(this, SendCodeActivity.class);
+            startActivity(sendCodeIntent);
         } else {
             //Incorrect user ID format
             new AlertDialog.Builder(ATSLoginActivity.this)

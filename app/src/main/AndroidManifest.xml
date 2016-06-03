@@ -38,6 +38,13 @@
             android:label="@string/title_receive"
             android:noHistory="true">
         </activity>
+
+        <activity
+            android:name="org.sp.attendance.SendCodeActivity"
+            android:label="SendCodeActivity"
+            android:noHistory="true">
+        </activity>
+
         <meta-data android:name="com.google.android.gms.nearby.connection.SERVICE_ID"
             android:value="@string/service_id" />
 

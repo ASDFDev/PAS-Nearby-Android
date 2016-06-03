@@ -2,15 +2,13 @@ package org.sp.attendance;
 
 import android.app.Activity;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.IntDef;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -42,7 +40,6 @@ import java.util.List;
 public class CodeBroadcastActivity extends Activity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        View.OnClickListener,
         Connections.ConnectionRequestListener,
         Connections.MessageListener{
 
@@ -53,7 +50,7 @@ public class CodeBroadcastActivity extends Activity implements
      * To set advertising or discovery to run indefinitely, use 0L where timeouts are required.
      */
     private static final long TIMEOUT_ADVERTISE = 900000L;
-
+    private static final String TAG = CodeBroadcastActivity.class.getSimpleName();
     /**
      * Possible states for this application:
      *      IDLE - GoogleApiClient not yet connected, can't do anything.
@@ -74,7 +71,6 @@ public class CodeBroadcastActivity extends Activity implements
     private GoogleApiClient mGoogleApiClient;
 
     /** Views and Dialogs **/
-    private EditText mMessageText;
     private MyListDialog mMyListDialog;
 
     /** The current state of the application **/
@@ -87,14 +83,8 @@ public class CodeBroadcastActivity extends Activity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_broadcast);
-
-        // Button listeners
-        findViewById(R.id.button_send).setOnClickListener(this);
-
-        // EditText
-        mMessageText = (EditText) findViewById(R.id.edittext_message);
-
+        setContentView(R.layout.device_broadcasting);
+        Log.d(TAG, "onCreate() called");
         // Initialize Google API Client for Nearby Connections. Note: if you are using Google+
         // sign-in with your project or any other API that requires Authentication you may want
         // to use a separate Google API Client for Nearby Connections.  This API does not
@@ -111,6 +101,7 @@ public class CodeBroadcastActivity extends Activity implements
     public void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
+        //sendMessage();
 
     }
 
@@ -179,10 +170,14 @@ public class CodeBroadcastActivity extends Activity implements
         // should be used for high-frequency messages where guaranteed delivery is not required, such
         // as showing one player's cursor location to another. Unreliable messages are often
         // delivered faster than reliable messages.
-        String msg = mMessageText.getText().toString();
+
+        SharedPreferences ats = PreferenceManager.getDefaultSharedPreferences(this);
+        String msg = ats.getString("ATS Code", "");
+
         Nearby.Connections.sendReliableMessage(mGoogleApiClient, mOtherEndpointId, msg.getBytes());
 
-        mMessageText.setText(null);
+        Toast.makeText(this, "ATS Code is " + msg,
+                Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -217,7 +212,8 @@ public class CodeBroadcastActivity extends Activity implements
 
     @Override
     public void onConnected(Bundle bundle) {
-        startAdvertising();
+       startAdvertising();
+        sendMessage();
     }
 
     @Override
@@ -231,32 +227,5 @@ public class CodeBroadcastActivity extends Activity implements
     public void onConnectionFailed(ConnectionResult connectionResult) {
     }
 
-    @Override
-    public void onClick(View v) {
-        switch(v.getId()) {
-            case R.id.button_send:
-
-                new AlertDialog.Builder(this)
-                        .setTitle(R.string.please_confirm)
-                        // TODO Fix "ATS Code is: " into string.
-                        // If  mMessageText.getText().toString is set, weird numbers will be displayed
-                        .setMessage("ATS Code is:" + mMessageText.getText())
-                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        })
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        sendMessage();
-                        Toast.makeText(getApplicationContext(),"Code sent to students!", Toast.LENGTH_LONG).show();
-                    }
-                }).create().show();
-                break;
-
-        }
-    }
 
 }
