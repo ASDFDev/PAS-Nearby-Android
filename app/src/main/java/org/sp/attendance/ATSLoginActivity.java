@@ -39,13 +39,12 @@ public class ATSLoginActivity extends AppCompatActivity {
             if (ssid.equals("\"SPStudent\"") || ssid.equals("\"SPStaff\"") || ssid.equals("\"SPGuest\"")) {
             } else {
                 new AlertDialog.Builder(ATSLoginActivity.this)
-                        .setTitle(R.string.title_sp_wifi)
+                        .setTitle(R.string.title_warning)
                         .setMessage(R.string.error_invalid_network)
                         .setCancelable(false)
                         .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                //finish();
                             }
                         })
                         .create()
@@ -53,13 +52,12 @@ public class ATSLoginActivity extends AppCompatActivity {
             }
         } else {
             new AlertDialog.Builder(ATSLoginActivity.this)
-                    .setTitle(R.string.title_sp_wifi)
+                    .setTitle(R.string.title_warning)
                     .setMessage(R.string.error_network_disappeared)
                     .setCancelable(false)
                     .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            finish();
                         }
                     })
                     .create()
