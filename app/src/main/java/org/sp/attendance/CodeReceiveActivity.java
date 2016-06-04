@@ -1,5 +1,6 @@
 package org.sp.attendance;
 
+import android.app.ProgressDialog;
 import android.support.v7.app.AlertDialog;
 import android.content.DialogInterface;
 import android.net.ConnectivityManager;
@@ -7,6 +8,8 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Window;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -34,7 +37,7 @@ public class CodeReceiveActivity extends AppCompatActivity implements
      * To set advertising or discovery to run indefinitely, use 0L where timeouts are required.
      */
 
-    private static final long TIMEOUT_DISCOVER = 900000L;
+    private static final long TIMEOUT_DISCOVER = 0L;
 
     /**
      * Possible states for this application:
@@ -45,10 +48,8 @@ public class CodeReceiveActivity extends AppCompatActivity implements
      *      CONNECTED - found a peer.
      */
     @Retention(RetentionPolicy.CLASS)
-    @IntDef({STATE_IDLE, STATE_READY, STATE_DISCOVERING, STATE_CONNECTED})
+    @IntDef({STATE_DISCOVERING, STATE_CONNECTED})
     public @interface NearbyConnectionState {}
-    private static final int STATE_IDLE = 1023;
-    private static final int STATE_READY = 1024;
     private static final int STATE_DISCOVERING = 1026;
     private static final int STATE_CONNECTED = 1027;
 
@@ -58,27 +59,22 @@ public class CodeReceiveActivity extends AppCompatActivity implements
     /** Views and Dialogs **/
     private MyListDialog mMyListDialog;
 
-    /** The current state of the application **/
-    @NearbyConnectionState
-    private int mState = STATE_IDLE;
-
     /** The endpoint ID of the connected peer, used for messaging **/
     private String mOtherEndpointId;
+
+    private ProgressBar spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receive);
+        spinner = (ProgressBar) findViewById(R.id.progressBar);
 
-        // Initialize Google API Client for Nearby Connections. Note: if you are using Google+
-        // sign-in with your project or any other API that requires Authentication you may want
-        // to use a separate Google API Client for Nearby Connections.  This API does not
-        // require the user to authenticate so it can be used even when the user does not want to
-        // sign in or sign-in has failed.
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(Nearby.CONNECTIONS_API)
+                .enableAutoManage(this, this)
                 .build();
     }
 
@@ -112,10 +108,6 @@ public class CodeReceiveActivity extends AppCompatActivity implements
     }
 
     /**
-     * Begin advertising for Nearby Connections, if possible.
-     */
-
-    /**
      * Begin discovering devices advertising Nearby Connections, if possible.
      */
     private void startDiscovery() {
@@ -138,7 +130,7 @@ public class CodeReceiveActivity extends AppCompatActivity implements
                         }
                     }
                 );
-}
+    }
 
     /**
      * Send a connection request to a given endpoint.
@@ -146,6 +138,7 @@ public class CodeReceiveActivity extends AppCompatActivity implements
      * @param endpointName the name of the endpoint to which you want to connect. Not required to
      *                     make the connection, but used to display after success or failure.
      */
+
     private void connectTo(String endpointId, final String endpointName) {
 
         // Send a connection request to a remote endpoint. By passing 'null' for the name,
@@ -159,11 +152,14 @@ public class CodeReceiveActivity extends AppCompatActivity implements
                     public void onConnectionResponse(String endpointId, Status status,
                                                      byte[] bytes) {
                         if (status.isSuccess()) {
-                            Toast.makeText(CodeReceiveActivity.this, "Connected to " + endpointName,
+                            Toast.makeText(CodeReceiveActivity.this, "Connected to " + endpointName + "success!",
                                     Toast.LENGTH_SHORT).show();
 
                             mOtherEndpointId = endpointId;
                         } else {
+                            Toast.makeText(CodeReceiveActivity.this, "Connection to " + endpointName + "failed! Retrying.....",
+                                    Toast.LENGTH_LONG).show();
+                            startDiscovery();
                         }
                     }
                 }, this);

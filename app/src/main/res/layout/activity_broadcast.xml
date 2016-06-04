@@ -41,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_weight="1"
-                    android:hint="@string/generated_code"
+                    android:inputType="number"
                     android:digits="1234567890"
                     />
 

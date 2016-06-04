@@ -1,39 +1,33 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
-
-
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal">
-
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/text_status"
-                android:layout_width="match_parent"
+      <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_alignLeft="@+id/text_status"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:paddingBottom="16dp"
-                android:text="Searching for lecturer device"
-                android:textAlignment="center"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:progressDrawable="@drawable/circular_progress_bar" />
 
-            <Button
+     <TextView
+         android:id="@+id/text_status"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_alignParentTop="true"
+         android:layout_centerHorizontal="true"
+         android:paddingBottom="16dp"
+         android:text="Searching for lecturer device"
+         android:textAlignment="center"
+         android:textAppearance="?android:attr/textAppearanceLarge" />
+
+
+     <Button
                 android:id="@+id/btn_confirm_submission"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal"
                 android:text="Confirm submission" />
-        </LinearLayout>
-    </ScrollView>
 </LinearLayout>

@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -26,6 +27,15 @@ public class SendCodeActivity extends Activity implements View.OnClickListener{
 
         findViewById(R.id.button_send).setOnClickListener(this);
         mMessageText = (EditText) findViewById(R.id.edittext_message);
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mMessageText.setFocusableInTouchMode(true);
+        mMessageText.requestFocus();
     }
 
     @Override
@@ -37,7 +47,7 @@ public class SendCodeActivity extends Activity implements View.OnClickListener{
                         .setTitle(R.string.please_confirm)
                         // TODO Fix "ATS Code is: " into string.
                         // If  mMessageText.getText().toString is set, weird numbers will be displayed
-                        .setMessage("ATS Code is: " + mMessageText.getText() + ".Would you like to continue?")
+                        .setMessage("ATS Code is: " + mMessageText.getText() + ". Would you like to continue?")
                         .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -52,7 +62,7 @@ public class SendCodeActivity extends Activity implements View.OnClickListener{
                                 SharedPreferences ats = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                                 SharedPreferences.Editor editor = ats.edit();
                                 editor.putString("ATS Code", mMessageText.getText().toString());
-                                editor.commit();
+                                editor.apply();
 
                                 Toast.makeText(getApplicationContext(),R.string.code_sent, Toast.LENGTH_LONG).show();
                                 Intent codeBroadcastActivity = new Intent(getApplicationContext(), CodeBroadcastActivity.class);

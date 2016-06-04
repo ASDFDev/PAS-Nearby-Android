@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.IntDef;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
@@ -48,7 +49,7 @@ public class CodeBroadcastActivity extends AppCompatActivity implements
      * <p/>
      * To set advertising or discovery to run indefinitely, use 0L where timeouts are required.
      */
-    private static final long TIMEOUT_ADVERTISE = 900000L;
+    private static final long TIMEOUT_ADVERTISE = 0L;
 
     /**
      * Possible states for this application:
@@ -59,12 +60,10 @@ public class CodeBroadcastActivity extends AppCompatActivity implements
      * CONNECTED - found a peer.
      */
     @Retention(RetentionPolicy.CLASS)
-    @IntDef({STATE_IDLE, STATE_READY, STATE_ADVERTISING, STATE_CONNECTED})
+    @IntDef({STATE_ADVERTISING, STATE_CONNECTED})
     public @interface NearbyConnectionState {
     }
 
-    private static final int STATE_IDLE = 1023;
-    private static final int STATE_READY = 1024;
     private static final int STATE_ADVERTISING = 1025;
     private static final int STATE_CONNECTED = 1027;
 
@@ -73,11 +72,6 @@ public class CodeBroadcastActivity extends AppCompatActivity implements
      **/
     private GoogleApiClient mGoogleApiClient;
 
-    /**
-     * The current state of the application
-     **/
-    @NearbyConnectionState
-    private int mState = STATE_IDLE;
 
     /**
      * The endpoint ID of the connected peer, used for messaging
@@ -88,15 +82,12 @@ public class CodeBroadcastActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.device_broadcasting);
-        // Initialize Google API Client for Nearby Connections. Note: if you are using Google+
-        // sign-in with your project or any other API that requires Authentication you may want
-        // to use a separate Google API Client for Nearby Connections.  This API does not
-        // require the user to authenticate so it can be used even when the user does not want to
-        // sign in or sign-in has failed.
+
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(Nearby.CONNECTIONS_API)
+                .enableAutoManage(this, this)
                 .build();
 
     }
@@ -192,10 +183,8 @@ public class CodeBroadcastActivity extends AppCompatActivity implements
                 .setResultCallback(new ResultCallback<Status>() {
                     @Override
                     public void onResult(Status status) {
-                        if (status.isSuccess()) {
                             mOtherEndpointId = endpointId;
-                        } else {
-                        }
+
                     }
                 });
     }
