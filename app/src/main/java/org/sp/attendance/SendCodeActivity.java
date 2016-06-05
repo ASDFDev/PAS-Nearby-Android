@@ -64,7 +64,7 @@ public class SendCodeActivity extends Activity implements View.OnClickListener{
                                 editor.putString("ATS Code", mMessageText.getText().toString());
                                 editor.apply();
 
-                                Toast.makeText(getApplicationContext(),R.string.code_sent, Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(),R.string.title_code_success, Toast.LENGTH_LONG).show();
                                 Intent codeBroadcastActivity = new Intent(getApplicationContext(), CodeBroadcastActivity.class);
                                 startActivity(codeBroadcastActivity);
                             }

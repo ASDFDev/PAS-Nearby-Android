@@ -147,7 +147,7 @@ public class CodeManager {
         } else {
             if (status.getStatusCode() == CommonStatusCodes.NETWORK_ERROR) {
                 Toast.makeText(ctx.getApplicationContext(),
-                        R.string.error_network_none,
+                        R.string.error_network_disappeared,
                         Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(ctx.getApplicationContext(), "Unsuccessful: " +
