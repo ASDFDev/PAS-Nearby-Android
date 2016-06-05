@@ -37,10 +37,11 @@ public class ATSLoginActivity extends AppCompatActivity {
         if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
             ssid = wifiInfo.getSSID();
             if (ssid.equals("\"SPStudent\"") || ssid.equals("\"SPStaff\"") || ssid.equals("\"SPGuest\"")) {
+               //TODO: Auto sign in
             } else {
                 new AlertDialog.Builder(ATSLoginActivity.this)
                         .setTitle(R.string.title_warning)
-                        .setMessage(R.string.error_invalid_network)
+                        .setMessage(R.string.error_network_invalid)
                         .setCancelable(false)
                         .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
                             @Override
@@ -63,9 +64,22 @@ public class ATSLoginActivity extends AppCompatActivity {
                     .create()
                     .show();
         }
+        boolean firstRun = getSharedPreferences("apppref", MODE_PRIVATE).getBoolean("firstrun", true);
+        if (firstRun) {
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.disclaimer)
+                    .setMessage(R.string.first_run_message)
+                    .setCancelable(false)
+                    .setPositiveButton(R.string.got_it, null)
+                    .create()
+                    .show();
+        }
+        getSharedPreferences("apppref", MODE_PRIVATE)
+                .edit()
+                .putBoolean("firstrun", false)
+                .commit();
         checkGooglePlayServices();
     }
-
 
     private boolean checkGooglePlayServices(){
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
@@ -99,7 +113,7 @@ public class ATSLoginActivity extends AppCompatActivity {
             //Incorrect user ID format
             new AlertDialog.Builder(ATSLoginActivity.this)
                     .setTitle(R.string.title_error_login)
-                    .setMessage(R.string.error_invalid_credentials)
+                    .setMessage(R.string.error_credentials_invalid)
                     .setCancelable(false)
                     .setPositiveButton(R.string.dismiss ,new DialogInterface.OnClickListener() {
                         @Override
