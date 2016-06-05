@@ -64,20 +64,6 @@ public class ATSLoginActivity extends AppCompatActivity {
                     .create()
                     .show();
         }
-        boolean firstRun = getSharedPreferences("apppref", MODE_PRIVATE).getBoolean("firstrun", true);
-        if (firstRun) {
-            new AlertDialog.Builder(this)
-                    .setTitle(R.string.disclaimer)
-                    .setMessage(R.string.first_run_message)
-                    .setCancelable(false)
-                    .setPositiveButton(R.string.got_it, null)
-                    .create()
-                    .show();
-        }
-        getSharedPreferences("apppref", MODE_PRIVATE)
-                .edit()
-                .putBoolean("firstrun", false)
-                .commit();
         checkGooglePlayServices();
     }
 
