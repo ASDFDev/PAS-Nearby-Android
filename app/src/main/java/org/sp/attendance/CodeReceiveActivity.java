@@ -8,7 +8,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -76,6 +76,7 @@ public class CodeReceiveActivity extends AppCompatActivity implements
                 .addApi(Nearby.CONNECTIONS_API)
                 .enableAutoManage(this, this)
                 .build();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     @Override
