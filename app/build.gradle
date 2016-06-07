@@ -26,4 +26,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-nearby:9.0.2'
     compile 'org.jsoup:jsoup:1.9.1'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.16'
+    compile 'com.google.firebase:firebase-database:9.0.0'
 }
+apply plugin: 'com.google.gms.google-services'

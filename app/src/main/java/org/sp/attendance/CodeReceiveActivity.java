@@ -60,8 +60,7 @@ public class CodeReceiveActivity extends AppCompatActivity implements
 
     /** The endpoint ID of the connected peer, used for messaging **/
     private String mOtherEndpointId;
-
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
