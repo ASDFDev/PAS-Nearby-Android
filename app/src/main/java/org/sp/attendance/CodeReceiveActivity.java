@@ -62,13 +62,11 @@ public class CodeReceiveActivity extends AppCompatActivity implements
     /** The endpoint ID of the connected peer, used for messaging **/
     private String mOtherEndpointId;
 
-    private ProgressBar spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receive);
-        spinner = (ProgressBar) findViewById(R.id.progressBar);
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -123,12 +121,49 @@ public class CodeReceiveActivity extends AppCompatActivity implements
                     @Override
                     public void onResult(Status status) {
                         if (status.isSuccess()) {
-
+// Connection success!
                         } else {
+                            int statusCode = status.getStatusCode();
 
+                                if (statusCode == 8000) {
+                                    new android.app.AlertDialog.Builder(CodeReceiveActivity.this)
+                                            .setTitle("Not connected to network!")
+                                            .setMessage("You are not connected to SP WiFi. Please try again.")
+                                            .setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            }).create().show();
+                                }
+                                else if (statusCode == 13) {
+                                        new android.app.AlertDialog.Builder(CodeReceiveActivity.this)
+                                                .setTitle("Error!")
+                                                .setMessage("Please try again later.")
+                                                .setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                }).create().show();
+                                    }
+                            else if (statusCode == 8004){
+                                    new android.app.AlertDialog.Builder(CodeReceiveActivity.this)
+                                            .setTitle("Error!")
+                                            .setMessage("Apparently lecturer rejected your connection. Please try again later.")
+                                            .setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            }).create().show();
+
+                                }
+                                }
                             }
 
-                        }
+
+
                     }
                 );
     }
@@ -153,7 +188,7 @@ public class CodeReceiveActivity extends AppCompatActivity implements
                     public void onConnectionResponse(String endpointId, Status status,
                                                      byte[] bytes) {
                         if (status.isSuccess()) {
-                            Toast.makeText(CodeReceiveActivity.this, "Connected to " + endpointName + "success!",
+                            Toast.makeText(CodeReceiveActivity.this, "Connected to " + endpointName + " success!",
                                     Toast.LENGTH_SHORT).show();
 
                             mOtherEndpointId = endpointId;
