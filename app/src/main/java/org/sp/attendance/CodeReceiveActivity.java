@@ -1,6 +1,5 @@
 package org.sp.attendance;
 
-import android.app.ProgressDialog;
 import android.support.v7.app.AlertDialog;
 import android.content.DialogInterface;
 import android.net.ConnectivityManager;
@@ -8,8 +7,8 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.WindowManager;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -216,8 +215,10 @@ public class CodeReceiveActivity extends AppCompatActivity implements
     public void onEndpointFound(final String endpointId, String deviceId, String serviceId,
                                 final String endpointName) {
 
+
         // This device is discovering endpoints and has located an advertiser. Display a dialog to
         // the user asking if they want to connect, and send a connection request if they do.
+
         if (mMyListDialog == null) {
             // Configure the AlertDialog that the MyListDialog wraps
             AlertDialog.Builder builder = new AlertDialog.Builder(this)
@@ -238,6 +239,8 @@ public class CodeReceiveActivity extends AppCompatActivity implements
 
         mMyListDialog.addItem(endpointName, endpointId);
         mMyListDialog.show();
+        findViewById(R.id.text_status).setVisibility(View.GONE);
+
     }
 
     @Override

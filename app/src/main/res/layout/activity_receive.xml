@@ -3,13 +3,6 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-      <ProgressBar
-                android:id="@+id/progressBar"
-                style="?android:attr/progressBarStyleLarge"
-                android:layout_alignLeft="@+id/text_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:progressDrawable="@drawable/circular_progress_bar" />
 
      <TextView
          android:id="@+id/text_status"
