@@ -60,9 +60,9 @@ public class ConnectionManager extends AsyncTask<String, Integer, String> {
             try {
                 String userID = params[1];
                 String password = params[2];
-                if (userID.startsWith("s")) {
+                if (userID.toLowerCase().startsWith("s")) {
                     signInType = SignInType.Staff;
-                } else if (userID.startsWith("p")) {
+                } else if (userID.toLowerCase().startsWith("p")) {
                     signInType = SignInType.Student;
                 } else {
                     signInType = SignInType.Guest;
