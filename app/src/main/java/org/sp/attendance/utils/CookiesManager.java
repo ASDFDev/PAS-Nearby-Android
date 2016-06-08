@@ -9,8 +9,8 @@ import java.util.List;
 
 public class CookiesManager {
 
-    private static List<String> storedCookies;
     public static Boolean isCookiesStored;
+    private static List<String> storedCookies;
 
     public static List<String> getCookies() {
         return storedCookies;

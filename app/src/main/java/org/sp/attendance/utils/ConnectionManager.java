@@ -48,6 +48,7 @@ public class ConnectionManager extends AsyncTask<String, Integer, String> {
     private String atsLoginPostURL = "https://" + atsHost + "/psc/cs90atstd/EMPLOYEE/HRMS/c/A_STDNT_ATTENDANCE.A_ATS_STDNT_SBMIT.GBL?cmd=login&languageCd=ENG";
     private String atsCodeURL = "https://" + atsHost + "/psc/cs90atstd/EMPLOYEE/HRMS/c/A_STDNT_ATTENDANCE.A_ATS_STDNT_SBMIT.GBL";
     private String atsCodePostURL = "https://" + atsHost + "/psc/cs90atstd/EMPLOYEE/HRMS/s/WEBLIB_A_ATS.ISCRIPT1.FieldFormula.IScript_SubmitAttendance";
+
     public ConnectionManager(Context context) {
         globalContext = context;
     }
@@ -59,36 +60,33 @@ public class ConnectionManager extends AsyncTask<String, Integer, String> {
             try {
                 String userID = params[1];
                 String password = params[2];
-                if (userID.length() > 0 && password.length() > 0) {
-                    if (userID.startsWith("s")) {
-                        signInType = SignInType.Staff;
-                    } else if (userID.startsWith("p")) {
-                        signInType = SignInType.Student;
-                    } else {
-                        signInType = SignInType.Guest;
-                    }
-                    signIn(userID, password);
+                if (userID.startsWith("s")) {
+                    signInType = SignInType.Staff;
+                } else if (userID.startsWith("p")) {
+                    signInType = SignInType.Student;
                 } else {
-                    result = globalContext.getResources().getString((R.string.error_credentials_disappeared));
+                    signInType = SignInType.Guest;
                 }
+                signInState = SignInResponse.SignedIn;
+                // Bypass sign-in for now
+                // signIn(userID, password);
             } catch (Exception e) {
-                result = (globalContext.getResources().getString((R.string.error_unknown)) + e.toString() + "\n\nWeb trace: \n" + result);
+                result = (globalContext.getResources().getString((R.string.error_unknown)));
                 signInState = SignInResponse.Unknown;
             }
         } else if (connectionType.equals("CodeOnly")) {
             try {
                 String code = params[1];
-                if (code.length() > 0) {
-                    submitCode(code);
-                } else {
-                    result = globalContext.getResources().getString((R.string.error_code_disappeared));
-                }
+                result = code;
+                codeState = CodeResponse.Unknown;
+                // Bypass code submission for now
+                // submitCode(code);
             } catch (Exception e) {
-                result = (globalContext.getResources().getString((R.string.error_unknown)) + e.toString() + "\n\nWeb trace: \n" + result);
+                result = (globalContext.getResources().getString((R.string.error_unknown)));
                 codeState = CodeResponse.Unknown;
             }
         } else {
-            result = "Invalid connection type";
+            result = globalContext.getResources().getString((R.string.error_connection_invalid));
             signInState = null;
             codeState = null;
         }
@@ -112,11 +110,11 @@ public class ConnectionManager extends AsyncTask<String, Integer, String> {
             if (connectionType.equals("SignInOnly")) {
                 if (signInState.equals(SignInResponse.SignedIn)) {
                     if (signInType == SignInType.Student) {
-                        Intent codeInputIntent = new Intent(globalContext, CodeReceiveActivity.class);
-                        globalContext.startActivity(codeInputIntent);
+                        Intent codeReceiveIntent = new Intent(globalContext, CodeReceiveActivity.class);
+                        globalContext.startActivity(codeReceiveIntent);
                     } else if (signInType == SignInType.Staff) {
-                        Intent codeInputIntent = new Intent(globalContext, CodeBroadcastActivity.class);
-                        globalContext.startActivity(codeInputIntent);
+                        Intent codeBroadcastIntent = new Intent(globalContext, CodeBroadcastActivity.class);
+                        globalContext.startActivity(codeBroadcastIntent);
                     }
                     updateUI();
                 } else if (signInState.equals(SignInResponse.InvalidCredentials)) {
@@ -220,7 +218,7 @@ public class ConnectionManager extends AsyncTask<String, Integer, String> {
                                     if (codeState.equals(CodeResponse.NotSignedIn)) {
                                         Intent codeInputIntent = new Intent(globalContext, ATSLoginActivity.class);
                                         globalContext.startActivity(codeInputIntent);
-                                        ((Activity)globalContext).finish();
+                                        ((Activity) globalContext).finish();
                                     }
                                 }
                             })
@@ -393,9 +391,9 @@ public class ConnectionManager extends AsyncTask<String, Integer, String> {
                 signInState = SignInResponse.Unknown;
             }
         } else {
+            //TODO: Staff/guest sign in
             result = null;
             signInState = SignInResponse.SignedIn;
-            //TODO: Staff/guest sign in
         }
     }
 
@@ -561,15 +559,15 @@ public class ConnectionManager extends AsyncTask<String, Integer, String> {
         return result;
     }
 
-    public enum CodeResponse {
+    private enum CodeResponse {
         Submitted, InvalidCode, NotEnrolled, AlreadySubmitted, ClassEnded, NotSignedIn, OutsideSP, Unknown
     }
 
-    public enum SignInResponse {
+    private enum SignInResponse {
         SignedIn, InvalidCredentials, OutsideSP, Unknown
     }
 
-    public enum SignInType {
+    private enum SignInType {
         Staff, Student, Guest
     }
 

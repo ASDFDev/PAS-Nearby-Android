@@ -2,8 +2,8 @@ package org.sp.attendance;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -15,6 +15,8 @@ import android.widget.EditText;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+
+import org.sp.attendance.utils.ConnectionManager;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -29,6 +31,7 @@ public class ATSLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_atslogin);
         CookieHandler.setDefault(new CookieManager());
+        checkGooglePlayServices();
         IntentFilter filter = new IntentFilter(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION);
         WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo;
@@ -37,7 +40,7 @@ public class ATSLoginActivity extends AppCompatActivity {
         if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
             ssid = wifiInfo.getSSID();
             if (ssid.equals("\"SPStudent\"") || ssid.equals("\"SPStaff\"") || ssid.equals("\"SPGuest\"")) {
-               //TODO: Auto sign in
+                tryAutoSignIn();
             } else {
                 new AlertDialog.Builder(ATSLoginActivity.this)
                         .setTitle(R.string.title_warning)
@@ -64,10 +67,9 @@ public class ATSLoginActivity extends AppCompatActivity {
                     .create()
                     .show();
         }
-        checkGooglePlayServices();
     }
 
-    private boolean checkGooglePlayServices(){
+    private boolean checkGooglePlayServices() {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
         if (resultCode != ConnectionResult.SUCCESS) {
@@ -82,29 +84,26 @@ public class ATSLoginActivity extends AppCompatActivity {
         return true;
     }
 
+    public void tryAutoSignIn() {
+        SharedPreferences sharedPref = ATSLoginActivity.this.getSharedPreferences("org.sp.ats.accounts", Context.MODE_PRIVATE);
+        if (!sharedPref.getString("ats_userid", "").equals("") && !sharedPref.getString("ats_pwd", "").equals("")) {
+            new ConnectionManager(ATSLoginActivity.this).execute("SignInOnly", sharedPref.getString("ats_userid", ""), sharedPref.getString("ats_pwd", ""));
 
+        }
+    }
 
     public void signIn(View view) {
-        if (((EditText)findViewById(R.id.textEdit_userID)).getText().toString().toLowerCase().startsWith("p")) {
-            //Found student user ID
-            //TODO: Login to student ATS
-            Intent codeReceiveIntent = new Intent(this, CodeReceiveActivity.class);
-            startActivity(codeReceiveIntent);
-        } else if (((EditText)findViewById(R.id.textEdit_userID)).getText().toString().toLowerCase().startsWith("s")) {
-            //Found staff user ID
-            //TODO: Login to staff ATS
-            Intent sendCodeIntent = new Intent(this, SendCodeActivity.class);
-            startActivity(sendCodeIntent);
+        if (!((EditText) findViewById(R.id.textEdit_userID)).getText().toString().equals("") && !((EditText) findViewById(R.id.textEdit_password)).getText().toString().equals("")) {
+            new ConnectionManager(ATSLoginActivity.this).execute("SignInOnly", ((EditText) findViewById(R.id.textEdit_userID)).getText().toString(),
+                    ((EditText) findViewById(R.id.textEdit_password)).getText().toString());
         } else {
-            //Incorrect user ID format
-            new AlertDialog.Builder(ATSLoginActivity.this)
-                    .setTitle(R.string.title_error_login)
-                    .setMessage(R.string.error_credentials_invalid)
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.title_sign_in_failed)
+                    .setMessage(R.string.error_credentials_disappeared)
                     .setCancelable(false)
-                    .setPositiveButton(R.string.dismiss ,new DialogInterface.OnClickListener() {
+                    .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-
                         }
                     })
                     .create()

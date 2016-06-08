@@ -12,14 +12,14 @@ import java.util.Map;
 /**
  * Created by Daniel Quah on 21/5/2016.
  */
-public class MyListDialog {
+public class ListDialog {
 
     private AlertDialog mDialog;
     private ArrayAdapter<String> mAdapter;
     private HashMap<String, String> mItemMap;
 
-    public MyListDialog(Context context, AlertDialog.Builder builder,
-                        DialogInterface.OnClickListener listener) {
+    public ListDialog(Context context, AlertDialog.Builder builder,
+                      DialogInterface.OnClickListener listener) {
 
         mItemMap = new HashMap<String, String>();
         mAdapter = new ArrayAdapter<String>(context, android.R.layout.select_dialog_singlechoice);
@@ -32,6 +32,7 @@ public class MyListDialog {
 
     /**
      * Add an item to the Dialog's list.
+     *
      * @param title the human-readable string that should be used to display the item.
      * @param value a value associated with the item that should not be displayed.
      */
@@ -42,6 +43,7 @@ public class MyListDialog {
 
     /**
      * Remove an item from the list by its title.
+     *
      * @param title the title of the item to remove.
      */
     public void removeItemByTitle(String title) {
@@ -52,6 +54,7 @@ public class MyListDialog {
     /**
      * Remove an item from the list by its associated value.
      * Note: this is an O(n) operation.
+     *
      * @param value the value of the item to remove.
      */
     public void removeItemByValue(String value) {
@@ -68,6 +71,7 @@ public class MyListDialog {
 
     /**
      * Get the title of the item at an index,
+     *
      * @param index the index of the item in the list.
      * @return the item's title.
      */
@@ -77,6 +81,7 @@ public class MyListDialog {
 
     /**
      * Get the value of an item at an index.
+     *
      * @param index the index of the item in the list.
      * @return the item's value.
      */

@@ -15,20 +15,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:weightSum="1">
+            android:weightSum="1"
+            android:id="@+id/layout_code_input" >
 
-            <WebView
-                android:id="@+id/web_ats_lecturer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="0.00" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Please enter ATS Code: "
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:text="@string/label_prompt_code"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
@@ -41,15 +36,48 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_weight="1"
-                    android:inputType="number"
                     android:digits="1234567890"
-                    />
+                    android:inputType="number" />
 
                 <Button
                     android:id="@+id/button_send"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal|bottom"
+                    android:onClick="startBroadcast"
+                    android:text="@string/broadcast" />
+
+            </LinearLayout>
+
+            <!-- Not using fragments yet, doing cheap visibility change -->
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:id="@+id/layout_code_broadcasting" >
+
+                <pl.droidsonroids.gif.GifImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:src="@drawable/ats" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingTop="16dp"
+                    android:text="@string/action_broadcasting"
+                    android:textAlignment="center"
+                    android:textAppearance="@android:style/TextAppearance.Large" />
+
+                <Button
+                    android:id="@+id/button_stop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:onClick="stopBroadcast"
                     android:text="@string/broadcast" />
 
             </LinearLayout>
