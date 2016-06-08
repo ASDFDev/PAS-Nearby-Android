@@ -4,19 +4,17 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/scrollView"
+        android:id="@+id/layout_code_input"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal"
+        android:visibility="visible" >
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:weightSum="1"
-            android:id="@+id/layout_code_input" >
+            android:orientation="vertical" >
 
             <TextView
                 android:layout_width="match_parent"
@@ -51,39 +49,46 @@
 
             <!-- Not using fragments yet, doing cheap visibility change -->
 
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:visibility="gone"
-                android:id="@+id/layout_code_broadcasting" >
-
-                <pl.droidsonroids.gif.GifImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:src="@drawable/ats" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:paddingTop="16dp"
-                    android:text="@string/action_broadcasting"
-                    android:textAlignment="center"
-                    android:textAppearance="@android:style/TextAppearance.Large" />
-
-                <Button
-                    android:id="@+id/button_stop"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal|bottom"
-                    android:onClick="stopBroadcast"
-                    android:text="@string/broadcast" />
-
-            </LinearLayout>
-
         </LinearLayout>
 
     </ScrollView>
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/layout_code_broadcasting"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone" >
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <pl.droidsonroids.gif.GifImageView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:src="@drawable/ats" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingTop="16dp"
+            android:text="@string/action_broadcasting"
+            android:textAlignment="center"
+            android:textAppearance="@android:style/TextAppearance.Large" />
+
+        <Button
+            android:id="@+id/button_stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:onClick="stopBroadcast"
+            android:text="@string/stop_broadcast" />
+
+    </LinearLayout>
+
+</ScrollView>
 
 </LinearLayout>

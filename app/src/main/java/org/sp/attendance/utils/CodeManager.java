@@ -109,6 +109,10 @@ public class CodeManager {
         return (info != null && info.isConnectedOrConnecting());
     }
 
+    /*
+        RECEIVE CODE FROM LECTURER
+     */
+
     public static void receiveCode() {
         if (!checkNetwork()) {
             return;
@@ -192,10 +196,6 @@ public class CodeManager {
         }
     }
 
-    /*
-        RECEIVE CODE FROM LECTURER
-     */
-
     private static void connectToEndpoint(String endpointId, final String endpointName) {
         // TODO: Payload as student ID?
         byte[] payload = null;
@@ -227,6 +227,10 @@ public class CodeManager {
                     }
                 });
     }
+
+    /*
+        LECTURER CODE BROADCAST
+     */
 
     private static void broadcastCode() {
         if (!checkNetwork()) {
@@ -272,10 +276,6 @@ public class CodeManager {
             });
         }
     }
-
-    /*
-        LECTURER CODE BROADCAST
-     */
 
     private static void deliverCode() {
         Nearby.Connections.sendReliableMessage(googleApiClient, globalLecturerName, globalCode.getBytes());

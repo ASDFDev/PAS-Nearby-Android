@@ -23,6 +23,7 @@ public class CodeReceiveActivity extends AppCompatActivity {
 
     public void stopReceive(View view) {
         CodeManager.destroy();
+        finish();
     }
 
 }
