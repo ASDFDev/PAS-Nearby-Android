@@ -41,6 +41,7 @@
     <string name="error_generic">An error occurred. Please try again later. </string>
     <string name="error_nearby_rejected">The lecturer\'s device rejected your connection. </string>
     <string name="error_nearby_kekd">Could not connect to a lecturer device. </string>
+    <string name="error_firebase_verify_failed">Proxy verification failed, please try again later. </string>
     <string name="dismiss">Dismiss</string>
     <string name="service_id">org.sp.attendance</string>
     <string name="please_wait">Please wait....</string>
