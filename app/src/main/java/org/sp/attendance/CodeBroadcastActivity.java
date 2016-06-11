@@ -34,4 +34,6 @@ public class CodeBroadcastActivity extends AppCompatActivity {
         finish();
     }
 
+    // Reserved space for future database management for staff
+
 }

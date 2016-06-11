@@ -30,17 +30,17 @@ public class DatabaseManager {
 
     Context globalContext;
 
-    /*
-        Student device checks
-     */
-
-    String deviceHardwareID;
-    Boolean studentSubmitted;
-
     public DatabaseManager(Context context) {
         deviceHardwareID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         globalContext = context;
     }
+
+    /*
+        Student device operations
+     */
+
+    String deviceHardwareID;
+    Boolean studentSubmitted;
 
     public Boolean checkStudentDevice(String message, String userID) {
         String[] messageParsed = message.split("|");
@@ -84,9 +84,17 @@ public class DatabaseManager {
         }
     }
 
+    /*
+        Lecturer device operations
+     */
+
     public void openDatabaseForLecturer(String code) {
         String classCode = generateClassCode();
         reference.child(classCode).push();
+    }
+
+    public void closeDatabaseForLecturer(String classCode) {
+        //TODO: Close database on code finish
     }
 
     public String generateMessage(String code, String classCode) {
@@ -104,5 +112,10 @@ public class DatabaseManager {
         }
         return sb.toString();
     }
+
+    public void removeEntry(String deviceHardwareID) {
+        //TODO: Manually remove entry for student devices in the event of conflict
+    }
+
 
 }

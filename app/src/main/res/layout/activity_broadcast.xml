@@ -87,6 +87,8 @@
             android:onClick="stopBroadcast"
             android:text="@string/stop_broadcast" />
 
+        <!-- Reserved for database management tools for staff -->
+
     </LinearLayout>
 
 </ScrollView>
