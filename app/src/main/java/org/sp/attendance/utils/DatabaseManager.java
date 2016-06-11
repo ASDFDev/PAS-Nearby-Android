@@ -25,24 +25,21 @@ import java.util.Random;
 public class DatabaseManager {
 
 
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    final DatabaseReference reference = database.getInstance().getReference();
-
-    Context globalContext;
+    private static FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private static final DatabaseReference reference = database.getInstance().getReference();
 
     public DatabaseManager(Context context) {
         deviceHardwareID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-        globalContext = context;
     }
 
     /*
         Student device operations
      */
 
-    String deviceHardwareID;
-    Boolean studentSubmitted;
+    private static String deviceHardwareID;
+    private static Boolean studentSubmitted;
 
-    public Boolean checkStudentDevice(String message, String userID) {
+    public static Boolean checkStudentDevice(String message, String userID) {
         String[] messageParsed = message.split("|");
         final String classCode = messageParsed[0];
         String attendanceCode = messageParsed[1];
@@ -65,15 +62,6 @@ public class DatabaseManager {
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        new AlertDialog.Builder(globalContext)
-                                .setTitle(R.string.error_firebase_verify_failed)
-                                .setCancelable(false)
-                                .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                    }
-                                })
-                                .create().show();
                         studentSubmitted = true;
                     }
                 });
@@ -88,21 +76,21 @@ public class DatabaseManager {
         Lecturer device operations
      */
 
-    public void openDatabaseForLecturer(String code) {
+    public static void openDatabaseForLecturer(String code) {
         String classCode = generateClassCode();
         reference.child(classCode).push();
     }
 
-    public void closeDatabaseForLecturer(String classCode) {
+    private static void closeDatabaseForLecturer(String classCode) {
         reference.child(classCode).removeValue();
     }
 
-    public String generateMessage(String code, String classCode) {
+    public static String generateMessage(String code, String classCode) {
         String message = (classCode + "|" + code);
         return message;
     }
 
-    private String generateClassCode() {
+    private static  String generateClassCode() {
         char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
         StringBuilder sb = new StringBuilder();
         Random random = new Random();
@@ -113,7 +101,7 @@ public class DatabaseManager {
         return sb.toString();
     }
 
-    public void removeEntry(String deviceHardwareID) {
+    public static void removeEntry(String deviceHardwareID) {
         //TODO: Manually remove entry for student devices in the event of conflict
     }
 

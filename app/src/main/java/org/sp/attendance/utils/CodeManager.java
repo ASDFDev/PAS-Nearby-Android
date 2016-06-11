@@ -217,7 +217,19 @@ public class CodeManager {
                     @Override
                     public void onMessageReceived(String endpointId, byte[] payload, boolean isReliable) {
                         if (payload != null && isReliable) {
-                            new ConnectionManager(ctx).execute("CodeOnly", new String(payload));
+                            if (DatabaseManager.checkStudentDevice(new String(payload), "0000000")) {
+                                new ConnectionManager(ctx).execute("CodeOnly", new String(payload));
+                            } else {
+                                new AlertDialog.Builder(ctx)
+                                        .setTitle(R.string.error_firebase_verify_failed)
+                                        .setCancelable(false)
+                                        .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                            }
+                                        })
+                                        .create().show();
+                            }
                         }
                     }
 
