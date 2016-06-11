@@ -94,7 +94,7 @@ public class DatabaseManager {
     }
 
     public void closeDatabaseForLecturer(String classCode) {
-        //TODO: Close database on code finish
+        reference.child(classCode).removeValue();
     }
 
     public String generateMessage(String code, String classCode) {
