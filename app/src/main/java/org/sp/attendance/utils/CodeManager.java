@@ -34,6 +34,8 @@ import static android.content.Context.CONNECTIVITY_SERVICE;
  */
 public class CodeManager {
 
+    public static boolean isDestroyed;
+
     private static GoogleApiClient googleApiClient;
     private static Context ctx;
     private static Message attendanceCode;
@@ -92,6 +94,7 @@ public class CodeManager {
                 })
                 .build();
         googleApiClient.connect();
+        isDestroyed = false;
     }
 
     public static void destroy() {
@@ -100,6 +103,7 @@ public class CodeManager {
         }
         ctx = null;
         googleApiClient = null;
+        isDestroyed = true;
     }
 
     private static boolean checkNetwork() {
@@ -216,7 +220,8 @@ public class CodeManager {
                 }, new Connections.MessageListener() {
                     @Override
                     public void onMessageReceived(String endpointId, byte[] payload, boolean isReliable) {
-                        if (payload != null && isReliable) {
+                        // Swapped isReliable for !isReliable to use audio signal messages
+                        if (payload != null && !isReliable) {
                             if (DatabaseManager.checkStudentDevice(new String(payload), "0000000")) {
                                 new ConnectionManager(ctx).execute("CodeOnly", new String(payload));
                             } else {
@@ -290,7 +295,8 @@ public class CodeManager {
     }
 
     private static void deliverCode() {
-        Nearby.Connections.sendReliableMessage(googleApiClient, globalLecturerName, globalCode.getBytes());
+        // Use unreliable messages for audio signal sending only
+        Nearby.Connections.sendUnreliableMessage(googleApiClient, globalLecturerName, globalCode.getBytes());
     }
 
     private enum ManagerType {
