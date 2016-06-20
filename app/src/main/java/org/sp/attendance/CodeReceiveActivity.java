@@ -21,6 +21,16 @@ public class CodeReceiveActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
+    @Override
+    protected void onPause() {
+        CodeManager.destroy();
+    }
+
+    @Override
+    protected void onDestroy() {
+        CodeManager.destroy();
+    }
+
     public void stopReceive(View view) {
         CodeManager.destroy();
         finish();

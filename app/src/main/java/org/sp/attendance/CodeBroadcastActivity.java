@@ -22,6 +22,16 @@ public class CodeBroadcastActivity extends AppCompatActivity {
         setContentView(R.layout.activity_broadcast);
     }
 
+    @Override
+    protected void onPause() {
+        CodeManager.destroy();
+    }
+
+    @Override
+    protected void onDestroy() {
+        CodeManager.destroy();
+    }
+
     public void startBroadcast(View view) {
         String code = ((EditText)findViewById((R.id.textCode))).getText().toString();
         CodeManager.setupLecturerEnvironment(this, "Lecturer", code);

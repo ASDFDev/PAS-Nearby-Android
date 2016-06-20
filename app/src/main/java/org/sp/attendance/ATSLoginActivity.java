@@ -16,6 +16,7 @@ import android.widget.EditText;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
+import org.sp.attendance.utils.CodeManager;
 import org.sp.attendance.utils.ConnectionManager;
 
 import java.net.CookieHandler;
@@ -31,6 +32,9 @@ public class ATSLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_atslogin);
         CookieHandler.setDefault(new CookieManager());
+        if (!CodeManager.isDestroyed) {
+            CodeManager.destroy();
+        }
         checkGooglePlayServices();
         IntentFilter filter = new IntentFilter(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION);
         WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
