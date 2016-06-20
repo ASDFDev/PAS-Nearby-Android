@@ -29,8 +29,8 @@ public class CodeBroadcastActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onStop() {
+        super.onStop();
         CodeManager.destroy();
     }
 

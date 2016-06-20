@@ -1,5 +1,6 @@
 package org.sp.attendance.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.ConnectivityManager;
@@ -7,49 +8,52 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
-import android.widget.Toast;
+import android.widget.ArrayAdapter;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.nearby.Nearby;
-import com.google.android.gms.nearby.connection.AppIdentifier;
-import com.google.android.gms.nearby.connection.AppMetadata;
-import com.google.android.gms.nearby.connection.Connections;
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageListener;
+import com.google.android.gms.nearby.messages.PublishCallback;
+import com.google.android.gms.nearby.messages.PublishOptions;
+import com.google.android.gms.nearby.messages.Strategy;
+import com.google.android.gms.nearby.messages.SubscribeCallback;
+import com.google.android.gms.nearby.messages.SubscribeOptions;
 
 import org.sp.attendance.ListDialog;
 import org.sp.attendance.R;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.charset.Charset;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
 
 /**
  * Created by HexGate on 7/5/16.
  */
+
 public class CodeManager {
 
-    public static boolean isDestroyed;
-
+    // 30 minutes time out for students to submit code
+    private static final Strategy PUB_SUB_STRATEGY = new Strategy.Builder()
+            .setTtlSeconds(1800).build();
+    public static boolean isDestroyed = true;
     private static GoogleApiClient googleApiClient;
     private static Context ctx;
     private static Message attendanceCode;
     private static MessageListener messageListener;
-
     private static ListDialog endpointListDialog = null;
-
     private static ManagerType globalManagerType;
-    private static String globalCode;
+    private static Message globalCode;
     private static String globalLecturerName;
     private static String globalStudentID;
 
     public static void setupLecturerEnvironment(Context context, String lecturerName, String code) {
-        globalCode = code;
+        globalCode = new Message((code).getBytes(Charset.forName("UTF-8")));
         globalLecturerName = lecturerName;
         globalStudentID = null;
         initialize(context, ManagerType.Send);
@@ -65,8 +69,30 @@ public class CodeManager {
     private static void initialize(Context context, ManagerType managerType) {
         ctx = context;
         globalManagerType = managerType;
+        messageListener = new MessageListener() {
+            @Override
+            public void onFound(Message message) {
+                // TODO: Actual code submission
+                new AlertDialog.Builder(ctx)
+                        .setTitle("Message found")
+                        .setMessage(new String(message.getContent()))
+                        .setCancelable(false)
+                        .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ((Activity) ctx).finish();
+                            }
+                        })
+                        .create()
+                        .show();
+            }
+
+            @Override
+            public void onLost(final Message message) {
+            }
+        };
         googleApiClient = new GoogleApiClient.Builder(ctx)
-                .addApi(Nearby.CONNECTIONS_API)
+                .addApi(Nearby.MESSAGES_API)
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                     @Override
                     public void onConnected(@Nullable Bundle bundle) {
@@ -75,7 +101,6 @@ public class CodeManager {
                             receiveCode();
                         } else if (globalManagerType == ManagerType.Send) {
                             broadcastCode();
-                            deliverCode();
                         } else {
                             destroy();
                         }
@@ -86,23 +111,38 @@ public class CodeManager {
                         googleApiClient.reconnect();
                     }
                 })
-                .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
+                .enableAutoManage(((FragmentActivity) ctx), new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+                        new AlertDialog.Builder(ctx)
+                                .setTitle(R.string.title_nearby_error)
+                                .setMessage(R.string.error_nearby_oops)
+                                .setCancelable(false)
+                                .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        ((Activity) ctx).finish();
+                                    }
+                                })
+                                .create()
+                                .show();
                     }
                 })
                 .build();
-        googleApiClient.connect();
         isDestroyed = false;
     }
 
     public static void destroy() {
-        if (googleApiClient != null) {
-            googleApiClient.disconnect();
-        }
         ctx = null;
-        googleApiClient = null;
+        if (globalManagerType == ManagerType.Receive) {
+            stopReceiveCode();
+        } else if (globalManagerType == ManagerType.Send) {
+            stopBroadcastCode();
+        }
+        globalCode = null;
+        globalStudentID = null;
+        globalLecturerName = null;
+        globalManagerType = null;
         isDestroyed = true;
     }
 
@@ -117,132 +157,56 @@ public class CodeManager {
         RECEIVE CODE FROM LECTURER
      */
 
-    public static void receiveCode() {
+    private static void receiveCode() {
         if (!checkNetwork()) {
             return;
         }
-        if (!googleApiClient.isConnected()) {
-            if (!googleApiClient.isConnecting()) {
-                googleApiClient.connect();
-            }
-        } else {
-            String serviceId = ctx.getString(R.string.service_id);
-            Nearby.Connections.startDiscovery(googleApiClient, serviceId, 0L, new Connections.EndpointDiscoveryListener() {
-                @Override
-                public void onEndpointFound(final String endpointId, String deviceId, String serviceId, final String endpointName) {
-                    if (endpointListDialog == null) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(ctx)
-                                .setTitle(R.string.lecturer_broadcasting);
-                        endpointListDialog = new ListDialog(ctx, builder, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String selectedEndpointName = endpointListDialog.getItemKey(which);
-                                String selectedEndpointId = endpointListDialog.getItemValue(which);
-                                //TODO: Implement connection to endpoint
-                                connectToEndpoint(selectedEndpointId, selectedEndpointName);
-                                endpointListDialog.dismiss();
-                            }
-                        });
-                        endpointListDialog.addItem(endpointName, endpointId);
-                        endpointListDialog.show();
-                    }
-                }
-
-                @Override
-                public void onEndpointLost(String endpointId) {
-                    if (endpointListDialog != null) {
-                        endpointListDialog.removeItemByValue(endpointId);
-                    }
-                }
-            })
-                    .setResultCallback(new ResultCallback<Status>() {
-
-                        @Override
-                        public void onResult(Status status) {
-                            int statusCode = status.getStatusCode();
-                            if (status.isSuccess()) {
-                                // Connection success
-                            } else {
-                                if (statusCode == 8000) {
-                                    new android.app.AlertDialog.Builder(ctx)
-                                            .setTitle(R.string.title_network)
-                                            .setMessage(R.string.error_network_disappeared)
-                                            .setNegativeButton(R.string.dismiss, new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.dismiss();
-                                                }
-                                            }).create().show();
-                                } else if (statusCode == 13) {
-                                    new android.app.AlertDialog.Builder(ctx)
-                                            .setTitle(R.string.title_nearby_error)
-                                            .setMessage(R.string.error_generic)
-                                            .setNegativeButton(R.string.dismiss, new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.dismiss();
-                                                }
-                                            }).create().show();
-                                } else if (statusCode == 8004) {
-                                    new android.app.AlertDialog.Builder(ctx)
-                                            .setTitle(R.string.title_nearby_error)
-                                            .setMessage(R.string.error_nearby_rejected)
-                                            .setNegativeButton(R.string.dismiss, new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.dismiss();
-                                                }
-                                            }).create().show();
-                                }
-                            }
-                        }
-                    });
-        }
-    }
-
-    private static void connectToEndpoint(String endpointId, final String endpointName) {
-        // TODO: Payload as student ID?
-        byte[] payload = null;
-        Nearby.Connections.sendConnectionRequest(googleApiClient, endpointName, endpointId, payload,
-                new Connections.ConnectionResponseCallback() {
+        SubscribeOptions options = new SubscribeOptions.Builder()
+                .setStrategy(PUB_SUB_STRATEGY)
+                .setCallback(new SubscribeCallback() {
                     @Override
-                    public void onConnectionResponse(String endpointId, Status status,
-                                                     byte[] bytes) {
+                    public void onExpired() {
+                        super.onExpired();
+                        new AlertDialog.Builder(ctx)
+                                .setTitle(R.string.title_nearby_error)
+                                .setMessage(R.string.error_nearby_timed_out)
+                                .setCancelable(false)
+                                .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        ((Activity) ctx).finish();
+                                    }
+                                })
+                                .create()
+                                .show();
+                    }
+                }).build();
+
+        Nearby.Messages.subscribe(googleApiClient, messageListener, options)
+                .setResultCallback(new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(@NonNull Status status) {
                         if (status.isSuccess()) {
-                            Toast.makeText(ctx, "Connection to " + endpointName + " success!",
-                                    Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(ctx, "Connection to " + endpointName + " failed! Retrying...",
-                                    Toast.LENGTH_LONG).show();
-                            receiveCode();
+                            new AlertDialog.Builder(ctx)
+                                    .setTitle(R.string.title_nearby_error)
+                                    .setMessage(R.string.error_nearby_kekd)
+                                    .setCancelable(false)
+                                    .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            ((Activity) ctx).finish();
+                                        }
+                                    })
+                                    .create()
+                                    .show();
                         }
-                    }
-                }, new Connections.MessageListener() {
-                    @Override
-                    public void onMessageReceived(String endpointId, byte[] payload, boolean isReliable) {
-                        // Swapped isReliable for !isReliable to use audio signal messages
-                        if (payload != null && !isReliable) {
-                            if (DatabaseManager.checkStudentDevice(new String(payload), "0000000")) {
-                                new ConnectionManager(ctx).execute("CodeOnly", new String(payload));
-                            } else {
-                                new AlertDialog.Builder(ctx)
-                                        .setTitle(R.string.error_firebase_verify_failed)
-                                        .setCancelable(false)
-                                        .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                            }
-                                        })
-                                        .create().show();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onDisconnected(String s) {
-                        // Disconnected
                     }
                 });
+    }
+
+    public static void stopReceiveCode() {
+        Nearby.Messages.unsubscribe(googleApiClient, messageListener);
     }
 
     /*
@@ -253,50 +217,51 @@ public class CodeManager {
         if (!checkNetwork()) {
             return;
         }
-        if (!googleApiClient.isConnected()) {
-            if (!googleApiClient.isConnecting()) {
-                googleApiClient.connect();
-            }
-        } else {
-            List<AppIdentifier> appIdentifierList = new ArrayList<>();
-            appIdentifierList.add(new AppIdentifier(ctx.getPackageName()));
-            AppMetadata appMetadata = new AppMetadata(appIdentifierList);
-            Nearby.Connections.startAdvertising(googleApiClient, globalLecturerName, appMetadata, 0L,
-                    new Connections.ConnectionRequestListener() {
-                        @Override
-                        public void onConnectionRequest(final String endpointId, String deviceId, String endpointName, byte[] payload) {
-                            Nearby.Connections.acceptConnectionRequest(googleApiClient, endpointId,
-                                    payload, new Connections.MessageListener() {
+        PublishOptions options = new PublishOptions.Builder()
+                .setStrategy(PUB_SUB_STRATEGY)
+                .setCallback(new PublishCallback() {
+                    @Override
+                    public void onExpired() {
+                        super.onExpired();
+                        new AlertDialog.Builder(ctx)
+                                .setTitle(R.string.title_nearby_error)
+                                .setMessage(R.string.error_nearby_timed_out)
+                                .setCancelable(false)
+                                .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        ((Activity) ctx).finish();
+                                    }
+                                })
+                                .create()
+                                .show();
+                    }
+                }).build();
+        Nearby.Messages.publish(googleApiClient, globalCode, options)
+                .setResultCallback(new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(@NonNull Status status) {
+                        if (status.isSuccess()) {
+                        } else {
+                            new AlertDialog.Builder(ctx)
+                                    .setTitle(R.string.title_nearby_error)
+                                    .setMessage(R.string.error_nearby_pwn)
+                                    .setCancelable(false)
+                                    .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
                                         @Override
-                                        public void onMessageReceived(String s, byte[] bytes, boolean b) {
-                                        }
-
-                                        @Override
-                                        public void onDisconnected(String s) {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            ((Activity) ctx).finish();
                                         }
                                     })
-                                    .setResultCallback(new ResultCallback<Status>() {
-                                        @Override
-                                        public void onResult(Status status) {
-                                        }
-                                    });
+                                    .create()
+                                    .show();
                         }
-                    }).setResultCallback(new ResultCallback<Connections.StartAdvertisingResult>() {
-                @Override
-                public void onResult(Connections.StartAdvertisingResult result) {
-                    if (result.getStatus().isSuccess()) {
-
-                    } else {
-
                     }
-                }
-            });
-        }
+                });
     }
 
-    private static void deliverCode() {
-        // Use unreliable messages for audio signal sending only
-        Nearby.Connections.sendUnreliableMessage(googleApiClient, globalLecturerName, globalCode.getBytes());
+    public static void stopBroadcastCode() {
+        Nearby.Messages.unpublish(googleApiClient, globalCode);
     }
 
     private enum ManagerType {

@@ -39,8 +39,10 @@
     <string name="error_already_submitted">You\'ve already submitted your attendance for this class. </string>
     <string name="error_timed_out">Session timed out. </string>
     <string name="error_generic">An error occurred. Please try again later. </string>
-    <string name="error_nearby_rejected">The lecturer\'s device rejected your connection. </string>
+    <string name="error_nearby_pwn">Could not broadcast code. </string>
+    <string name="error_nearby_timed_out">Request timed out, please try again later. </string>
     <string name="error_nearby_kekd">Could not connect to a lecturer device. </string>
+    <string name="error_nearby_oops">Could not connect to the presence checking service. </string>
     <string name="error_firebase_verify_failed">Proxy verification failed, please try again later. </string>
     <string name="dismiss">Dismiss</string>
     <string name="service_id">org.sp.attendance</string>
