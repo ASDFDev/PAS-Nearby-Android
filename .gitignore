@@ -48,3 +48,5 @@ build/
 gradlew*
 
 gradle/
+
+gradle.properties
