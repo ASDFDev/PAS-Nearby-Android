@@ -23,11 +23,13 @@ public class CodeReceiveActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
+        super.onPause();
         CodeManager.destroy();
     }
 
     @Override
     protected void onDestroy() {
+        super.onDestroy();
         CodeManager.destroy();
     }
 
