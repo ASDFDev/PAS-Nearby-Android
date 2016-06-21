@@ -6,11 +6,11 @@ import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.provider.Settings.Secure;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
-import android.widget.ArrayAdapter;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -24,11 +24,14 @@ import com.google.android.gms.nearby.messages.PublishOptions;
 import com.google.android.gms.nearby.messages.Strategy;
 import com.google.android.gms.nearby.messages.SubscribeCallback;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.sp.attendance.ListDialog;
 import org.sp.attendance.R;
 
 import java.nio.charset.Charset;
+
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
 
@@ -51,6 +54,7 @@ public class CodeManager {
     private static Message globalCode;
     private static String globalLecturerName;
     private static String globalStudentID;
+    private String android_id = Secure.getString(ctx.getContentResolver(), Secure.ANDROID_ID);
 
     public static void setupLecturerEnvironment(Context context, String lecturerName, String code) {
         globalCode = new Message((code).getBytes(Charset.forName("UTF-8")));
@@ -74,8 +78,8 @@ public class CodeManager {
             public void onFound(Message message) {
                 // TODO: Actual code submission
                 new AlertDialog.Builder(ctx)
-                        .setTitle("Message found")
-                        .setMessage(new String(message.getContent()))
+                        .setTitle("Lecturers found")
+                        .setMessage("Mr. Tan Ah Beng")
                         .setCancelable(false)
                         .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
                             @Override
@@ -85,8 +89,10 @@ public class CodeManager {
                         })
                         .create()
                         .show();
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference();
+                myRef.setValue(message.getContent());
             }
-
             @Override
             public void onLost(final Message message) {
             }
