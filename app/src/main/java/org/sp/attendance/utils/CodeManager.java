@@ -100,17 +100,17 @@ public class CodeManager {
         googleApiClient = new GoogleApiClient.Builder(ctx)
                 .addApi(Nearby.MESSAGES_API)
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-                    @Override
-                    public void onConnected(@Nullable Bundle bundle) {
-                        if (globalManagerType == ManagerType.Receive) {
-                            // TODO: Implement student ID for sending/receiving
-                            receiveCode();
-                        } else if (globalManagerType == ManagerType.Send) {
-                            broadcastCode();
-                        } else {
-                            destroy();
-                        }
+                @Override
+                public void onConnected(@Nullable Bundle bundle) {
+                    if (globalManagerType == ManagerType.Receive) {
+                        // TODO: Implement student ID for sending/receiving
+                        receiveCode();
+                    } else if (globalManagerType == ManagerType.Send) {
+                        broadcastCode();
+                    } else {
+                        destroy();
                     }
+                }
 
                     @Override
                     public void onConnectionSuspended(int i) {

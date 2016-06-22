@@ -9,6 +9,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import org.sp.attendance.utils.CodeManager;
 import org.sp.attendance.utils.DatabaseManager;
@@ -38,6 +39,10 @@ public class CodeBroadcastActivity extends AppCompatActivity{
 
     public void startBroadcast(View view) {
         String code = ((EditText) findViewById((R.id.textCode))).getText().toString();
+        if (code.matches("")){
+            Toast.makeText(this, "You did not enter a code", Toast.LENGTH_SHORT).show();
+            return;
+        }
         CodeManager.setupLecturerEnvironment(this, "Lecturer", code);
         DatabaseManager.openDatabaseForLecturer(code);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
