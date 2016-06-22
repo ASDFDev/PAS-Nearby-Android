@@ -102,7 +102,7 @@ public class DatabaseManager {
     }
 
     public static void removeEntry(String deviceHardwareID) {
-        //TODO: Manually remove entry for student devices in the event of conflict
+       reference.child(deviceHardwareID).removeValue();
     }
 
 
