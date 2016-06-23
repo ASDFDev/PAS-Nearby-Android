@@ -59,6 +59,7 @@
     <string name="stop_broadcast">Stop Broadcast</string>
     <string name="broadcast">Broadcast</string>
     <string name="generated_code">Enter generated code</string>
-    <string name="continue_confirmation">Would you like to continue?</string>
+    <string name="continue_confirmation">You have entered \'</string>
+    <string name="continue_confirmation2">\' as the ATS code. Begin broadcast? </string>
 
 </resources>
