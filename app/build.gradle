@@ -12,12 +12,13 @@ android {
         versionName "0.1"
     }
     buildTypes {
+        debug {
+            resValue 'string', 'GoogleAPIKey', AppKey
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-        buildTypes.each {
-            it.resValue 'string', 'GoogleAPIKey', AppKey
+            resValue 'string', 'GoogleAPIKey', AppKey
         }
     }
 }
