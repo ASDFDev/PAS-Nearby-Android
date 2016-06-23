@@ -40,29 +40,39 @@ public class CodeBroadcastActivity extends AppCompatActivity{
     public void startBroadcast(View view) {
         String code = ((EditText) findViewById((R.id.textCode))).getText().toString();
         if (code.matches("")){
-            Toast.makeText(this, "You did not enter a code", Toast.LENGTH_SHORT).show();
+            new AlertDialog.Builder(CodeBroadcastActivity.this)
+                    .setTitle(R.string.title_warning)
+                    .setMessage(R.string.error_code_disappeared)
+                    .setCancelable(false)
+                    .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .create()
+                    .show();
             return;
         }
         CodeManager.setupLecturerEnvironment(this, "Lecturer", code);
         DatabaseManager.openDatabaseForLecturer(code);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setTitle("Please confirm");
-        alertDialogBuilder.setMessage("ATS code is " + code + ". Would you like to continue?")
+        new AlertDialog.Builder(CodeBroadcastActivity.this)
+                .setTitle(R.string.title_warning)
+                .setMessage(getResources().getString(R.string.continue_confirmation) + code + getResources().getString(R.string.continue_confirmation2))
                 .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         (findViewById(R.id.layout_code_input)).setVisibility(ScrollView.GONE);
                         (findViewById(R.id.layout_code_broadcasting)).setVisibility(ScrollView.VISIBLE);
                     }
                 })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
-                });
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
+                })
+                .create()
+                .show();
     }
 
         public void stopBroadcast(View view) {
