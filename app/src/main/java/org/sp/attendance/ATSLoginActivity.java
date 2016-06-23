@@ -16,8 +16,8 @@ import android.widget.EditText;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
+import org.sp.attendance.utils.AccountsManager;
 import org.sp.attendance.utils.CodeManager;
-import org.sp.attendance.utils.ConnectionManager;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -91,14 +91,14 @@ public class ATSLoginActivity extends AppCompatActivity {
     public void tryAutoSignIn() {
         SharedPreferences sharedPref = ATSLoginActivity.this.getSharedPreferences("org.sp.ats.accounts", Context.MODE_PRIVATE);
         if (!sharedPref.getString("ats_userid", "").equals("") && !sharedPref.getString("ats_pwd", "").equals("")) {
-            new ConnectionManager(ATSLoginActivity.this).execute("SignInOnly", sharedPref.getString("ats_userid", ""), sharedPref.getString("ats_pwd", ""));
+            new AccountsManager(ATSLoginActivity.this).execute("SignInOnly", sharedPref.getString("ats_userid", ""), sharedPref.getString("ats_pwd", ""));
 
         }
     }
 
     public void signIn(View view) {
         if (!((EditText) findViewById(R.id.textEdit_userID)).getText().toString().equals("") && !((EditText) findViewById(R.id.textEdit_password)).getText().toString().equals("")) {
-            new ConnectionManager(ATSLoginActivity.this).execute("SignInOnly", ((EditText) findViewById(R.id.textEdit_userID)).getText().toString(),
+            new AccountsManager(ATSLoginActivity.this).execute("SignInOnly", ((EditText) findViewById(R.id.textEdit_userID)).getText().toString(),
                     ((EditText) findViewById(R.id.textEdit_password)).getText().toString());
         } else {
             new AlertDialog.Builder(this)

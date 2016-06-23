@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 
+import org.sp.attendance.utils.AccountsManager;
 import org.sp.attendance.utils.CodeManager;
 
 /**
@@ -17,7 +18,7 @@ public class CodeReceiveActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receive);
         // TODO: Implement student ID for sending/receiving
-        CodeManager.setupStudentEnvironment(this, "0000000");
+        CodeManager.setupStudentEnvironment(this, AccountsManager.loggedInUserID);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 

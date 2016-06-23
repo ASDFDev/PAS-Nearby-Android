@@ -24,14 +24,11 @@ import com.google.android.gms.nearby.messages.PublishOptions;
 import com.google.android.gms.nearby.messages.Strategy;
 import com.google.android.gms.nearby.messages.SubscribeCallback;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import org.sp.attendance.ListDialog;
 import org.sp.attendance.R;
 
 import java.nio.charset.Charset;
-
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
 
@@ -52,47 +49,33 @@ public class CodeManager {
     private static ListDialog endpointListDialog = null;
     private static ManagerType globalManagerType;
     private static Message globalCode;
-    private static String globalLecturerName;
     private static String globalStudentID;
-    private String android_id = Secure.getString(ctx.getContentResolver(), Secure.ANDROID_ID);
+    private static String deviceID;
 
-    public static void setupLecturerEnvironment(Context context, String lecturerName, String code) {
-        globalCode = new Message((code).getBytes(Charset.forName("UTF-8")));
-        globalLecturerName = lecturerName;
+    public static void setupLecturerEnvironment(Context context, String code) {
+        globalCode = new Message((DatabaseManager.generateMessage(code)).getBytes(Charset.forName("UTF-8")));
         globalStudentID = null;
+        DatabaseManager.openDatabaseForLecturer();
         initialize(context, ManagerType.Send);
     }
 
     public static void setupStudentEnvironment(Context context, String studentID) {
         globalCode = null;
-        globalLecturerName = null;
         globalStudentID = studentID;
         initialize(context, ManagerType.Receive);
     }
 
     private static void initialize(Context context, ManagerType managerType) {
         ctx = context;
+        DatabaseManager.initialize(ctx);
+        deviceID = Secure.getString(ctx.getContentResolver(), Secure.ANDROID_ID);
         globalManagerType = managerType;
         messageListener = new MessageListener() {
             @Override
             public void onFound(Message message) {
-                // TODO: Actual code submission
-                new AlertDialog.Builder(ctx)
-                        .setTitle("Lecturers found")
-                        .setMessage("Mr. Tan Ah Beng")
-                        .setCancelable(false)
-                        .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                ((Activity) ctx).finish();
-                            }
-                        })
-                        .create()
-                        .show();
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference();
-                myRef.setValue(message.getContent());
+                DatabaseManager.submitStudentDevice(new String(message.getContent(), Charset.forName("UTF-8")), deviceID);
             }
+
             @Override
             public void onLost(final Message message) {
             }
@@ -100,17 +83,17 @@ public class CodeManager {
         googleApiClient = new GoogleApiClient.Builder(ctx)
                 .addApi(Nearby.MESSAGES_API)
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-                @Override
-                public void onConnected(@Nullable Bundle bundle) {
-                    if (globalManagerType == ManagerType.Receive) {
-                        // TODO: Implement student ID for sending/receiving
-                        receiveCode();
-                    } else if (globalManagerType == ManagerType.Send) {
-                        broadcastCode();
-                    } else {
-                        destroy();
+                    @Override
+                    public void onConnected(@Nullable Bundle bundle) {
+                        if (globalManagerType == ManagerType.Receive) {
+                            // TODO: Implement student ID for sending/receiving
+                            receiveCode();
+                        } else if (globalManagerType == ManagerType.Send) {
+                            broadcastCode();
+                        } else {
+                            destroy();
+                        }
                     }
-                }
 
                     @Override
                     public void onConnectionSuspended(int i) {
@@ -147,7 +130,6 @@ public class CodeManager {
         }
         globalCode = null;
         globalStudentID = null;
-        globalLecturerName = null;
         globalManagerType = null;
         isDestroyed = true;
     }

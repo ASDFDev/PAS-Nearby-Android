@@ -38,7 +38,7 @@ public class CodeBroadcastActivity extends AppCompatActivity{
     }
 
     public void startBroadcast(View view) {
-        String code = ((EditText) findViewById((R.id.textCode))).getText().toString();
+        final String code = ((EditText) findViewById((R.id.textCode))).getText().toString();
         if (code.matches("")){
             new AlertDialog.Builder(CodeBroadcastActivity.this)
                     .setTitle(R.string.title_warning)
@@ -53,9 +53,6 @@ public class CodeBroadcastActivity extends AppCompatActivity{
                     .show();
             return;
         }
-        CodeManager.setupLecturerEnvironment(this, "Lecturer", code);
-        DatabaseManager.openDatabaseForLecturer(code);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         new AlertDialog.Builder(CodeBroadcastActivity.this)
                 .setTitle(R.string.title_warning)
                 .setMessage(getResources().getString(R.string.continue_confirmation) + code + getResources().getString(R.string.continue_confirmation2))
@@ -64,6 +61,8 @@ public class CodeBroadcastActivity extends AppCompatActivity{
                     public void onClick(DialogInterface dialog, int id) {
                         (findViewById(R.id.layout_code_input)).setVisibility(ScrollView.GONE);
                         (findViewById(R.id.layout_code_broadcasting)).setVisibility(ScrollView.VISIBLE);
+                        CodeManager.setupLecturerEnvironment(CodeBroadcastActivity.this, code);
+                        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                     }
                 })
                 .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -77,6 +76,7 @@ public class CodeBroadcastActivity extends AppCompatActivity{
 
         public void stopBroadcast(View view) {
         CodeManager.destroy();
+        DatabaseManager.closeDatabaseForLecturer();
         (findViewById(R.id.layout_code_input)).setVisibility(ScrollView.VISIBLE);
         (findViewById(R.id.layout_code_broadcasting)).setVisibility(ScrollView.GONE);
     }
