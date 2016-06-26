@@ -3,6 +3,8 @@ package org.sp.attendance.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentSender;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -19,6 +22,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageListener;
+import com.google.android.gms.nearby.messages.NearbyMessagesStatusCodes;
 import com.google.android.gms.nearby.messages.PublishCallback;
 import com.google.android.gms.nearby.messages.PublishOptions;
 import com.google.android.gms.nearby.messages.Strategy;
@@ -51,6 +55,8 @@ public class CodeManager {
     private static Message globalCode;
     private static String globalStudentID;
     private static String deviceID;
+    private static boolean resolvingPermissionError = false;
+    public static final int GOOGLE_PLAY_ERROR = 101;
 
     public static void setupLecturerEnvironment(Context context, String code) {
         globalCode = new Message((DatabaseManager.generateMessage(code)).getBytes(Charset.forName("UTF-8")));
@@ -176,18 +182,7 @@ public class CodeManager {
                     public void onResult(@NonNull Status status) {
                         if (status.isSuccess()) {
                         } else {
-                            new AlertDialog.Builder(ctx)
-                                    .setTitle(R.string.title_nearby_error)
-                                    .setMessage(R.string.error_nearby_kekd)
-                                    .setCancelable(false)
-                                    .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            ((Activity) ctx).finish();
-                                        }
-                                    })
-                                    .create()
-                                    .show();
+                            handleUnsuccessfulNearbyResult(status);
                         }
                     }
                 });
@@ -230,19 +225,9 @@ public class CodeManager {
                     @Override
                     public void onResult(@NonNull Status status) {
                         if (status.isSuccess()) {
+
                         } else {
-                            new AlertDialog.Builder(ctx)
-                                    .setTitle(R.string.title_nearby_error)
-                                    .setMessage(R.string.error_nearby_pwn)
-                                    .setCancelable(false)
-                                    .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            ((Activity) ctx).finish();
-                                        }
-                                    })
-                                    .create()
-                                    .show();
+                            handleUnsuccessfulNearbyResult(status);
                         }
                     }
                 });
@@ -254,6 +239,61 @@ public class CodeManager {
 
     private enum ManagerType {
         Receive, Send, Unknown
+    }
+
+    private static void handleUnsuccessfulNearbyResult(Status status) {
+        if (status.getStatusCode() == NearbyMessagesStatusCodes.APP_NOT_OPTED_IN) {
+            if (!resolvingPermissionError) {
+                try {
+                    resolvingPermissionError = true;
+                    status.startResolutionForResult((Activity)ctx, GOOGLE_PLAY_ERROR);
+
+                } catch (IntentSender.SendIntentException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            if (status.getStatusCode() == ConnectionResult.NETWORK_ERROR) {
+                new AlertDialog.Builder(ctx)
+                        .setTitle("Error")
+                        .setMessage("No network found")
+                        .setCancelable(false)
+                        .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ((Activity) ctx).finish();
+                            }
+                        })
+                        .create()
+                        .show();
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == GOOGLE_PLAY_ERROR) {
+            resolvingPermissionError = false;
+            if (resultCode == Activity.RESULT_OK) {
+               broadcastCode();
+               receiveCode();
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                new AlertDialog.Builder(ctx)
+                        .setTitle("Error")
+                        .setMessage("Permission is needed for this app to function")
+                        .setCancelable(false)
+                        .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ((Activity) ctx).finish();
+                            }
+                        })
+                        .create()
+                        .show();
+            } else {
+            }
+        }
     }
 
 }
