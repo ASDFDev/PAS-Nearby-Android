@@ -32,11 +32,11 @@
         <activity
             android:name="org.sp.attendance.CodeBroadcastActivity"
             android:label="@string/title_broadcast"
-            android:noHistory="true"></activity>
+            ></activity>
         <activity
             android:name="org.sp.attendance.CodeReceiveActivity"
             android:label="@string/title_receive"
-            android:noHistory="true"></activity>
+            ></activity>
 
         <meta-data
             android:name="com.google.android.gms.nearby.connection.SERVICE_ID"

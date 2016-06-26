@@ -22,8 +22,10 @@
     <string name="title_internal">Internal error</string>
     <string name="title_nearby_error">Presence check error</string>
     <string name="title_network">Network error</string>
+    <string name="title_permission">Permission required</string>
     <string name="error_invalid">The user ID or password is incorrect</string>
     <string name="error_network_invalid">You must be connected to the SPStudent Wi-Fi to be able to sign in to ATS. </string>
+    <string name="error_network_disappeared_generic">No network detected. </string>
     <string name="error_network_disappeared">No Wi-Fi detected, you will not be able to sign in to ATS. </string>
     <string name="error_network_oops">Could not connect to ATS. \n\nStack trace: </string>
     <string name="error_outside_sp">The ATS cannot be used outside SP. </string>
@@ -39,10 +41,13 @@
     <string name="error_already_submitted">You\'ve already submitted your attendance for this class. </string>
     <string name="error_timed_out">Session timed out. </string>
     <string name="error_generic">An error occurred. Please try again later. </string>
+    <string name="error_nearby_api">One or more services could not be started. </string>
     <string name="error_nearby_pwn">Could not broadcast code. </string>
     <string name="error_nearby_timed_out">Request timed out, please try again later. </string>
     <string name="error_nearby_kekd">Could not connect to a lecturer device. </string>
     <string name="error_nearby_oops">Could not connect to the presence checking service. </string>
+    <string name="error_nearby_access_denied">Permissions are required to take your attendance. </string>
+    <string name="error_nearby_access_still_denied">Attendance taking will not work without Nearby permissions. The app will now close. </string>
     <string name="error_firebase_verify_failed">Proxy verification failed, please try again later. </string>
     <string name="dismiss">Dismiss</string>
     <string name="service_id">org.sp.attendance</string>
@@ -56,6 +61,7 @@
     <string name="ats_code">ATS Code is: </string>
     <string name="no">No</string>
     <string name="yes">yes</string>
+    <string name="continue_prompt">Continue</string>
     <string name="stop_broadcast">Stop Broadcast</string>
     <string name="broadcast">Broadcast</string>
     <string name="generated_code">Enter generated code</string>

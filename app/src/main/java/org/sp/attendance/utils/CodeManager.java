@@ -1,9 +1,9 @@
 package org.sp.attendance.utils;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.IntentSender;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -13,7 +13,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -46,6 +45,7 @@ public class CodeManager {
     private static final Strategy PUB_SUB_STRATEGY = new Strategy.Builder()
             .setTtlSeconds(1800).build();
     public static boolean isDestroyed = true;
+    public static boolean resolvingPermissionError = false;
     private static GoogleApiClient googleApiClient;
     private static Context ctx;
     private static Message attendanceCode;
@@ -55,8 +55,6 @@ public class CodeManager {
     private static Message globalCode;
     private static String globalStudentID;
     private static String deviceID;
-    private static boolean resolvingPermissionError = false;
-    public static final int GOOGLE_PLAY_ERROR = 101;
 
     public static void setupLecturerEnvironment(Context context, String code) {
         globalCode = new Message((DatabaseManager.generateMessage(code)).getBytes(Charset.forName("UTF-8")));
@@ -84,6 +82,7 @@ public class CodeManager {
 
             @Override
             public void onLost(final Message message) {
+
             }
         };
         googleApiClient = new GoogleApiClient.Builder(ctx)
@@ -92,7 +91,6 @@ public class CodeManager {
                     @Override
                     public void onConnected(@Nullable Bundle bundle) {
                         if (globalManagerType == ManagerType.Receive) {
-                            // TODO: Implement student ID for sending/receiving
                             receiveCode();
                         } else if (globalManagerType == ManagerType.Send) {
                             broadcastCode();
@@ -111,7 +109,7 @@ public class CodeManager {
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
                         new AlertDialog.Builder(ctx)
                                 .setTitle(R.string.title_nearby_error)
-                                .setMessage(R.string.error_nearby_oops)
+                                .setMessage(R.string.error_nearby_api)
                                 .setCancelable(false)
                                 .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
                                     @Override
@@ -128,16 +126,18 @@ public class CodeManager {
     }
 
     public static void destroy() {
-        ctx = null;
-        if (globalManagerType == ManagerType.Receive) {
-            stopReceiveCode();
-        } else if (globalManagerType == ManagerType.Send) {
-            stopBroadcastCode();
+        if (resolvingPermissionError = false) {
+            ctx = null;
+            if (globalManagerType == ManagerType.Receive) {
+                stopReceiveCode();
+            } else if (globalManagerType == ManagerType.Send) {
+                stopBroadcastCode();
+            }
+            globalCode = null;
+            globalStudentID = null;
+            globalManagerType = null;
+            isDestroyed = true;
         }
-        globalCode = null;
-        globalStudentID = null;
-        globalManagerType = null;
-        isDestroyed = true;
     }
 
     private static boolean checkNetwork() {
@@ -175,7 +175,6 @@ public class CodeManager {
                                 .show();
                     }
                 }).build();
-
         Nearby.Messages.subscribe(googleApiClient, messageListener, options)
                 .setResultCallback(new ResultCallback<Status>() {
                     @Override
@@ -237,17 +236,12 @@ public class CodeManager {
         Nearby.Messages.unpublish(googleApiClient, globalCode);
     }
 
-    private enum ManagerType {
-        Receive, Send, Unknown
-    }
-
     private static void handleUnsuccessfulNearbyResult(Status status) {
         if (status.getStatusCode() == NearbyMessagesStatusCodes.APP_NOT_OPTED_IN) {
             if (!resolvingPermissionError) {
                 try {
                     resolvingPermissionError = true;
-                    status.startResolutionForResult((Activity)ctx, GOOGLE_PLAY_ERROR);
-
+                    status.startResolutionForResult((Activity) ctx, 101);
                 } catch (IntentSender.SendIntentException e) {
                     e.printStackTrace();
                 }
@@ -255,8 +249,8 @@ public class CodeManager {
         } else {
             if (status.getStatusCode() == ConnectionResult.NETWORK_ERROR) {
                 new AlertDialog.Builder(ctx)
-                        .setTitle("Error")
-                        .setMessage("No network found")
+                        .setTitle(R.string.title_nearby_error)
+                        .setMessage(R.string.error_network_disappeared_generic)
                         .setCancelable(false)
                         .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
                             @Override
@@ -270,30 +264,8 @@ public class CodeManager {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == GOOGLE_PLAY_ERROR) {
-            resolvingPermissionError = false;
-            if (resultCode == Activity.RESULT_OK) {
-               broadcastCode();
-               receiveCode();
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                new AlertDialog.Builder(ctx)
-                        .setTitle("Error")
-                        .setMessage("Permission is needed for this app to function")
-                        .setCancelable(false)
-                        .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                ((Activity) ctx).finish();
-                            }
-                        })
-                        .create()
-                        .show();
-            } else {
-            }
-        }
+    private enum ManagerType {
+        Receive, Send, Unknown
     }
 
 }
