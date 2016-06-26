@@ -11,6 +11,7 @@ import android.view.WindowManager;
 
 import org.sp.attendance.utils.AccountsManager;
 import org.sp.attendance.utils.CodeManager;
+import org.sp.attendance.utils.DatabaseManager;
 
 /**
  * Created by Daniel Quah on 21/5/2016
@@ -30,16 +31,19 @@ public class CodeReceiveActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         CodeManager.destroy();
+        DatabaseManager.destroy();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         CodeManager.destroy();
+        DatabaseManager.destroy();
     }
 
     public void stopReceive(View view) {
         CodeManager.destroy();
+        DatabaseManager.destroy();
         finish();
     }
 

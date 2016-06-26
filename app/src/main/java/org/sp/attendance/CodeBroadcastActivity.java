@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import org.sp.attendance.utils.CodeManager;
@@ -18,7 +17,7 @@ import org.sp.attendance.utils.DatabaseManager;
 /**
  * Created by Daniel Quah on 21/5/2016
  */
-public class CodeBroadcastActivity extends AppCompatActivity{
+public class CodeBroadcastActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,17 +29,19 @@ public class CodeBroadcastActivity extends AppCompatActivity{
     protected void onPause() {
         super.onPause();
         CodeManager.destroy();
+        DatabaseManager.destroy();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         CodeManager.destroy();
+        DatabaseManager.destroy();
     }
 
     public void startBroadcast(View view) {
         final String code = ((EditText) findViewById((R.id.textCode))).getText().toString();
-        if (code.matches("")){
+        if (code.matches("")) {
             new AlertDialog.Builder(CodeBroadcastActivity.this)
                     .setTitle(R.string.title_warning)
                     .setMessage(R.string.error_code_disappeared)
@@ -75,9 +76,10 @@ public class CodeBroadcastActivity extends AppCompatActivity{
                 .show();
     }
 
-        public void stopBroadcast(View view) {
-        CodeManager.destroy();
+    public void stopBroadcast(View view) {
         DatabaseManager.closeDatabaseForLecturer();
+        CodeManager.destroy();
+        DatabaseManager.destroy();
         (findViewById(R.id.layout_code_input)).setVisibility(ScrollView.VISIBLE);
         (findViewById(R.id.layout_code_broadcasting)).setVisibility(ScrollView.GONE);
     }

@@ -1,7 +1,6 @@
 package org.sp.attendance.utils;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.IntentSender;
@@ -28,7 +27,6 @@ import com.google.android.gms.nearby.messages.Strategy;
 import com.google.android.gms.nearby.messages.SubscribeCallback;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
 
-import org.sp.attendance.ListDialog;
 import org.sp.attendance.R;
 
 import java.nio.charset.Charset;
@@ -45,12 +43,12 @@ public class CodeManager {
     private static final Strategy PUB_SUB_STRATEGY = new Strategy.Builder()
             .setTtlSeconds(1800).build();
     public static boolean isDestroyed = true;
+    public static boolean isGoogleApiClientInitialized = false;
     public static boolean resolvingPermissionError = false;
     private static GoogleApiClient googleApiClient;
     private static Context ctx;
     private static Message attendanceCode;
     private static MessageListener messageListener;
-    private static ListDialog endpointListDialog = null;
     private static ManagerType globalManagerType;
     private static Message globalCode;
     private static String globalStudentID;
@@ -71,7 +69,9 @@ public class CodeManager {
 
     private static void initialize(Context context, ManagerType managerType) {
         ctx = context;
-        DatabaseManager.initialize(ctx);
+        if (!DatabaseManager.isDestroyed) {
+            DatabaseManager.initialize(ctx);
+        }
         deviceID = Secure.getString(ctx.getContentResolver(), Secure.ANDROID_ID);
         globalManagerType = managerType;
         messageListener = new MessageListener() {
@@ -85,57 +85,63 @@ public class CodeManager {
 
             }
         };
-        googleApiClient = new GoogleApiClient.Builder(ctx)
-                .addApi(Nearby.MESSAGES_API)
-                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-                    @Override
-                    public void onConnected(@Nullable Bundle bundle) {
-                        if (globalManagerType == ManagerType.Receive) {
-                            receiveCode();
-                        } else if (globalManagerType == ManagerType.Send) {
-                            broadcastCode();
-                        } else {
-                            destroy();
+        if (!isGoogleApiClientInitialized) {
+            googleApiClient = new GoogleApiClient.Builder(ctx)
+                    .addApi(Nearby.MESSAGES_API)
+                    .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                        @Override
+                        public void onConnected(@Nullable Bundle bundle) {
+                            if (globalManagerType == ManagerType.Receive) {
+                                receiveCode();
+                            } else if (globalManagerType == ManagerType.Send) {
+                                broadcastCode();
+                            } else {
+                                destroy();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onConnectionSuspended(int i) {
-                        googleApiClient.reconnect();
-                    }
-                })
-                .enableAutoManage(((FragmentActivity) ctx), new GoogleApiClient.OnConnectionFailedListener() {
-                    @Override
-                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                        new AlertDialog.Builder(ctx)
-                                .setTitle(R.string.title_nearby_error)
-                                .setMessage(R.string.error_nearby_api)
-                                .setCancelable(false)
-                                .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        ((Activity) ctx).finish();
-                                    }
-                                })
-                                .create()
-                                .show();
-                    }
-                })
-                .build();
+                        @Override
+                        public void onConnectionSuspended(int i) {
+                            googleApiClient.reconnect();
+                        }
+                    })
+                    .enableAutoManage(((FragmentActivity) ctx), new GoogleApiClient.OnConnectionFailedListener() {
+                        @Override
+                        public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                            new AlertDialog.Builder(ctx)
+                                    .setTitle(R.string.title_nearby_error)
+                                    .setMessage(R.string.error_nearby_api)
+                                    .setCancelable(false)
+                                    .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            ((Activity) ctx).finish();
+                                        }
+                                    })
+                                    .create()
+                                    .show();
+                        }
+                    })
+                    .build();
+            isGoogleApiClientInitialized = true;
+        } else {
+            googleApiClient.reconnect();
+        }
         isDestroyed = false;
     }
 
     public static void destroy() {
-        if (resolvingPermissionError = false) {
-            ctx = null;
+        if (!resolvingPermissionError) {
             if (globalManagerType == ManagerType.Receive) {
                 stopReceiveCode();
             } else if (globalManagerType == ManagerType.Send) {
                 stopBroadcastCode();
             }
+            ctx = null;
             globalCode = null;
             globalStudentID = null;
             globalManagerType = null;
+            googleApiClient.disconnect();
             isDestroyed = true;
         }
     }
@@ -189,6 +195,7 @@ public class CodeManager {
 
     public static void stopReceiveCode() {
         Nearby.Messages.unsubscribe(googleApiClient, messageListener);
+        googleApiClient.disconnect();
     }
 
     /*
@@ -234,6 +241,7 @@ public class CodeManager {
 
     public static void stopBroadcastCode() {
         Nearby.Messages.unpublish(googleApiClient, globalCode);
+        googleApiClient.disconnect();
     }
 
     private static void handleUnsuccessfulNearbyResult(Status status) {
