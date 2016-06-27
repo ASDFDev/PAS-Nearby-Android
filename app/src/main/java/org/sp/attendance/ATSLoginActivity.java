@@ -44,7 +44,7 @@ public class ATSLoginActivity extends AppCompatActivity {
         if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
             ssid = wifiInfo.getSSID();
             if (ssid.equals("\"SPStudent\"") || ssid.equals("\"SPStaff\"") || ssid.equals("\"SPGuest\"")) {
-                tryAutoSignIn();
+              //  tryAutoSignIn();
             } else {
                 new AlertDialog.Builder(ATSLoginActivity.this)
                         .setTitle(R.string.title_warning)
