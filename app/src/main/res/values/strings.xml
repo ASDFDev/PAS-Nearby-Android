@@ -6,7 +6,7 @@
     <string name="title_broadcast">Broadcasting Code</string>
     <string name="title_receive">Receiving Code</string>
     <string name="action_connecting">Connecting...</string>
-    <string name="action_broadcasting">Code validated. \nDevices around you: </string>
+    <string name="action_broadcasting">Broadcasting code to students... </string>
     <string name="action_receiving">Devices around you: </string>
     <string name="label_username">Username</string>
     <string name="label_password">Password</string>
