@@ -131,7 +131,7 @@ public class CodeManager {
     }
 
     public static void destroy() {
-        if (!resolvingPermissionError) {
+        if (resolvingPermissionError = false) {
             if (globalManagerType == ManagerType.Receive) {
                 stopReceiveCode();
             } else if (globalManagerType == ManagerType.Send) {
