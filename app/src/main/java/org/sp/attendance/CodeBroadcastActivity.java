@@ -82,6 +82,7 @@ public class CodeBroadcastActivity extends AppCompatActivity {
         DatabaseManager.destroy();
         (findViewById(R.id.layout_code_input)).setVisibility(ScrollView.VISIBLE);
         (findViewById(R.id.layout_code_broadcasting)).setVisibility(ScrollView.GONE);
+        finish();
     }
 
     @Override
