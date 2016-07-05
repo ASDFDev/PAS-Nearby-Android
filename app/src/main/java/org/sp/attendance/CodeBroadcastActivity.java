@@ -21,7 +21,7 @@ import org.sp.attendance.utils.DatabaseManager;
  * Created by Daniel Quah on 21/5/2016
  */
 public class CodeBroadcastActivity extends AppCompatActivity {
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +86,21 @@ public class CodeBroadcastActivity extends AppCompatActivity {
         DatabaseManager.destroy();
         (findViewById(R.id.layout_code_input)).setVisibility(ScrollView.VISIBLE);
         (findViewById(R.id.layout_code_broadcasting)).setVisibility(ScrollView.GONE);
-        finish();
+        new AlertDialog.Builder(CodeBroadcastActivity.this)
+                .setTitle("Are you sure?")
+                .setCancelable(false)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog, int id){
+                        finish();
+                    }
+                })
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                })
+                .create()
+                .show();;
     }
 
     @Override
