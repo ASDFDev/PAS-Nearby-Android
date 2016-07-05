@@ -67,7 +67,7 @@ public class DatabaseManager {
                                         .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-                                                ((Activity) ctx).finish();
+                                                ((Activity) instance).finish();
                                             }
                                         })
                                         .create()
@@ -80,7 +80,7 @@ public class DatabaseManager {
                                         .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-                                                ((Activity) ctx).finish();
+                                                ((Activity) instance).finish();
                                             }
                                         })
                                         .create()
@@ -94,7 +94,7 @@ public class DatabaseManager {
                                     .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            ((Activity) ctx).finish();
+                                            ((Activity) instance).finish();
                                         }
                                     })
                                     .create()
@@ -111,7 +111,7 @@ public class DatabaseManager {
                                 .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        ((Activity) ctx).finish();
+                                        ((Activity) instance).finish();
                                     }
                                 })
                                 .create()

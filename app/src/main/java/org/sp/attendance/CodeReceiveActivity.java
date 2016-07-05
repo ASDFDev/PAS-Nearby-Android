@@ -19,7 +19,7 @@ import org.sp.attendance.utils.DatabaseManager;
  */
 public class CodeReceiveActivity extends AppCompatActivity {
 
-    private static Context mContext;
+    private static CodeReceiveActivity instance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +85,6 @@ public class CodeReceiveActivity extends AppCompatActivity {
         }
     }
 
-    private static CodeReceiveActivity instance;
 
     public CodeReceiveActivity(){
         instance = this;
