@@ -1,6 +1,7 @@
 package org.sp.attendance;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +18,8 @@ import org.sp.attendance.utils.DatabaseManager;
  * Created by Daniel Quah on 21/5/2016
  */
 public class CodeReceiveActivity extends AppCompatActivity {
+
+    private static Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,4 +84,15 @@ public class CodeReceiveActivity extends AppCompatActivity {
             }
         }
     }
+
+    private static CodeReceiveActivity instance;
+
+    public CodeReceiveActivity(){
+        instance = this;
+    }
+
+    public static Context getmContext(){
+        return instance;
+    }
+
 }

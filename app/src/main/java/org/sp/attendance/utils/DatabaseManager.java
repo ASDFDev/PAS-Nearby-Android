@@ -12,6 +12,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.sp.attendance.CodeReceiveActivity;
 import org.sp.attendance.R;
 
 import java.util.Random;
@@ -27,6 +28,7 @@ public class DatabaseManager {
     private static final DatabaseReference reference = database.getInstance().getReference();
     private static String deviceHardwareID;
     private static Context ctx;
+    private static Context instance;
 
     public static void destroy() {
         ctx = null;
@@ -48,6 +50,7 @@ public class DatabaseManager {
 
     public static void submitStudentDevice(final String message, final String deviceID) {
         deviceHardwareID = deviceID;
+        instance = CodeReceiveActivity.getmContext();
         // TODO: Check class state
         reference.child(message).child(deviceHardwareID).addListenerForSingleValueEvent(
                 new ValueEventListener() {
@@ -57,7 +60,7 @@ public class DatabaseManager {
                             if (dataSnapshot.getValue() != null) {
                                 // Device exists, check if submission is valid
                                 String databaseValue = dataSnapshot.getValue().toString();
-                                new AlertDialog.Builder(ctx)
+                                new AlertDialog.Builder(instance)
                                         .setTitle(R.string.title_code_failed)
                                         .setMessage(R.string.error_already_submitted)
                                         .setCancelable(false)
@@ -71,7 +74,7 @@ public class DatabaseManager {
                                         .show();
                             } else {
                                 reference.child(message).child(deviceHardwareID).setValue(AccountsManager.loggedInUserID);
-                                new AlertDialog.Builder(ctx)
+                                new AlertDialog.Builder(instance)
                                         .setTitle(R.string.title_code_success)
                                         .setCancelable(false)
                                         .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
@@ -84,7 +87,7 @@ public class DatabaseManager {
                                         .show();
                             }
                         } else {
-                            new AlertDialog.Builder(ctx)
+                            new AlertDialog.Builder(instance)
                                     .setTitle(R.string.title_code_failed)
                                     .setMessage(R.string.error_code_unenrolled)
                                     .setCancelable(false)
@@ -101,7 +104,7 @@ public class DatabaseManager {
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        new AlertDialog.Builder(ctx)
+                        new AlertDialog.Builder(instance)
                                 .setTitle(R.string.title_code_failed)
                                 .setMessage(R.string.error_code_invalid)
                                 .setCancelable(false)
