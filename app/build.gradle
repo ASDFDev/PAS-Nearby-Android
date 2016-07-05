@@ -30,5 +30,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-nearby:9.0.2'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.16'
     compile 'com.google.firebase:firebase-database:9.0.0'
+    compile 'com.github.ybq:Android-SpinKit:1.0.4'
 }
+
 apply plugin: 'com.google.gms.google-services'
