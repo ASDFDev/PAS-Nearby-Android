@@ -1,6 +1,7 @@
 package org.sp.attendance;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +9,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethod;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ScrollView;
 
@@ -18,7 +21,7 @@ import org.sp.attendance.utils.DatabaseManager;
  * Created by Daniel Quah on 21/5/2016
  */
 public class CodeBroadcastActivity extends AppCompatActivity {
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +67,7 @@ public class CodeBroadcastActivity extends AppCompatActivity {
                         (findViewById(R.id.layout_code_input)).setVisibility(ScrollView.GONE);
                         (findViewById(R.id.layout_code_broadcasting)).setVisibility(ScrollView.VISIBLE);
                         CodeManager.setupLecturerEnvironment(CodeBroadcastActivity.this, code);
+                        hideKeyboard();
                         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                     }
                 })
@@ -120,6 +124,13 @@ public class CodeBroadcastActivity extends AppCompatActivity {
         }
     }
 
+    private void hideKeyboard(){
+        View view = this.getCurrentFocus();
+        if (view != null){
+            InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(),0);
+        }
+    }
     // Reserved space for future database management for staff
 
 }
