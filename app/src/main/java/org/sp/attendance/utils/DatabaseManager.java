@@ -27,7 +27,7 @@ public class DatabaseManager {
     private static FirebaseDatabase database = FirebaseDatabase.getInstance();
     private static final DatabaseReference reference = database.getInstance().getReference();
     private static String deviceHardwareID;
-    private static Context ctx;
+    private static Context ctx = CodeReceiveActivity.getmContext();
 
     public static void destroy() {
         ctx = null;
@@ -49,7 +49,6 @@ public class DatabaseManager {
 
     public static void submitStudentDevice(final String message, final String deviceID) {
         deviceHardwareID = deviceID;
-        ctx = CodeReceiveActivity.getmContext();
         // TODO: Check class state
         reference.child(message).child(deviceHardwareID).addListenerForSingleValueEvent(
                 new ValueEventListener() {
@@ -66,7 +65,7 @@ public class DatabaseManager {
                                         .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-                                                ((Activity) ctx).finish();
+                                                ((Activity)ctx).finish();
                                             }
                                         })
                                         .create()
