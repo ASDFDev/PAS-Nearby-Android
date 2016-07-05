@@ -84,8 +84,6 @@ public class CodeBroadcastActivity extends AppCompatActivity {
         DatabaseManager.closeDatabaseForLecturer();
         CodeManager.destroy();
         DatabaseManager.destroy();
-        (findViewById(R.id.layout_code_input)).setVisibility(ScrollView.VISIBLE);
-        (findViewById(R.id.layout_code_broadcasting)).setVisibility(ScrollView.GONE);
         new AlertDialog.Builder(CodeBroadcastActivity.this)
                 .setTitle("Are you sure?")
                 .setCancelable(false)
@@ -139,12 +137,9 @@ public class CodeBroadcastActivity extends AppCompatActivity {
     }
 
     private void hideKeyboard(){
-        View view = this.getCurrentFocus();
-        if (view != null){
-            InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(),0);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
         }
     }
     // Reserved space for future database management for staff
 
-}
