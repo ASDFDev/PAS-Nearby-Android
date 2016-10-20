@@ -49,6 +49,19 @@ So, your file should have this line `AppKey=1337shamaladingdong420`.
 1. Click on `Add Firebase to your Android app`. Enter `org.sp.attendance` for the package name and click next.
 1. `google-services.json` will be downloaded. Put the file in under ATS_Nearby/app
 
+# IMPORTANT NOTE: 
+Date: 20/10/2016 
+
+Firebase sdk version: 9.0.0
+
+Error output: Missing api_key/current_key object
+
+Bug: In `google-services.json`, the "api_key:[]" field is empty.
+
+Solution: Manually add your api key in. Your end result will look similar to "api_key: [ { 1337shamaladingdong420 } ]"
+
+[Link to solution on stackoverflow](http://stackoverflow.com/questions/37317295/missing-api-key-current-key-with-google-services-3-0-0).
+
 Start building!
 
 
