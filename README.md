@@ -8,7 +8,7 @@ The code cannot be compiled straight from source as it is missing 2 things: - Go
 
 ATS_Nearby is a solution to improve the flaws in the current ATS. As of writing, there are multiple flaws in the ATS, such as student commiting attendance fraud(helping classmate to submit attendance when not in class.) and
 not checking if the same device has been used to submit attendance. This project was inspired from a Straits Times
-article, [Poly's app attendance system stirs concerns](http://www.straitstimes.com/singapore/education/polys-app-attendance-system-stirs-concerns). [MIRROR LINK](https://web.archive.org/web/20160730032416/http://www.straitstimes.com/singapore/education/polys-app-attendance-system-stirs-concerns).
+article, [Poly's app attendance system stirs concerns](http://www.straitstimes.com/singapore/education/polys-app-attendance-system-stirs-concerns). [Mirror link](https://web.archive.org/web/20160730032416/http://www.straitstimes.com/singapore/education/polys-app-attendance-system-stirs-concerns).
 
 
 
