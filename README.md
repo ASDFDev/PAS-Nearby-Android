@@ -1,14 +1,19 @@
-# ATS_Nearby
-Presence checking with Nearby API for SP ATS
+# PAS-Nearby-Android
 
-The code cannot be compiled straight from source as it is missing 2 things: - Google API Key
-																			- google-services.json
+Presence checking using Nearby API
+
+## NOTE: This project has been deprecated in favour of Quiet's library. 
+
+The namespace will remain the same due to avoid errors with users using this project.
 
 *Designed to improve the current Attendance Taking System(ATS) used in Singapore Polytechnic.*
 
-ATS_Nearby is a solution to improve the flaws in the current ATS. As of writing, there are multiple flaws in the ATS, such as student commiting attendance fraud(helping classmate to submit attendance when not in class.) and
-not checking if the same device has been used to submit attendance. This project was inspired from a Straits Times
-article, [Poly's app attendance system stirs concerns](http://www.straitstimes.com/singapore/education/polys-app-attendance-system-stirs-concerns). [Mirror link](https://web.archive.org/web/20160730032416/http://www.straitstimes.com/singapore/education/polys-app-attendance-system-stirs-concerns).
+
+The code cannot be compiled straight from source as it is missing 2 things: 
+
+- Google API Key	
+
+- google-services.json
 
 
 
@@ -25,7 +30,6 @@ Solution used:
 1. Check to ensure that student is in class by using near-ultrasound.
 1. Check to ensure that the device used by student has not been used to submit attendance for the past 30 minutes. 
 
-For more information, please take a look at our [powerpoint slides](materials/Revamping the Attendance Taking System.pptx)
 	
 Getting Started
 ---------------
@@ -49,18 +53,6 @@ So, your file should have this line `AppKey=1337shamaladingdong420`.
 1. Click on `Add Firebase to your Android app`. Enter `org.sp.attendance` for the package name and click next.
 1. `google-services.json` will be downloaded. Put the file in under ATS_Nearby/app
 
-# IMPORTANT NOTE: 
-Date: 20/10/2016 
-
-Firebase sdk version: 9.0.0
-
-Error output: Missing api_key/current_key object
-
-Bug: In `google-services.json`, the "api_key:[]" field is empty.
-
-Solution: Manually add your api key in. Your end result will look similar to "api_key: [ { 1337shamaladingdong420 } ]"
-
-[Link to solution on stackoverflow](http://stackoverflow.com/questions/37317295/missing-api-key-current-key-with-google-services-3-0-0).
 
 Start building!
 
@@ -75,7 +67,7 @@ Team members
 
 ### License
 ```
-Copyright 2016 Daniel Quah and Justin Xin
+Copyright 2016-2017 Daniel Quah and Justin Xin
 
 This file is part of org.sp.attendance
  
