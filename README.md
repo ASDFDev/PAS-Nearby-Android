@@ -2,19 +2,13 @@
 
 Presence checking using Nearby API
 
-## NOTE: This project has been deprecated in favour of Quiet's library. 
 
-The namespace will remain the same due to avoid errors with users using this project.
+## NOTE: (24 April 2017) This project has been deprecated in favour of Quiet's library. 
+
+The namespace will remain the same to avoid errors with users using this project.
+
 
 *Designed to improve the current Attendance Taking System(ATS) used in Singapore Polytechnic.*
-
-
-The code cannot be compiled straight from source as it is missing 2 things: 
-
-- Google API Key	
-
-- google-services.json
-
 
 
 # Screnshots
@@ -33,6 +27,13 @@ Solution used:
 	
 Getting Started
 ---------------
+
+The code cannot be compiled straight from source as it is missing 2 things:
+
+- Google API Key
+
+- google-services.json
+
 
 1. Create a project on
 [Google Developer Console](https://console.developers.google.com/). 
