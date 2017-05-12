@@ -45,8 +45,4 @@ out/
 build/
 .gradle/
 
-gradlew*
-
-gradle/
-
 gradle.properties
