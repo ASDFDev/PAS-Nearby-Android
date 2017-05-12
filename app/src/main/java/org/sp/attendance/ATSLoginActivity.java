@@ -51,7 +51,7 @@ public class ATSLoginActivity extends AppCompatActivity {
         }
         checkGooglePlayServices();
         IntentFilter filter = new IntentFilter(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION);
-        WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo;
         String ssid;
         wifiInfo = wifiManager.getConnectionInfo();
