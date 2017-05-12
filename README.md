@@ -12,11 +12,8 @@ The namespace will remain the same to avoid errors with users using this project
 
 
 # Screnshots
-<img src="materials/Picture1.png" />
-<img src="materials/Picture2.png" />
-<img src="materials/Picture3.png" />
-<img src="materials/Picture4.png" />
-
+![](materials/screenshot.png)
+![](materials/receive-broadcast.png)
 
 Solution used:
 
