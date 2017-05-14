@@ -55,7 +55,7 @@ public class CodeManager {
     private static final Strategy PUB_SUB_STRATEGY = new Strategy.Builder()
             .setTtlSeconds(1800).build();
     public static boolean isDestroyed = true;
-    public static boolean isGoogleApiClientInitialized = false;
+    private static boolean isGoogleApiClientInitialized = false;
     public static boolean resolvingPermissionError = false;
     private static GoogleApiClient googleApiClient;
     private static Context ctx;
@@ -120,18 +120,8 @@ public class CodeManager {
                     .enableAutoManage(((FragmentActivity) ctx), new GoogleApiClient.OnConnectionFailedListener() {
                         @Override
                         public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                            new AlertDialog.Builder(ctx)
-                                    .setTitle(R.string.title_nearby_error)
-                                    .setMessage(R.string.error_nearby_api)
-                                    .setCancelable(false)
-                                    .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            ((Activity) ctx).finish();
-                                        }
-                                    })
-                                    .create()
-                                    .show();
+                            showNearbyErrorDialog(ctx.getResources().getString(R.string.title_nearby_error),
+                                    ctx.getResources().getString(R.string.error_nearby_api));
                         }
                     })
                     .build();
@@ -179,18 +169,8 @@ public class CodeManager {
                     @Override
                     public void onExpired() {
                         super.onExpired();
-                        new AlertDialog.Builder(ctx)
-                                .setTitle(R.string.title_nearby_error)
-                                .setMessage(R.string.error_nearby_timed_out)
-                                .setCancelable(false)
-                                .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        ((Activity) ctx).finish();
-                                    }
-                                })
-                                .create()
-                                .show();
+                        showNearbyErrorDialog(ctx.getResources().getString(R.string.title_nearby_error),
+                                ctx.getResources().getString(R.string.error_nearby_timed_out));
                     }
                 }).build();
         Nearby.Messages.subscribe(googleApiClient, messageListener, options)
@@ -205,7 +185,7 @@ public class CodeManager {
                 });
     }
 
-    public static void stopReceiveCode() {
+    private static void stopReceiveCode() {
         Nearby.Messages.unsubscribe(googleApiClient, messageListener);
         googleApiClient.disconnect();
     }
@@ -224,18 +204,8 @@ public class CodeManager {
                     @Override
                     public void onExpired() {
                         super.onExpired();
-                        new AlertDialog.Builder(ctx)
-                                .setTitle(R.string.title_nearby_error)
-                                .setMessage(R.string.error_nearby_timed_out)
-                                .setCancelable(false)
-                                .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        ((Activity) ctx).finish();
-                                    }
-                                })
-                                .create()
-                                .show();
+                        showNearbyErrorDialog(ctx.getResources().getString(R.string.title_nearby_error),
+                                ctx.getResources().getString(R.string.error_nearby_timed_out));
                     }
                 }).build();
         Nearby.Messages.publish(googleApiClient, globalCode, options)
@@ -251,7 +221,7 @@ public class CodeManager {
                 });
     }
 
-    public static void stopBroadcastCode() {
+    private static void stopBroadcastCode() {
         Nearby.Messages.unpublish(googleApiClient, globalCode);
         googleApiClient.disconnect();
     }
@@ -268,20 +238,25 @@ public class CodeManager {
             }
         } else {
             if (status.getStatusCode() == ConnectionResult.NETWORK_ERROR) {
-                new AlertDialog.Builder(ctx)
-                        .setTitle(R.string.title_nearby_error)
-                        .setMessage(R.string.error_network_disappeared_generic)
-                        .setCancelable(false)
-                        .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                ((Activity) ctx).finish();
-                            }
-                        })
-                        .create()
-                        .show();
+                showNearbyErrorDialog(ctx.getResources().getString(R.string.title_nearby_error),
+                        ctx.getResources().getString(R.string.error_network_disappeared_generic));
             }
         }
+    }
+
+    private static void showNearbyErrorDialog(String title, String message){
+        new AlertDialog.Builder(ctx)
+                .setTitle(title)
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ((Activity) ctx).finish();
+                    }
+                })
+                .create()
+                .show();
     }
 
     private enum ManagerType {

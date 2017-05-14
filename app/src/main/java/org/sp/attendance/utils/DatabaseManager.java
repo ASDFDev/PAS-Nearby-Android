@@ -26,6 +26,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 import org.sp.attendance.CodeReceiveActivity;
@@ -35,11 +36,12 @@ import java.util.Random;
 
 public class DatabaseManager {
 
-    public static Boolean isDestroyed = true;
+    static Boolean isDestroyed = true;
     private static FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private static final DatabaseReference reference = database.getInstance().getReference();
+    private static final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
     private static String deviceHardwareID;
     private static Context ctx = CodeReceiveActivity.getmContext();
+    private static DatabaseModel databaseModel;
 
     public static void destroy() {
         ctx = null;
@@ -53,84 +55,49 @@ public class DatabaseManager {
      */
     private static String globalClassValue;
 
-    public static void initialize(Context context) {
+    static void initialize(Context context) {
         ctx = context;
         database.goOnline();
         isDestroyed = false;
     }
 
-    public static void submitStudentDevice(final String message, final String deviceID) {
+    static void submitStudentDevice(final String message, final String deviceID) {
         deviceHardwareID = deviceID;
+        databaseModel = new DatabaseModel();
         // TODO: Check class state
-        reference.child(message).child(deviceHardwareID).addListenerForSingleValueEvent(
+        reference.child(message).addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot != null) {
-                            if (dataSnapshot.getValue() != null) {
-                                // Device exists, check if submission is valid
-                                String databaseValue = dataSnapshot.getValue().toString();
-                                new AlertDialog.Builder(ctx)
-                                        .setTitle(R.string.title_code_failed)
-                                        .setMessage(R.string.error_already_submitted)
-                                        .setCancelable(false)
-                                        .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                ((Activity)ctx).finish();
-                                            }
-                                        })
-                                        .create()
-                                        .show();
-                            } else {
-                                reference.child(message).child(deviceHardwareID).setValue(AccountsManager.loggedInUserID);
-                                new AlertDialog.Builder(ctx)
-                                        .setTitle(R.string.title_code_success)
-                                        .setCancelable(false)
-                                        .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                ((Activity) ctx).finish();
-                                            }
-                                        })
-                                        .create()
-                                        .show();
-                            }
+                                if (dataSnapshot.hasChild(AccountsManager.loggedInUserID) || dataSnapshot.child(deviceHardwareID).exists()) {
+                                    // Device exists, check if submission is valid
+                                    showDatabaseResult(ctx.getResources().getString(R.string.title_code_failed),
+                                            ctx.getResources().getString(R.string.error_already_submitted));
+                                } else {
+                                    final String key = dataSnapshot.child(AccountsManager.loggedInUserID).getKey();
+                                    databaseModel.setDeviceID(deviceHardwareID);
+                                    databaseModel.setTimeStamp(ServerValue.TIMESTAMP);
+                                    final DatabaseReference databaseReference = reference.child(message).child(key);
+                                    databaseReference.setValue(databaseModel);
+
+                                    showDatabaseResult(ctx.getResources().getString(R.string.title_code_success), "");
+                                }
+
                         } else {
-                            new AlertDialog.Builder(ctx)
-                                    .setTitle(R.string.title_code_failed)
-                                    .setMessage(R.string.error_code_unenrolled)
-                                    .setCancelable(false)
-                                    .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            ((Activity) ctx).finish();
-                                        }
-                                    })
-                                    .create()
-                                    .show();
+                            showDatabaseResult(ctx.getResources().getString(R.string.title_code_failed),
+                                    ctx.getResources().getString(R.string.error_code_unenrolled));
                         }
                     }
-
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        new AlertDialog.Builder(ctx)
-                                .setTitle(R.string.title_code_failed)
-                                .setMessage(R.string.error_code_invalid)
-                                .setCancelable(false)
-                                .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        ((Activity) ctx).finish();
-                                    }
-                                })
-                                .create()
-                                .show();
+                        showDatabaseResult(ctx.getResources().getString(R.string.title_code_failed),
+                                ctx.getResources().getString(R.string.error_code_invalid));
                     }
                 });
     }
 
-    public static void openDatabaseForLecturer() {
+    static void openDatabaseForLecturer() {
         reference.child(globalClassValue).child(":::CLASS_STATE:::").setValue("CLASS_STARTED");
     }
 
@@ -142,8 +109,8 @@ public class DatabaseManager {
         reference.child(globalClassValue).child(":::CLASS_STATE:::").setValue("CLASS_ENDED");
     }
 
-    public static String generateMessage(String code) {
-        String message = (generateClassCode() + "|" + code);
+    static String generateMessage(String code) {
+        String message = (generateClassCode() + "|||" + code);
         globalClassValue = message;
         return message;
     }
@@ -165,8 +132,18 @@ public class DatabaseManager {
         return sb.toString();
     }
 
-    public static void removeEntry(String deviceHardwareID) {
-        reference.child(deviceHardwareID).removeValue();
+    private static void showDatabaseResult(String title, String message){
+        new AlertDialog.Builder(ctx)
+                .setTitle(title)
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton(ctx.getResources().getString(R.string.dismiss), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ((Activity)ctx).finish();
+                    }
+                })
+                .create()
+                .show();
     }
-
 }

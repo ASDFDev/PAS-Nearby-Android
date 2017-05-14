@@ -112,88 +112,43 @@ public class AccountsManager extends AsyncTask<String, Integer, String> {
                     }
                     updateUI();
                 } else if (signInState.equals(SignInResponse.InvalidCredentials)) {
-                    new AlertDialog.Builder(globalContext)
-                            .setTitle(R.string.title_sign_in_failed)
-                            .setMessage(R.string.error_credentials_invalid)
-                            .setCancelable(false)
-                            .setPositiveButton(globalContext.getResources().getString(R.string.dismiss), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                }
-                            })
-                            .create()
-                            .show();
+                    showPostExecuteDialog(globalContext.getResources().getString(R.string.title_sign_in_failed),
+                            globalContext.getResources().getString(R.string.error_credentials_invalid));
                 } else if (signInState.equals(SignInResponse.OutsideSP)) {
-                    new AlertDialog.Builder(globalContext)
-                            .setTitle(R.string.title_sign_in_failed)
-                            .setMessage(R.string.error_outside_sp)
-                            .setCancelable(false)
-                            .setPositiveButton(globalContext.getResources().getString(R.string.dismiss), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                }
-                            })
-                            .create()
-                            .show();
-                } else if (signInState.equals(null) && codeState.equals(CodeResponse.NotSignedIn)) {
-                    new AlertDialog.Builder(globalContext)
-                            .setTitle(R.string.title_code_failed)
-                            .setMessage(R.string.error_timed_out)
-                            .setCancelable(false)
-                            .setPositiveButton(globalContext.getResources().getString(R.string.dismiss), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                }
-                            })
-                            .create()
-                            .show();
-                } else {
-                    new AlertDialog.Builder(globalContext)
-                            .setTitle(R.string.title_code)
-                            .setMessage(globalContext.getResources().getString(R.string.error_unknown) + "\n\n" + result)
-                            .setCancelable(false)
-                            .setPositiveButton(globalContext.getResources().getString(R.string.dismiss), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                }
-                            })
-                            .create()
-                            .show();
+                    showPostExecuteDialog(globalContext.getResources().getString(R.string.title_sign_in_failed),
+                            globalContext.getResources().getString(R.string.error_outside_sp));
                 }
             } else {
-                new AlertDialog.Builder(globalContext)
-                        .setTitle(R.string.title_internal)
-                        .setCancelable(false)
-                        .setPositiveButton(globalContext.getResources().getString(R.string.dismiss), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        })
-                        .create()
-                        .show();
+                showPostExecuteDialog(globalContext.getResources().getString(R.string.title_internal), "");
             }
         } catch (Exception e) {
-            new AlertDialog.Builder(globalContext)
-                    .setMessage(e.toString())
-                    .setCancelable(false)
-                    .setPositiveButton(globalContext.getResources().getString(R.string.dismiss), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    })
-                    .create()
-                    .show();
+            showPostExecuteDialog("", (e.toString()));
         }
     }
 
-    public void saveCredentials(String userID, String password) {
+    private void saveCredentials(String userID, String password) {
         SharedPreferences sharedPref = globalContext.getSharedPreferences("org.sp.ats.accounts", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         if (sharedPref.getString("ats_userid", "").equals("") && sharedPref.getString("ats_pwd", "").equals("")) {
             editor.putString("ats_userid", userID);
             editor.putString("ats_pwd", password);
-            editor.commit();
+            editor.apply();
         }
+    }
+
+    private void showPostExecuteDialog(String title, String message){
+        new AlertDialog.Builder(globalContext)
+                .setTitle(title)
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton(globalContext.getResources().getString(R.string.dismiss), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .create()
+                .show();
+
     }
 
     private String updateUI() {
@@ -201,7 +156,7 @@ public class AccountsManager extends AsyncTask<String, Integer, String> {
     }
 
     private enum CodeResponse {
-        Submitted, InvalidCode, NotEnrolled, AlreadySubmitted, ClassEnded, NotSignedIn, OutsideSP, Unknown
+        NotSignedIn
     }
 
     private enum SignInResponse {
@@ -209,7 +164,7 @@ public class AccountsManager extends AsyncTask<String, Integer, String> {
     }
 
     private enum SignInType {
-        Staff, Student, Guest
+        Staff, Student
     }
 
 }

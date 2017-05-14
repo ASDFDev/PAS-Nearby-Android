@@ -46,6 +46,7 @@ public class ATSLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_atslogin);
         CookieHandler.setDefault(new CookieManager());
+
         if (!CodeManager.isDestroyed) {
             CodeManager.destroy();
         }
@@ -60,30 +61,12 @@ public class ATSLoginActivity extends AppCompatActivity {
             if (ssid.equals("\"SPStudent\"") || ssid.equals("\"SPStaff\"") || ssid.equals("\"SPGuest\"")) {
               //  tryAutoSignIn();
             } else {
-                new AlertDialog.Builder(ATSLoginActivity.this)
-                        .setTitle(R.string.title_warning)
-                        .setMessage(R.string.error_network_invalid)
-                        .setCancelable(false)
-                        .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        })
-                        .create()
-                        .show();
+                showDialog(this.getResources().getString(R.string.title_warning),
+                        this.getResources().getString(R.string.error_network_invalid));
             }
         } else {
-            new AlertDialog.Builder(ATSLoginActivity.this)
-                    .setTitle(R.string.title_warning)
-                    .setMessage(R.string.error_network_disappeared)
-                    .setCancelable(false)
-                    .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    })
-                    .create()
-                    .show();
+            showDialog(this.getResources().getString(R.string.title_warning),
+                    this.getResources().getString(R.string.error_network_disappeared));
         }
     }
 
@@ -104,29 +87,38 @@ public class ATSLoginActivity extends AppCompatActivity {
 
     public void tryAutoSignIn() {
         SharedPreferences sharedPref = ATSLoginActivity.this.getSharedPreferences("org.sp.ats.accounts", Context.MODE_PRIVATE);
-        if (!sharedPref.getString("ats_userid", "").equals("") && !sharedPref.getString("ats_pwd", "").equals("")) {
-            new AccountsManager(ATSLoginActivity.this).execute("SignInOnly", sharedPref.getString("ats_userid", ""), sharedPref.getString("ats_pwd", ""));
+        if (!sharedPref.getString("ats_userid", "").equals("") &&
+                !sharedPref.getString("ats_pwd", "").equals("")) {
+            new AccountsManager(ATSLoginActivity.this).execute("SignInOnly", sharedPref.getString("ats_userid", ""),
+                    sharedPref.getString("ats_pwd", ""));
 
         }
     }
 
     public void signIn(View view) {
-        if (!((EditText) findViewById(R.id.textEdit_userID)).getText().toString().equals("") && !((EditText) findViewById(R.id.textEdit_password)).getText().toString().equals("")) {
-            new AccountsManager(ATSLoginActivity.this).execute("SignInOnly", ((EditText) findViewById(R.id.textEdit_userID)).getText().toString(),
+        if (!((EditText) findViewById(R.id.textEdit_userID)).getText().toString().equals("") &&
+                !((EditText) findViewById(R.id.textEdit_password)).getText().toString().equals("")) {
+            new AccountsManager(ATSLoginActivity.this).execute("SignInOnly",
+                    ((EditText) findViewById(R.id.textEdit_userID)).getText().toString(),
                     ((EditText) findViewById(R.id.textEdit_password)).getText().toString());
         } else {
-            new AlertDialog.Builder(this)
-                    .setTitle(R.string.title_sign_in_failed)
-                    .setMessage(R.string.error_credentials_disappeared)
-                    .setCancelable(false)
-                    .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    })
-                    .create()
-                    .show();
+            showDialog(this.getResources().getString(R.string.title_sign_in_failed),
+                    this.getResources().getString(R.string.error_credentials_disappeared));
         }
+    }
+
+    private void showDialog(String title, String message){
+        new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .create()
+                .show();
     }
 
 }
