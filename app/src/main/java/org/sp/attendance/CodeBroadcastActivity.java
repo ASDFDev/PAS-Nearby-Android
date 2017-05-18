@@ -94,7 +94,6 @@ public class CodeBroadcastActivity extends AppCompatActivity {
     }
 
     public void stopBroadcast(View view) {
-        DatabaseManager.closeDatabaseForLecturer();
         CodeManager.destroy();
         DatabaseManager.destroy();
         new AlertDialog.Builder(CodeBroadcastActivity.this)

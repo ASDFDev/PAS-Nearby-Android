@@ -64,13 +64,13 @@ public class DatabaseManager {
     static void submitStudentDevice(final String message, final String deviceID) {
         deviceHardwareID = deviceID;
         databaseModel = new DatabaseModel();
-        // TODO: Check class state
         reference.child(message).addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot != null) {
-                                if (dataSnapshot.hasChild(AccountsManager.loggedInUserID) || dataSnapshot.child(deviceHardwareID).exists()) {
+                                if (dataSnapshot.hasChild(AccountsManager.loggedInUserID) ||
+                                        dataSnapshot.child(deviceHardwareID).exists()) {
                                     // Device exists, check if submission is valid
                                     showDatabaseResult(ctx.getResources().getString(R.string.title_code_failed),
                                             ctx.getResources().getString(R.string.error_already_submitted));
@@ -97,39 +97,18 @@ public class DatabaseManager {
                 });
     }
 
-    static void openDatabaseForLecturer() {
-        reference.child(globalClassValue).child(":::CLASS_STATE:::").setValue("CLASS_STARTED");
-    }
-
     /*
         Lecturer device operations
      */
-
-    public static void closeDatabaseForLecturer() {
-        reference.child(globalClassValue).child(":::CLASS_STATE:::").setValue("CLASS_ENDED");
-    }
-
+    
     static String generateMessage(String code) {
-        String message = (generateClassCode() + "|||" + code);
-        globalClassValue = message;
-        return message;
+        globalClassValue = code;
+        return code;
     }
 
     @NonNull
     public static String[] parseMessage(String message) {
         return message.split("|");
-    }
-
-    @NonNull
-    private static String generateClassCode() {
-        char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
-        StringBuilder sb = new StringBuilder();
-        Random random = new Random();
-        for (int i = 0; i < 18; i++) {
-            char c = chars[random.nextInt(chars.length)];
-            sb.append(c);
-        }
-        return sb.toString();
     }
 
     private static void showDatabaseResult(String title, String message){

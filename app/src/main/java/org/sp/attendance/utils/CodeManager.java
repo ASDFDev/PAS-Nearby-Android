@@ -69,7 +69,7 @@ public class CodeManager {
     public static void setupLecturerEnvironment(Context context, String code) {
         globalCode = new Message((DatabaseManager.generateMessage(code)).getBytes(Charset.forName("UTF-8")));
         globalStudentID = null;
-        DatabaseManager.openDatabaseForLecturer();
+     //   DatabaseManager.openDatabaseForLecturer();
         initialize(context, ManagerType.Send);
     }
 
