@@ -1,6 +1,6 @@
 package org.sp.attendance;
 
-/**
+/*
  * Copyright 2016-2017 Daniel Quah and Justin Xin
  * 	
  * This file is part of org.sp.attendance
@@ -17,7 +17,6 @@ package org.sp.attendance;
  */
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.wifi.SupplicantState;
@@ -46,7 +45,6 @@ public class ATSLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_atslogin);
         CookieHandler.setDefault(new CookieManager());
-
         if (!CodeManager.isDestroyed) {
             CodeManager.destroy();
         }
@@ -112,10 +110,7 @@ public class ATSLoginActivity extends AppCompatActivity {
                 .setTitle(title)
                 .setMessage(message)
                 .setCancelable(false)
-                .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
+                .setPositiveButton(R.string.dismiss, (dialog, which) -> {
                 })
                 .create()
                 .show();

@@ -1,6 +1,6 @@
 package org.sp.attendance.utils;
 
-/**
+/*
  * Copyright 2016-2017 Daniel Quah and Justin Xin
  * 	
  * This file is part of org.sp.attendance
@@ -18,21 +18,17 @@ package org.sp.attendance.utils;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 import org.sp.attendance.CodeReceiveActivity;
 import org.sp.attendance.R;
-
-import java.util.Random;
+import org.sp.attendance.models.DatabaseModel;
 
 public class DatabaseManager {
 
@@ -42,6 +38,8 @@ public class DatabaseManager {
     private static String deviceHardwareID;
     private static Context ctx = CodeReceiveActivity.getmContext();
     private static DatabaseModel databaseModel;
+    private static String globalClassValue;
+    private static String databaseArray;
 
     public static void destroy() {
         ctx = null;
@@ -53,7 +51,6 @@ public class DatabaseManager {
     /*
         Student device operations
      */
-    private static String globalClassValue;
 
     static void initialize(Context context) {
         ctx = context;
@@ -61,7 +58,8 @@ public class DatabaseManager {
         isDestroyed = false;
     }
 
-    static void submitStudentDevice(final String message, final String deviceID) {
+
+    static void submitStudentDevice(final String message, final String deviceID, final String timeStamp) {
         deviceHardwareID = deviceID;
         databaseModel = new DatabaseModel();
         reference.child(message).addListenerForSingleValueEvent(
@@ -69,25 +67,26 @@ public class DatabaseManager {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot != null) {
+                            System.out.println("Datasnapshot value: " + dataSnapshot.getValue());
+                            databaseArray = String.valueOf(dataSnapshot.getValue());
                                 if (dataSnapshot.hasChild(AccountsManager.loggedInUserID) ||
-                                        dataSnapshot.child(deviceHardwareID).exists()) {
-                                    // Device exists, check if submission is valid
+                                        databaseArray.contains(deviceID)) {
+                                    // Device and username exists
                                     showDatabaseResult(ctx.getResources().getString(R.string.title_code_failed),
                                             ctx.getResources().getString(R.string.error_already_submitted));
                                 } else {
                                     final String key = dataSnapshot.child(AccountsManager.loggedInUserID).getKey();
                                     databaseModel.setDeviceID(deviceHardwareID);
-                                    databaseModel.setTimeStamp(ServerValue.TIMESTAMP);
+                                    databaseModel.setTimeStamp(timeStamp);
                                     final DatabaseReference databaseReference = reference.child(message).child(key);
                                     databaseReference.setValue(databaseModel);
-
-                                    showDatabaseResult(ctx.getResources().getString(R.string.title_code_success), "");
+                                    showDatabaseResult(ctx.getResources().getString(R.string.title_code_success), "Submitted on: " + timeStamp);
                                 }
+                            } else{
+                                showDatabaseResult(ctx.getResources().getString(R.string.title_code_failed),
+                                        ctx.getResources().getString(R.string.error_code_unenrolled));
+                            }
 
-                        } else {
-                            showDatabaseResult(ctx.getResources().getString(R.string.title_code_failed),
-                                    ctx.getResources().getString(R.string.error_code_unenrolled));
-                        }
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
@@ -96,6 +95,8 @@ public class DatabaseManager {
                     }
                 });
     }
+
+
 
     /*
         Lecturer device operations
@@ -106,9 +107,8 @@ public class DatabaseManager {
         return code;
     }
 
-    @NonNull
-    public static String[] parseMessage(String message) {
-        return message.split("|");
+    static void openDatabaseForLecturer(){
+        reference.child(globalClassValue).setValue("");
     }
 
     private static void showDatabaseResult(String title, String message){
@@ -116,12 +116,7 @@ public class DatabaseManager {
                 .setTitle(title)
                 .setMessage(message)
                 .setCancelable(false)
-                .setPositiveButton(ctx.getResources().getString(R.string.dismiss), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ((Activity)ctx).finish();
-                    }
-                })
+                .setPositiveButton(ctx.getResources().getString(R.string.dismiss), (dialog, which) -> ((Activity)ctx).finish())
                 .create()
                 .show();
     }

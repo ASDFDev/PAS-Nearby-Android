@@ -1,6 +1,6 @@
 package org.sp.attendance;
 
-/**
+/*
  * Copyright 2016-2017 Daniel Quah and Justin Xin
  * 	
  * This file is part of org.sp.attendance
@@ -18,7 +18,6 @@ package org.sp.attendance;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -38,7 +37,6 @@ public class CodeReceiveActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receive);
-        // TODO: Implement student ID for sending/receiving
         CodeManager.setupStudentEnvironment(this, AccountsManager.loggedInUserID);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
@@ -71,12 +69,7 @@ public class CodeReceiveActivity extends AppCompatActivity {
                     .setTitle(R.string.title_permission)
                     .setMessage(R.string.error_nearby_access_denied)
                     .setCancelable(false)
-                    .setPositiveButton(R.string.continue_prompt, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            CodeManager.resolvingPermissionError = false;
-                        }
-                    })
+                    .setPositiveButton(R.string.continue_prompt, (dialog, which) -> CodeManager.resolvingPermissionError = false)
                     .create()
                     .show();
             if (resultCode == Activity.RESULT_OK) {
@@ -85,12 +78,7 @@ public class CodeReceiveActivity extends AppCompatActivity {
                         .setTitle(R.string.title_permission)
                         .setMessage(R.string.error_nearby_access_still_denied)
                         .setCancelable(false)
-                        .setPositiveButton(R.string.continue_prompt, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                finish();
-                            }
-                        })
+                        .setPositiveButton(R.string.continue_prompt, (dialog, which) -> finish())
                         .create()
                         .show();
             } else {

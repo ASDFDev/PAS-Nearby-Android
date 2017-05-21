@@ -1,6 +1,6 @@
 package org.sp.attendance.utils;
 
-/**
+/*
  * Copyright 2016-2017 Daniel Quah and Justin Xin
  * 	
  * This file is part of org.sp.attendance
@@ -148,7 +148,6 @@ public class AccountsManager extends AsyncTask<String, Integer, String> {
                 })
                 .create()
                 .show();
-
     }
 
     private String updateUI() {

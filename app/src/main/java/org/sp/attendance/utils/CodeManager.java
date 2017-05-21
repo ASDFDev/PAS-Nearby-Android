@@ -1,6 +1,6 @@
 package org.sp.attendance.utils;
 
-/**
+/*
  * Copyright 2016-2017 Daniel Quah and Justin Xin
  * 	
  * This file is part of org.sp.attendance
@@ -18,20 +18,17 @@ package org.sp.attendance.utils;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.IntentSender;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.provider.Settings.Secure;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.messages.Message;
@@ -64,12 +61,12 @@ public class CodeManager {
     private static ManagerType globalManagerType;
     private static Message globalCode;
     private static String globalStudentID;
-    private static String deviceID;
+    private static String deviceID, timeStamp;
 
     public static void setupLecturerEnvironment(Context context, String code) {
         globalCode = new Message((DatabaseManager.generateMessage(code)).getBytes(Charset.forName("UTF-8")));
         globalStudentID = null;
-     //   DatabaseManager.openDatabaseForLecturer();
+        DatabaseManager.openDatabaseForLecturer();
         initialize(context, ManagerType.Send);
     }
 
@@ -84,12 +81,13 @@ public class CodeManager {
         if (!DatabaseManager.isDestroyed) {
             DatabaseManager.initialize(ctx);
         }
+        timeStamp = NtpManager.getNtp();
         deviceID = Secure.getString(ctx.getContentResolver(), Secure.ANDROID_ID);
         globalManagerType = managerType;
         messageListener = new MessageListener() {
             @Override
             public void onFound(Message message) {
-                DatabaseManager.submitStudentDevice(new String(message.getContent(), Charset.forName("UTF-8")), deviceID);
+                DatabaseManager.submitStudentDevice(new String(message.getContent(), Charset.forName("UTF-8")), deviceID, timeStamp);
             }
 
             @Override
@@ -117,13 +115,9 @@ public class CodeManager {
                             googleApiClient.reconnect();
                         }
                     })
-                    .enableAutoManage(((FragmentActivity) ctx), new GoogleApiClient.OnConnectionFailedListener() {
-                        @Override
-                        public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                    .enableAutoManage(((FragmentActivity) ctx), connectionResult ->
                             showNearbyErrorDialog(ctx.getResources().getString(R.string.title_nearby_error),
-                                    ctx.getResources().getString(R.string.error_nearby_api));
-                        }
-                    })
+                            ctx.getResources().getString(R.string.error_nearby_api)))
                     .build();
             isGoogleApiClientInitialized = true;
         } else {
@@ -174,13 +168,10 @@ public class CodeManager {
                     }
                 }).build();
         Nearby.Messages.subscribe(googleApiClient, messageListener, options)
-                .setResultCallback(new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(@NonNull Status status) {
-                        if (status.isSuccess()) {
-                        } else {
-                            handleUnsuccessfulNearbyResult(status);
-                        }
+                .setResultCallback(status -> {
+                    if (status.isSuccess()) {
+                    } else {
+                        handleUnsuccessfulNearbyResult(status);
                     }
                 });
     }
@@ -209,14 +200,10 @@ public class CodeManager {
                     }
                 }).build();
         Nearby.Messages.publish(googleApiClient, globalCode, options)
-                .setResultCallback(new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(@NonNull Status status) {
-                        if (status.isSuccess()) {
-
-                        } else {
-                            handleUnsuccessfulNearbyResult(status);
-                        }
+                .setResultCallback(status -> {
+                    if (status.isSuccess()) {
+                    } else {
+                        handleUnsuccessfulNearbyResult(status);
                     }
                 });
     }
@@ -249,12 +236,7 @@ public class CodeManager {
                 .setTitle(title)
                 .setMessage(message)
                 .setCancelable(false)
-                .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ((Activity) ctx).finish();
-                    }
-                })
+                .setPositiveButton(R.string.dismiss, (dialog, which) -> ((Activity) ctx).finish())
                 .create()
                 .show();
     }

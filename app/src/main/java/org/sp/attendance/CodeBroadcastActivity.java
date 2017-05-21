@@ -1,6 +1,6 @@
 package org.sp.attendance;
 
-/**
+/*
  * Copyright 2016-2017 Daniel Quah and Justin Xin
  * 	
  * This file is part of org.sp.attendance
@@ -17,15 +17,12 @@ package org.sp.attendance;
  */
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethod;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ScrollView;
@@ -62,10 +59,7 @@ public class CodeBroadcastActivity extends AppCompatActivity {
                     .setTitle(R.string.title_warning)
                     .setMessage(R.string.error_code_disappeared)
                     .setCancelable(false)
-                    .setPositiveButton(R.string.dismiss, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
+                    .setPositiveButton(R.string.dismiss, (dialog, which) -> {
                     })
                     .create()
                     .show();
@@ -75,20 +69,14 @@ public class CodeBroadcastActivity extends AppCompatActivity {
                 .setTitle(R.string.title_warning)
                 .setMessage(getResources().getString(R.string.continue_confirmation) + code + getResources().getString(R.string.continue_confirmation2))
                 .setCancelable(false)
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        (findViewById(R.id.layout_code_input)).setVisibility(ScrollView.GONE);
-                        (findViewById(R.id.layout_code_broadcasting)).setVisibility(ScrollView.VISIBLE);
-                        CodeManager.setupLecturerEnvironment(CodeBroadcastActivity.this, code);
-                        hideKeyboard();
-                        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                    }
+                .setPositiveButton(R.string.yes, (dialog, id) -> {
+                    (findViewById(R.id.layout_code_input)).setVisibility(ScrollView.GONE);
+                    (findViewById(R.id.layout_code_broadcasting)).setVisibility(ScrollView.VISIBLE);
+                    CodeManager.setupLecturerEnvironment(CodeBroadcastActivity.this, code);
+                    hideKeyboard();
+                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 })
-                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                })
+                .setNegativeButton(R.string.no, (dialog, id) -> dialog.cancel())
                 .create()
                 .show();
     }
@@ -99,16 +87,8 @@ public class CodeBroadcastActivity extends AppCompatActivity {
         new AlertDialog.Builder(CodeBroadcastActivity.this)
                 .setTitle("Are you sure?")
                 .setCancelable(false)
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener(){
-                    public void onClick(DialogInterface dialog, int id){
-                        finish();
-                    }
-                })
-                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener(){
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                })
+                .setPositiveButton(R.string.yes, (dialog, id) -> finish())
+                .setNegativeButton(R.string.no, (dialog, id) -> dialog.cancel())
                 .create()
                 .show();;
     }
@@ -121,12 +101,7 @@ public class CodeBroadcastActivity extends AppCompatActivity {
                     .setTitle(R.string.title_permission)
                     .setMessage(R.string.error_nearby_access_denied)
                     .setCancelable(false)
-                    .setPositiveButton(R.string.continue_prompt, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            CodeManager.resolvingPermissionError = false;
-                        }
-                    })
+                    .setPositiveButton(R.string.continue_prompt, (dialog, which) -> CodeManager.resolvingPermissionError = false)
                     .create()
                     .show();
             if (resultCode == Activity.RESULT_OK) {
@@ -135,12 +110,7 @@ public class CodeBroadcastActivity extends AppCompatActivity {
                         .setTitle(R.string.title_permission)
                         .setMessage(R.string.error_nearby_access_still_denied)
                         .setCancelable(false)
-                        .setPositiveButton(R.string.continue_prompt, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                finish();
-                            }
-                        })
+                        .setPositiveButton(R.string.continue_prompt, (dialog, which) -> finish())
                         .create()
                         .show();
             } else {

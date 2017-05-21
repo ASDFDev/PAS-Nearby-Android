@@ -21,13 +21,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import org.sp.attendance.utils.CodeManager;
+import org.sp.attendance.utils.NtpManager;
 
 public class StartupActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_startup);
+        NtpManager.queryNtpServer();
         //TODO: Check saved credentials
         if (!CodeManager.isDestroyed) {
             CodeManager.destroy();

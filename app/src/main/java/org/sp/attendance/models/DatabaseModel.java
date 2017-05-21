@@ -1,21 +1,20 @@
-package org.sp.attendance.utils;
+package org.sp.attendance.models;
 
 
-import java.util.Map;
 
-class DatabaseModel {
+public class DatabaseModel {
 
-    private Map<String,String> timeStamp;
+    private String timeStamp;
     private String userName;
     private String deviceID;
 
-    DatabaseModel(){}
+    public DatabaseModel(){}
 
-    public Map<String, String> getTimeStamp(){
+    public String  getTimeStamp(){
         return timeStamp;
     }
 
-    void setTimeStamp(final Map<String, String> timeStamp){
+    public void setTimeStamp(final String timeStamp){
         this.timeStamp = timeStamp;
     }
 
@@ -23,7 +22,7 @@ class DatabaseModel {
         return userName;
     }
 
-    void setUsername(final String username){
+    public void setUsername(final String username){
         this.userName = username;
     }
 
@@ -31,7 +30,7 @@ class DatabaseModel {
         return deviceID;
     }
 
-    void setDeviceID(final String deviceID){
+    public void setDeviceID(final String deviceID){
         this.deviceID = deviceID;
     }
 
