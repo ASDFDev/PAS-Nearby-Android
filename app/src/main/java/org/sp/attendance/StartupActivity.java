@@ -1,6 +1,6 @@
 package org.sp.attendance;
 
-/**
+/*
  * Copyright 2016-2017 Daniel Quah and Justin Xin
  * 	
  * This file is part of org.sp.attendance
@@ -35,6 +35,7 @@ public class StartupActivity extends AppCompatActivity {
         }
         Intent loginIntent = new Intent(this, ATSLoginActivity.class);
         startActivity(loginIntent);
+        finish();
     }
 
 }

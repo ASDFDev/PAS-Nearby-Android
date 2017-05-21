@@ -141,10 +141,7 @@ public class AccountsManager extends AsyncTask<String, Integer, String> {
                 .setTitle(title)
                 .setMessage(message)
                 .setCancelable(false)
-                .setPositiveButton(globalContext.getResources().getString(R.string.dismiss), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
+                .setPositiveButton(globalContext.getResources().getString(R.string.dismiss), (dialog, which) -> {
                 })
                 .create()
                 .show();

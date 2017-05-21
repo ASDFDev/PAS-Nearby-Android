@@ -127,7 +127,7 @@ public class CodeManager {
     }
 
     public static void destroy() {
-        if (resolvingPermissionError = false) {
+        if (resolvingPermissionError) {
             if (globalManagerType == ManagerType.Receive) {
                 stopReceiveCode();
             } else if (globalManagerType == ManagerType.Send) {
@@ -169,8 +169,7 @@ public class CodeManager {
                 }).build();
         Nearby.Messages.subscribe(googleApiClient, messageListener, options)
                 .setResultCallback(status -> {
-                    if (status.isSuccess()) {
-                    } else {
+                    if (!status.isSuccess()) {
                         handleUnsuccessfulNearbyResult(status);
                     }
                 });
@@ -201,8 +200,7 @@ public class CodeManager {
                 }).build();
         Nearby.Messages.publish(googleApiClient, globalCode, options)
                 .setResultCallback(status -> {
-                    if (status.isSuccess()) {
-                    } else {
+                    if (!status.isSuccess()) {
                         handleUnsuccessfulNearbyResult(status);
                     }
                 });

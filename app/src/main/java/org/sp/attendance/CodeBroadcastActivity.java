@@ -104,8 +104,7 @@ public class CodeBroadcastActivity extends AppCompatActivity {
                     .setPositiveButton(R.string.continue_prompt, (dialog, which) -> CodeManager.resolvingPermissionError = false)
                     .create()
                     .show();
-            if (resultCode == Activity.RESULT_OK) {
-            } else if (resultCode == Activity.RESULT_CANCELED) {
+            if (resultCode == Activity.RESULT_CANCELED) {
                 new AlertDialog.Builder(this)
                         .setTitle(R.string.title_permission)
                         .setMessage(R.string.error_nearby_access_still_denied)
@@ -113,7 +112,6 @@ public class CodeBroadcastActivity extends AppCompatActivity {
                         .setPositiveButton(R.string.continue_prompt, (dialog, which) -> finish())
                         .create()
                         .show();
-            } else {
             }
         }
     }

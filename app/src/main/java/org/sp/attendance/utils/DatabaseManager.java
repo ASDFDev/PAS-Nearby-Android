@@ -67,7 +67,6 @@ public class DatabaseManager {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot != null) {
-                            System.out.println("Datasnapshot value: " + dataSnapshot.getValue());
                             databaseArray = String.valueOf(dataSnapshot.getValue());
                                 if (dataSnapshot.hasChild(AccountsManager.loggedInUserID) ||
                                         databaseArray.contains(deviceID)) {
@@ -80,7 +79,8 @@ public class DatabaseManager {
                                     databaseModel.setTimeStamp(timeStamp);
                                     final DatabaseReference databaseReference = reference.child(message).child(key);
                                     databaseReference.setValue(databaseModel);
-                                    showDatabaseResult(ctx.getResources().getString(R.string.title_code_success), "Submitted on: " + timeStamp);
+                                    showDatabaseResult(ctx.getResources().getString(R.string.title_code_success),
+                                            ctx.getResources().getString(R.string.submission_message) + timeStamp);
                                 }
                             } else{
                                 showDatabaseResult(ctx.getResources().getString(R.string.title_code_failed),
