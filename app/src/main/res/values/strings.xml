@@ -83,6 +83,6 @@
     <string name="generated_code">Enter generated code</string>
     <string name="continue_confirmation">You have entered \'</string>
     <string name="continue_confirmation2">\' as the ATS code. Begin broadcast? </string>
-    <string name="submission_message">Submitted on</string>
-
+    <string name="submission_message">Submitted on: </string>
+    <string name="ntp_init_message">Getting time from NTP...</string>
 </resources>

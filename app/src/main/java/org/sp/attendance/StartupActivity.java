@@ -28,6 +28,7 @@ public class StartupActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new NtpManager(this);
         NtpManager.queryNtpServer();
         //TODO: Check saved credentials
         if (!CodeManager.isDestroyed) {
