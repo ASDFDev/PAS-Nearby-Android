@@ -28,15 +28,13 @@
         <activity
             android:name="org.sp.attendance.ATSLoginActivity"
             android:label="@string/title_login"
-            android:noHistory="true"></activity>
+            android:noHistory="true" />
         <activity
             android:name="org.sp.attendance.CodeBroadcastActivity"
-            android:label="@string/title_broadcast"
-            ></activity>
+            android:label="@string/title_broadcast" />
         <activity
             android:name="org.sp.attendance.CodeReceiveActivity"
-            android:label="@string/title_receive"
-            ></activity>
+            android:label="@string/title_receive" />
 
         <meta-data
             android:name="com.google.android.gms.nearby.connection.SERVICE_ID"

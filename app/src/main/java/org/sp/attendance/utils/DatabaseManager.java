@@ -58,16 +58,17 @@ public class DatabaseManager {
         isDestroyed = false;
     }
 
-
     static void submitStudentDevice(final String message, final String deviceID, final String timeStamp) {
         deviceHardwareID = deviceID;
         databaseModel = new DatabaseModel();
-        reference.child(message).addListenerForSingleValueEvent(
+        reference.child(NtpManager.getYear() + "/" + NtpManager.getMonth() + "/" + NtpManager.getDay() + "/" + message)
+                .addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot != null) {
                             databaseArray = String.valueOf(dataSnapshot.getValue());
+                            System.out.println("Database Array: " + databaseArray);
                                 if (dataSnapshot.hasChild(AccountsManager.loggedInUserID) ||
                                         databaseArray.contains(deviceID)) {
                                     // Device and username exists
@@ -77,7 +78,9 @@ public class DatabaseManager {
                                     final String key = dataSnapshot.child(AccountsManager.loggedInUserID).getKey();
                                     databaseModel.setDeviceID(deviceHardwareID);
                                     databaseModel.setTimeStamp(timeStamp);
-                                    final DatabaseReference databaseReference = reference.child(message).child(key);
+                                    final DatabaseReference databaseReference =
+                                            reference.child(NtpManager.getYear() + "/" + NtpManager.getMonth() +
+                                                    "/" + NtpManager.getDay() + "/" + message).child(key);
                                     databaseReference.setValue(databaseModel);
                                     showDatabaseResult(ctx.getResources().getString(R.string.title_code_success),
                                             ctx.getResources().getString(R.string.submission_message) + timeStamp);
@@ -108,7 +111,8 @@ public class DatabaseManager {
     }
 
     static void openDatabaseForLecturer(){
-        reference.child(globalClassValue).setValue("");
+        reference.child(NtpManager.getYear()).child(NtpManager.getMonth()).child(NtpManager.getDay())
+                .child("Class code: ").setValue(globalClassValue);
     }
 
     private static void showDatabaseResult(String title, String message){

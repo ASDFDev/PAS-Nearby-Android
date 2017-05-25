@@ -33,7 +33,6 @@ import com.google.android.gms.common.GoogleApiAvailability;
 
 import org.sp.attendance.utils.AccountsManager;
 import org.sp.attendance.utils.CodeManager;
-import org.sp.attendance.utils.NtpManager;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;

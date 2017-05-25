@@ -81,7 +81,7 @@ public class CodeManager {
         if (!DatabaseManager.isDestroyed) {
             DatabaseManager.initialize(ctx);
         }
-        timeStamp = NtpManager.getNtp();
+        timeStamp = NtpManager.getTime();
         deviceID = Secure.getString(ctx.getContentResolver(), Secure.ANDROID_ID);
         globalManagerType = managerType;
         messageListener = new MessageListener() {

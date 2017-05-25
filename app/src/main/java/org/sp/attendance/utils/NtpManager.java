@@ -28,6 +28,7 @@ import org.sp.attendance.R;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import io.reactivex.schedulers.Schedulers;
 
@@ -64,8 +65,38 @@ public class NtpManager {
         progressDialog.dismiss();
     }
 
-    public static String getNtp(){
+    static String getNtp(){
         Format formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date trueTime = TrueTimeRx.now();
+        return formatter.format(trueTime);
+    }
+
+    public static String getDate(){
+        Format formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date trueTime = TrueTimeRx.now();
+        return formatter.format(trueTime);
+    }
+
+    static String getTime(){
+        Format formatter = new SimpleDateFormat("HH:mm:ss");
+        Date trueTime = TrueTimeRx.now();
+        return formatter.format(trueTime);
+    }
+
+    static String getYear(){
+        Format formatter = new SimpleDateFormat("yyyy");
+        Date trueTime = TrueTimeRx.now();
+        return formatter.format(trueTime);
+    }
+
+    static String getMonth(){
+        Format formatter = new SimpleDateFormat("LLLL", Locale.getDefault());
+        Date trueTime = TrueTimeRx.now();
+        return formatter.format(trueTime);
+    }
+
+    static String getDay(){
+        Format formatter = new SimpleDateFormat("dd");
         Date trueTime = TrueTimeRx.now();
         return formatter.format(trueTime);
     }

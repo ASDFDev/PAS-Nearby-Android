@@ -21,8 +21,8 @@
     <string name="title_login">Login to SPICE</string>
     <string name="title_broadcast">Broadcasting Code</string>
     <string name="title_receive">Receiving Code</string>
-    <string name="action_connecting">Connecting...</string>
-    <string name="action_broadcasting">Broadcasting code to students... </string>
+    <string name="action_connecting">Connecting…</string>
+    <string name="action_broadcasting">Broadcasting code to students… </string>
     <string name="action_receiving">Devices around you: </string>
     <string name="label_username">Username</string>
     <string name="label_password">Password</string>
@@ -72,7 +72,6 @@
     <string name="lecturer_broadcasting">Lecturer(s) broadcasting: </string>
     <string name="please_confirm">Please confirm</string>
     <string name="disclaimer">Disclaimer</string>
-    <string name="first_run_message">This app is not endorsed by SP and as such, we take no responsibility if your attendance fails to be submitted correctly. </string>
     <string name="got_it">Got it</string>
     <string name="ats_code">ATS Code is: </string>
     <string name="no">No</string>
@@ -83,6 +82,6 @@
     <string name="generated_code">Enter generated code</string>
     <string name="continue_confirmation">You have entered \'</string>
     <string name="continue_confirmation2">\' as the ATS code. Begin broadcast? </string>
-    <string name="submission_message">Submitted on: </string>
-    <string name="ntp_init_message">Getting time from NTP...</string>
+    <string name="submission_message">Submitted on:\u0020</string>
+    <string name="ntp_init_message">Getting time from NTP…</string>
 </resources>
