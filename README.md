@@ -14,7 +14,7 @@ The namespace will remain the same to avoid errors with users using this project
 # Screnshots
 ![](materials/screenshot.png)
 ![](materials/receive-broadcast.png)
-![](materials/database.png)
+![](materials/database_layout.gif)
 
 Solution used:
 
