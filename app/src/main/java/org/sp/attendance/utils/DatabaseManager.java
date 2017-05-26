@@ -40,6 +40,7 @@ public class DatabaseManager {
     private static DatabaseModel databaseModel;
     private static String globalClassValue;
     private static String databaseArray;
+    private static String childRef = NtpManager.getYear() + "/" + NtpManager.getMonth() + "/" + NtpManager.getDay();
 
     public static void destroy() {
         ctx = null;
@@ -61,7 +62,7 @@ public class DatabaseManager {
     static void submitStudentDevice(final String message, final String deviceID, final String timeStamp) {
         deviceHardwareID = deviceID;
         databaseModel = new DatabaseModel();
-        reference.child(NtpManager.getYear() + "/" + NtpManager.getMonth() + "/" + NtpManager.getDay() + "/" + message)
+        reference.child(childRef + "/" + message)
                 .addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
@@ -79,8 +80,7 @@ public class DatabaseManager {
                                     databaseModel.setDeviceID(deviceHardwareID);
                                     databaseModel.setTimeStamp(timeStamp);
                                     final DatabaseReference databaseReference =
-                                            reference.child(NtpManager.getYear() + "/" + NtpManager.getMonth() +
-                                                    "/" + NtpManager.getDay() + "/" + message).child(key);
+                                            reference.child(childRef + "/" + message).child(key);
                                     databaseReference.setValue(databaseModel);
                                     showDatabaseResult(ctx.getResources().getString(R.string.title_code_success),
                                             ctx.getResources().getString(R.string.submission_message) + timeStamp);
@@ -111,8 +111,7 @@ public class DatabaseManager {
     }
 
     static void openDatabaseForLecturer(){
-        reference.child(NtpManager.getYear()).child(NtpManager.getMonth()).child(NtpManager.getDay())
-                .child("Class code: ").setValue(globalClassValue);
+        reference.child(childRef).setValue(globalClassValue);
     }
 
     private static void showDatabaseResult(String title, String message){
@@ -120,7 +119,8 @@ public class DatabaseManager {
                 .setTitle(title)
                 .setMessage(message)
                 .setCancelable(false)
-                .setPositiveButton(ctx.getResources().getString(R.string.dismiss), (dialog, which) -> ((Activity)ctx).finish())
+                .setPositiveButton(ctx.getResources().getString(R.string.dismiss),
+                        (dialog, which) -> ((Activity)ctx).finish())
                 .create()
                 .show();
     }
