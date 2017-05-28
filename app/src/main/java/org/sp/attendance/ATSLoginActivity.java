@@ -33,6 +33,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 
 import org.sp.attendance.utils.AccountsManager;
 import org.sp.attendance.utils.CodeManager;
+import org.sp.attendance.utils.NtpManager;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -49,23 +50,8 @@ public class ATSLoginActivity extends AppCompatActivity {
             CodeManager.destroy();
         }
         checkGooglePlayServices();
-        IntentFilter filter = new IntentFilter(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION);
-        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        WifiInfo wifiInfo;
-        String ssid;
-        wifiInfo = wifiManager.getConnectionInfo();
-        if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
-            ssid = wifiInfo.getSSID();
-            if (ssid.equals("\"SPStudent\"") || ssid.equals("\"SPStaff\"") || ssid.equals("\"SPGuest\"")) {
-              //  tryAutoSignIn();
-            } else {
-                showDialog(this.getResources().getString(R.string.title_warning),
-                        this.getResources().getString(R.string.error_network_invalid));
-            }
-        } else {
-            showDialog(this.getResources().getString(R.string.title_warning),
-                    this.getResources().getString(R.string.error_network_disappeared));
-        }
+        NtpManager.queryNtpServer();
+        checkSsid();
     }
 
     private boolean checkGooglePlayServices() {
@@ -83,13 +69,20 @@ public class ATSLoginActivity extends AppCompatActivity {
         return true;
     }
 
-    public void tryAutoSignIn() {
-        SharedPreferences sharedPref = ATSLoginActivity.this.getSharedPreferences("org.sp.ats.accounts", Context.MODE_PRIVATE);
-        if (!sharedPref.getString("ats_userid", "").equals("") &&
-                !sharedPref.getString("ats_pwd", "").equals("")) {
-            new AccountsManager(ATSLoginActivity.this).execute("SignInOnly", sharedPref.getString("ats_userid", ""),
-                    sharedPref.getString("ats_pwd", ""));
-
+    private void checkSsid() {
+        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wifiInfo;
+        String ssid;
+        wifiInfo = wifiManager.getConnectionInfo();
+        if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
+            ssid = wifiInfo.getSSID();
+            if (!ssid.equals("\"SPStudent\"") || !ssid.equals("\"SPStaff\"") || !ssid.equals("\"SPGuest\"")) {
+                showDialog(this.getResources().getString(R.string.title_warning),
+                        this.getResources().getString(R.string.error_network_invalid));
+            } else {
+                showDialog(this.getResources().getString(R.string.title_warning),
+                        this.getResources().getString(R.string.error_network_disappeared));
+            }
         }
     }
 
