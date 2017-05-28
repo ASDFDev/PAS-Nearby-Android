@@ -16,75 +16,34 @@ package org.sp.attendance;
  * GNU General Public License for more details.
  */
 
-import android.content.Context;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.net.wifi.SupplicantState;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 
 import org.sp.attendance.utils.AccountsManager;
 import org.sp.attendance.utils.CodeManager;
-import org.sp.attendance.utils.NtpManager;
+import org.sp.attendance.utils.StartUpManager;
 
-import java.net.CookieHandler;
-import java.net.CookieManager;
+
 
 
 public class ATSLoginActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_atslogin);
-        CookieHandler.setDefault(new CookieManager());
+        showProgressDialog();
         if (!CodeManager.isDestroyed) {
             CodeManager.destroy();
         }
-        checkGooglePlayServices();
-        NtpManager.queryNtpServer();
-        checkSsid();
     }
 
-    private boolean checkGooglePlayServices() {
-        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (apiAvailability.isUserResolvableError(resultCode)) {
-                apiAvailability.getErrorDialog(this, resultCode, 9000)
-                        .show();
-            } else {
-                finish();
-            }
-            return false;
-        }
-        return true;
-    }
-
-    private void checkSsid() {
-        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        WifiInfo wifiInfo;
-        String ssid;
-        wifiInfo = wifiManager.getConnectionInfo();
-        if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
-            ssid = wifiInfo.getSSID();
-            if (!ssid.equals("\"SPStudent\"") || !ssid.equals("\"SPStaff\"") || !ssid.equals("\"SPGuest\"")) {
-                showDialog(this.getResources().getString(R.string.title_warning),
-                        this.getResources().getString(R.string.error_network_invalid));
-            } else {
-                showDialog(this.getResources().getString(R.string.title_warning),
-                        this.getResources().getString(R.string.error_network_disappeared));
-            }
-        }
-    }
 
     public void signIn(View view) {
         if (!((EditText) findViewById(R.id.textEdit_userID)).getText().toString().equals("") &&
@@ -109,4 +68,18 @@ public class ATSLoginActivity extends AppCompatActivity {
                 .show();
     }
 
+    private void showProgressDialog(){
+        ProgressDialog progressdialog = new ProgressDialog(ATSLoginActivity.this);
+        progressdialog.setMessage(getResources().getString(R.string.please_wait));
+        progressdialog.setCancelable(false);
+        progressdialog.show();
+        initChecks();
+        progressdialog.dismiss();
+    }
+
+
+    private void initChecks(){
+        new StartUpManager(this);
+        StartUpManager.initStartUp();
+    }
 }
