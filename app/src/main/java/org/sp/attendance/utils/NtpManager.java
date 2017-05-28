@@ -30,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class NtpManager {
@@ -50,18 +51,19 @@ public class NtpManager {
         this.context = context;
     }
 
-     public static void queryNtpServer(){
-         showProgressDialog();
-            TrueTimeRx.build()
-                    .withRetryCount(100)
-                    .withSharedPreferences(context)
-                    .withLoggingEnabled(false)
-                    .initializeRx("time.apple.com")
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(date ->
-                                    System.out.println("Ntp initialization successful ( " + date  + " )"),
-                            Throwable ->
-                                    System.out.print("Ntp initialization failed!"));
+    public static void queryNtpServer(){
+        showProgressDialog();
+        TrueTimeRx.build()
+                .withRetryCount(100)
+                .withSharedPreferences(context)
+                .withLoggingEnabled(false)
+                .initializeRx("time.apple.com")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(date ->
+                                System.out.println("Ntp initialization successful ( " + date  + " )"),
+                        Throwable ->
+                                System.out.print("Ntp initialization failed!"));
         progressDialog.dismiss();
     }
 
