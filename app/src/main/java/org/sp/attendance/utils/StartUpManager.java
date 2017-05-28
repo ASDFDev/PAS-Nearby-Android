@@ -67,6 +67,7 @@ public class StartUpManager{
         new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setMessage(message)
+                .setIcon(R.drawable.ic_warning_black_24dp)
                 .setCancelable(false)
                 .setPositiveButton(R.string.dismiss, (dialog, which) -> {
                 })

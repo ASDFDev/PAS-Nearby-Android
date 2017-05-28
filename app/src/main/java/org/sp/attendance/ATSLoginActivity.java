@@ -23,6 +23,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 
+import com.github.ybq.android.spinkit.style.Wave;
 
 import org.sp.attendance.utils.AccountsManager;
 import org.sp.attendance.utils.CodeManager;
@@ -31,8 +32,7 @@ import org.sp.attendance.utils.StartUpManager;
 
 
 
-public class ATSLoginActivity extends AppCompatActivity {
-
+public class ATSLoginActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +61,7 @@ public class ATSLoginActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle(title)
                 .setMessage(message)
+                .setIcon(R.drawable.ic_warning_black_24dp)
                 .setCancelable(false)
                 .setPositiveButton(R.string.dismiss, (dialog, which) -> {
                 })
@@ -72,6 +73,10 @@ public class ATSLoginActivity extends AppCompatActivity {
         ProgressDialog progressdialog = new ProgressDialog(ATSLoginActivity.this);
         progressdialog.setMessage(getResources().getString(R.string.please_wait));
         progressdialog.setCancelable(false);
+        Wave mWaveDrawable = new Wave();
+        mWaveDrawable.setBounds(0, 0, 100, 100);
+        mWaveDrawable.setColor(getResources().getColor(R.color.colorAccent));
+        progressdialog.setIndeterminateDrawable(mWaveDrawable);
         progressdialog.show();
         initChecks();
         progressdialog.dismiss();

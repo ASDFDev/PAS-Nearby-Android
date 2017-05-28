@@ -76,6 +76,7 @@ public class CodeReceiveActivity extends AppCompatActivity {
                 new AlertDialog.Builder(this)
                         .setTitle(R.string.title_permission)
                         .setMessage(R.string.error_nearby_access_still_denied)
+                        .setIcon(R.drawable.ic_error_outline_black_24dp)
                         .setCancelable(false)
                         .setPositiveButton(R.string.continue_prompt, (dialog, which) -> finish())
                         .create()

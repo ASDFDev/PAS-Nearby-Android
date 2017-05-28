@@ -59,6 +59,7 @@ public class CodeBroadcastActivity extends AppCompatActivity {
                     .setTitle(R.string.title_warning)
                     .setMessage(R.string.error_code_disappeared)
                     .setCancelable(false)
+                    .setIcon(R.drawable.ic_warning_black_24dp)
                     .setPositiveButton(R.string.dismiss, (dialog, which) -> {
                     })
                     .create()
@@ -108,6 +109,7 @@ public class CodeBroadcastActivity extends AppCompatActivity {
                 new AlertDialog.Builder(this)
                         .setTitle(R.string.title_permission)
                         .setMessage(R.string.error_nearby_access_still_denied)
+                        .setIcon(R.drawable.ic_error_outline_black_24dp)
                         .setCancelable(false)
                         .setPositiveButton(R.string.continue_prompt, (dialog, which) -> finish())
                         .create()
