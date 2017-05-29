@@ -29,15 +29,15 @@ import java.util.Locale;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class NtpManager {
+class NtpManager {
 
-    private static Context context;
+    private Context context;
 
-    public NtpManager(Context context){
+    NtpManager(Context context){
         this.context = context;
     }
 
-    public static void queryNtpServer(){
+    void queryNtpServer(){
         TrueTimeRx.build()
                 .withRetryCount(100)
                 .withSharedPreferences(context)

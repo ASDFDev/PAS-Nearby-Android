@@ -85,7 +85,7 @@ public class ATSLoginActivity extends AppCompatActivity{
 
 
     private void initChecks(){
-        new StartUpManager(this);
-        StartUpManager.initStartUp();
+        StartUpManager startUpManager = new StartUpManager(this);
+        startUpManager.initStartUp();
     }
 }

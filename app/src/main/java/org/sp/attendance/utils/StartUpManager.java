@@ -15,23 +15,23 @@ import org.sp.attendance.R;
 
 public class StartUpManager{
 
-    private static Context context;
+    private Context context;
 
 
     public StartUpManager(Context context){
         this.context = context;
     }
 
-    public static void initStartUp(){
+    public void initStartUp(){
         checkPlayServices((Activity) context);
-        new NtpManager(context);
-        NtpManager.queryNtpServer();
+        NtpManager ntpManager = new NtpManager(context);
+        ntpManager.queryNtpServer();
         checkSsid();
     }
 
 
 
-    private static void checkSsid() {
+    private void checkSsid() {
         WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo;
         String ssid;
@@ -48,7 +48,7 @@ public class StartUpManager{
         }
     }
 
-    private static boolean checkPlayServices(Activity activity) {
+    private boolean checkPlayServices(Activity activity) {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(activity);
         if (resultCode != ConnectionResult.SUCCESS) {
@@ -63,7 +63,7 @@ public class StartUpManager{
         return true;
     }
 
-    private static void showDialog(String title, String message){
+    private void showDialog(String title, String message){
         new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setMessage(message)
