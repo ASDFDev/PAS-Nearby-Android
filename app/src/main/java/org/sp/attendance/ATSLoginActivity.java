@@ -16,12 +16,14 @@ package org.sp.attendance;
  * GNU General Public License for more details.
  */
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.github.ybq.android.spinkit.style.Wave;
@@ -39,7 +41,9 @@ public class ATSLoginActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_atslogin);
+        hideKeyboard();
         showProgressDialog();
+        showKeyboard();
         if (!CodeManager.isDestroyed) {
             CodeManager.destroy();
         }
@@ -88,4 +92,15 @@ public class ATSLoginActivity extends AppCompatActivity{
         StartUpManager startUpManager = new StartUpManager(this);
         startUpManager.initStartUp();
     }
+
+    private void hideKeyboard(){
+        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+    }
+
+    private void showKeyboard(){
+        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+    }
+
 }
