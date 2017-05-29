@@ -23,10 +23,10 @@ public class StartUpManager{
     }
 
     public static void initStartUp(){
-        checkSsid();
         checkPlayServices((Activity) context);
         new NtpManager(context);
         NtpManager.queryNtpServer();
+        checkSsid();
     }
 
 
