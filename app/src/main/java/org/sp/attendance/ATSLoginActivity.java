@@ -75,7 +75,7 @@ public class ATSLoginActivity extends AppCompatActivity{
         progressdialog.setCancelable(false);
         Wave mWaveDrawable = new Wave();
         mWaveDrawable.setBounds(0, 0, 100, 100);
-        mWaveDrawable.setColor(getResources().getColor(R.color.colorAccent));
+        mWaveDrawable.setColor(ContextCompat.getColor(this,R.color.colorAccent));
         progressdialog.setIndeterminateDrawable(mWaveDrawable);
         progressdialog.show();
         initChecks();
