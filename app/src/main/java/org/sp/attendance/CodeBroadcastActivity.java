@@ -69,6 +69,7 @@ public class CodeBroadcastActivity extends AppCompatActivity {
         new AlertDialog.Builder(CodeBroadcastActivity.this)
                 .setTitle(R.string.title_warning)
                 .setMessage(getResources().getString(R.string.continue_confirmation) + code + getResources().getString(R.string.continue_confirmation2))
+                .setIcon(R.drawable.ic_question_answer_black_24dp)
                 .setCancelable(false)
                 .setPositiveButton(R.string.yes, (dialog, id) -> {
                     (findViewById(R.id.layout_code_input)).setVisibility(ScrollView.GONE);
@@ -88,6 +89,7 @@ public class CodeBroadcastActivity extends AppCompatActivity {
         new AlertDialog.Builder(CodeBroadcastActivity.this)
                 .setTitle("Are you sure?")
                 .setCancelable(false)
+                .setIcon(R.drawable.ic_question_answer_black_24dp)
                 .setPositiveButton(R.string.yes, (dialog, id) -> finish())
                 .setNegativeButton(R.string.no, (dialog, id) -> dialog.cancel())
                 .create()
@@ -121,7 +123,7 @@ public class CodeBroadcastActivity extends AppCompatActivity {
     private void hideKeyboard(){
         InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-        }
     }
-    // Reserved space for future database management for staff
+
+}
 
