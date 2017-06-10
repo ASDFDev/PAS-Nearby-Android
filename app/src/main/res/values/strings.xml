@@ -58,6 +58,7 @@
     <string name="error_timed_out">Session timed out. </string>
     <string name="error_generic">An error occurred. Please try again later. </string>
     <string name="error_nearby_api">One or more services could not be started. </string>
+    <!--29 May 2017: I found these strings today while trying to find a generic error message -->
     <string name="error_nearby_pwn">Could not broadcast code. </string>
     <string name="error_nearby_timed_out">Request timed out, please try again later. </string>
     <string name="error_nearby_kekd">Could not connect to a lecturer device. </string>
@@ -83,5 +84,7 @@
     <string name="continue_confirmation">You have entered \'</string>
     <string name="continue_confirmation2">\' as the ATS code. Begin broadcast? </string>
     <string name="submission_message">Submitted on:\u0020</string>
-    <string name="ntp_init_message">Getting time from NTP…</string>
+    <string name="ntp_init_failed">Unable to reach NTP server!</string>
+    <string name="ntp_init_message">Getting time from NTP server…</string>
+    <string name="confirmation">Are you sure?</string>
 </resources>

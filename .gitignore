@@ -46,3 +46,4 @@ build/
 .gradle/
 
 gradle.properties
+*.keystore

@@ -26,24 +26,30 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.sp.attendance.CodeReceiveActivity;
+import org.sp.attendance.models.NtpModel;
 import org.sp.attendance.R;
 import org.sp.attendance.models.DatabaseModel;
 
+
+
 public class DatabaseManager {
 
-    static Boolean isDestroyed = true;
+    Boolean isDestroyed = true;
     private static FirebaseDatabase database = FirebaseDatabase.getInstance();
     private static final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
     private static String deviceHardwareID;
-    private static Context ctx = CodeReceiveActivity.getmContext();
     private static DatabaseModel databaseModel;
     private static String globalClassValue;
     private static String databaseArray;
-    private static String childRef = NtpManager.getYear() + "/" + NtpManager.getMonth() + "/" + NtpManager.getDay();
+    private static String studentAccount;
+    private Context context;
 
-    public static void destroy() {
-        ctx = null;
+    public DatabaseManager(Context context){
+        this.context = context;
+    }
+
+    public void destroy() {
+        context = null;
         deviceHardwareID = null;
         database.goOffline();
         isDestroyed = true;
@@ -53,48 +59,48 @@ public class DatabaseManager {
         Student device operations
      */
 
-    static void initialize(Context context) {
-        ctx = context;
+    void initialize(Context context) {
         database.goOnline();
         isDestroyed = false;
     }
 
-    static void submitStudentDevice(final String message, final String deviceID, final String timeStamp) {
+    void submitStudentDevice(final String message, final String deviceID, final String timeStamp) {
         deviceHardwareID = deviceID;
         databaseModel = new DatabaseModel();
-        reference.child(childRef + "/" + message)
+        NtpModel ntpModel = new NtpModel(context);
+        String currentTime = ntpModel.getTrueYear() + "/" + ntpModel.getTrueMonth() + "/" + ntpModel.getTrueDay();
+        reference.child(currentTime + "/" + message)
                 .addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot != null) {
                             databaseArray = String.valueOf(dataSnapshot.getValue());
-                            System.out.println("Database Array: " + databaseArray);
                                 if (dataSnapshot.hasChild(AccountsManager.loggedInUserID) ||
                                         databaseArray.contains(deviceID)) {
                                     // Device and username exists
-                                    showDatabaseResult(ctx.getResources().getString(R.string.title_code_failed),
-                                            ctx.getResources().getString(R.string.error_already_submitted));
+                                    showDatabaseResult(context.getResources().getString(R.string.title_code_failed),
+                                            context.getResources().getString(R.string.error_already_submitted));
                                 } else {
                                     final String key = dataSnapshot.child(AccountsManager.loggedInUserID).getKey();
                                     databaseModel.setDeviceID(deviceHardwareID);
                                     databaseModel.setTimeStamp(timeStamp);
                                     final DatabaseReference databaseReference =
-                                            reference.child(childRef + "/" + message).child(key);
+                                            reference.child(currentTime + "/" + message).child(key);
                                     databaseReference.setValue(databaseModel);
-                                    showDatabaseResult(ctx.getResources().getString(R.string.title_code_success),
-                                            ctx.getResources().getString(R.string.submission_message) + timeStamp);
+                                    showDatabaseResult(context.getResources().getString(R.string.title_code_success),
+                                            context.getResources().getString(R.string.submission_message) + timeStamp);
                                 }
                             } else{
-                                showDatabaseResult(ctx.getResources().getString(R.string.title_code_failed),
-                                        ctx.getResources().getString(R.string.error_code_unenrolled));
+                                showDatabaseResult(context.getResources().getString(R.string.title_code_failed),
+                                        context.getResources().getString(R.string.error_code_unenrolled));
                             }
 
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        showDatabaseResult(ctx.getResources().getString(R.string.title_code_failed),
-                                ctx.getResources().getString(R.string.error_code_invalid));
+                        showDatabaseResult(context.getResources().getString(R.string.title_code_failed),
+                                context.getResources().getString(R.string.error_code_invalid));
                     }
                 });
     }
@@ -105,22 +111,50 @@ public class DatabaseManager {
         Lecturer device operations
      */
     
-    static String generateMessage(String code) {
+    String generateMessage(String code) {
         globalClassValue = code;
         return code;
     }
 
-    static void openDatabaseForLecturer(){
-        reference.child(childRef).setValue(globalClassValue);
+    void openDatabaseForLecturer(){
+        NtpModel ntpModel = new NtpModel(context);
+        String currentTime = ntpModel.getTrueYear() + "/" + ntpModel.getTrueMonth() + "/" + ntpModel.getTrueDay();
+        reference.child(currentTime).setValue(globalClassValue);
     }
 
-    private static void showDatabaseResult(String title, String message){
-        new AlertDialog.Builder(ctx)
+    // TODO: Migrate to this function in AttendanceActivity
+    String getStudent(){
+        DatabaseReference classReference = FirebaseDatabase.getInstance()
+                .getReference("YEAR")
+                .child("MONTH")
+                .child("DAY")
+                .child("ATTENDANCE_CODE");
+        classReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                    studentAccount = childSnapshot.getKey();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("Database Error! Message: " + databaseError);
+            }
+        });
+        // Currently this returns null
+        return studentAccount;
+    }
+
+
+
+    private void showDatabaseResult(String title, String message){
+        new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setMessage(message)
                 .setCancelable(false)
-                .setPositiveButton(ctx.getResources().getString(R.string.dismiss),
-                        (dialog, which) -> ((Activity)ctx).finish())
+                .setPositiveButton(context.getResources().getString(R.string.dismiss),
+                        (dialog, which) -> ((Activity)context).finish())
                 .create()
                 .show();
     }

@@ -17,7 +17,6 @@ package org.sp.attendance;
  */
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -31,33 +30,34 @@ import org.sp.attendance.utils.DatabaseManager;
 
 public class CodeReceiveActivity extends AppCompatActivity {
 
-    private static CodeReceiveActivity instance;
+    CodeManager codeManager = new CodeManager(this);
+    DatabaseManager databaseManager = new DatabaseManager(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receive);
-        CodeManager.setupStudentEnvironment(this, AccountsManager.loggedInUserID);
+        codeManager.setupStudentEnvironment(this, AccountsManager.loggedInUserID);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        CodeManager.destroy();
-        DatabaseManager.destroy();
+        codeManager.destroy();
+        databaseManager.destroy();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        CodeManager.destroy();
-        DatabaseManager.destroy();
+        codeManager.destroy();
+        databaseManager.destroy();
     }
 
     public void stopReceive(View view) {
-        CodeManager.destroy();
-        DatabaseManager.destroy();
+        codeManager.destroy();
+        databaseManager.destroy();
         finish();
     }
 
@@ -84,14 +84,4 @@ public class CodeReceiveActivity extends AppCompatActivity {
             }
         }
     }
-
-
-    public CodeReceiveActivity(){
-        instance = this;
-    }
-
-    public static Context getmContext(){
-        return instance;
-    }
-
 }

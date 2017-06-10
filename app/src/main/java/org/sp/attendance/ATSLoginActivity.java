@@ -2,7 +2,7 @@ package org.sp.attendance;
 
 /*
  * Copyright 2016-2017 Daniel Quah and Justin Xin
- * 	
+ *
  * This file is part of org.sp.attendance
  *
  * ATS_Nearby is free software: you can redistribute it and/or modify
@@ -17,35 +17,28 @@ package org.sp.attendance;
  */
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import com.github.ybq.android.spinkit.style.Wave;
-
 import org.sp.attendance.utils.AccountsManager;
 import org.sp.attendance.utils.CodeManager;
-import org.sp.attendance.utils.StartUpManager;
-
-
-
 
 public class ATSLoginActivity extends AppCompatActivity{
+
+    CodeManager codeManager = new CodeManager(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_atslogin);
         hideKeyboard();
-        showProgressDialog();
         showKeyboard();
-        if (!CodeManager.isDestroyed) {
-            CodeManager.destroy();
+        if (!codeManager.isDestroyed) {
+            codeManager.destroy();
         }
     }
 
@@ -72,25 +65,6 @@ public class ATSLoginActivity extends AppCompatActivity{
                 })
                 .create()
                 .show();
-    }
-
-    private void showProgressDialog(){
-        ProgressDialog progressdialog = new ProgressDialog(ATSLoginActivity.this);
-        progressdialog.setMessage(getResources().getString(R.string.please_wait));
-        progressdialog.setCancelable(false);
-        Wave mWaveDrawable = new Wave();
-        mWaveDrawable.setBounds(0, 0, 100, 100);
-        mWaveDrawable.setColor(ContextCompat.getColor(this,R.color.colorAccent));
-        progressdialog.setIndeterminateDrawable(mWaveDrawable);
-        progressdialog.show();
-        initChecks();
-        progressdialog.dismiss();
-    }
-
-
-    private void initChecks(){
-        StartUpManager startUpManager = new StartUpManager(this);
-        startUpManager.initStartUp();
     }
 
     private void hideKeyboard(){

@@ -40,6 +40,7 @@ import com.google.android.gms.nearby.messages.Strategy;
 import com.google.android.gms.nearby.messages.SubscribeCallback;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
 
+import org.sp.attendance.models.NtpModel;
 import org.sp.attendance.R;
 
 import java.nio.charset.Charset;
@@ -51,11 +52,11 @@ public class CodeManager {
     // 30 minutes time out for students to submit code
     private static final Strategy PUB_SUB_STRATEGY = new Strategy.Builder()
             .setTtlSeconds(1800).build();
-    public static boolean isDestroyed = true;
+    public boolean isDestroyed = true;
     private static boolean isGoogleApiClientInitialized = false;
     public static boolean resolvingPermissionError = false;
     private static GoogleApiClient googleApiClient;
-    private static Context ctx;
+    private Context ctx;
     private static Message attendanceCode;
     private static MessageListener messageListener;
     private static ManagerType globalManagerType;
@@ -63,31 +64,38 @@ public class CodeManager {
     private static String globalStudentID;
     private static String deviceID, timeStamp;
 
-    public static void setupLecturerEnvironment(Context context, String code) {
-        globalCode = new Message((DatabaseManager.generateMessage(code)).getBytes(Charset.forName("UTF-8")));
+    public CodeManager(Context context){
+        this.ctx = context;
+    }
+
+    public void setupLecturerEnvironment(Context context, String code) {
+        DatabaseManager databaseManager = new DatabaseManager(context);
+        globalCode = new Message((databaseManager.generateMessage(code)).getBytes(Charset.forName("UTF-8")));
         globalStudentID = null;
-        DatabaseManager.openDatabaseForLecturer();
+        databaseManager.openDatabaseForLecturer();
         initialize(context, ManagerType.Send);
     }
 
-    public static void setupStudentEnvironment(Context context, String studentID) {
+    public void setupStudentEnvironment(Context context, String studentID) {
         globalCode = null;
         globalStudentID = studentID;
         initialize(context, ManagerType.Receive);
     }
 
-    private static void initialize(Context context, ManagerType managerType) {
+    private void initialize(Context context, ManagerType managerType) {
+        DatabaseManager databaseManager = new DatabaseManager(context);
         ctx = context;
-        if (!DatabaseManager.isDestroyed) {
-            DatabaseManager.initialize(ctx);
+        if (!databaseManager.isDestroyed) {
+            databaseManager.initialize(ctx);
         }
-        timeStamp = NtpManager.getTime();
+        NtpModel ntpModel = new NtpModel(context);
+        timeStamp = ntpModel.getTrueTime();
         deviceID = Secure.getString(ctx.getContentResolver(), Secure.ANDROID_ID);
         globalManagerType = managerType;
         messageListener = new MessageListener() {
             @Override
             public void onFound(Message message) {
-                DatabaseManager.submitStudentDevice(new String(message.getContent(), Charset.forName("UTF-8")), deviceID, timeStamp);
+                databaseManager.submitStudentDevice(new String(message.getContent(), Charset.forName("UTF-8")), deviceID, timeStamp);
             }
 
             @Override
@@ -126,7 +134,7 @@ public class CodeManager {
         isDestroyed = false;
     }
 
-    public static void destroy() {
+    public void destroy() {
         if (resolvingPermissionError) {
             if (globalManagerType == ManagerType.Receive) {
                 stopReceiveCode();
@@ -142,7 +150,7 @@ public class CodeManager {
         }
     }
 
-    private static boolean checkNetwork() {
+    private boolean checkNetwork() {
         ConnectivityManager connManager = (ConnectivityManager)
                 ctx.getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo info = connManager.getActiveNetworkInfo();
@@ -153,7 +161,7 @@ public class CodeManager {
         RECEIVE CODE FROM LECTURER
      */
 
-    private static void receiveCode() {
+    private void receiveCode() {
         if (!checkNetwork()) {
             return;
         }
@@ -175,7 +183,7 @@ public class CodeManager {
                 });
     }
 
-    private static void stopReceiveCode() {
+    private void stopReceiveCode() {
         Nearby.Messages.unsubscribe(googleApiClient, messageListener);
         googleApiClient.disconnect();
     }
@@ -184,7 +192,7 @@ public class CodeManager {
         LECTURER CODE BROADCAST
      */
 
-    private static void broadcastCode() {
+    private void broadcastCode() {
         if (!checkNetwork()) {
             return;
         }
@@ -206,12 +214,12 @@ public class CodeManager {
                 });
     }
 
-    private static void stopBroadcastCode() {
+    private void stopBroadcastCode() {
         Nearby.Messages.unpublish(googleApiClient, globalCode);
         googleApiClient.disconnect();
     }
 
-    private static void handleUnsuccessfulNearbyResult(Status status) {
+    private void handleUnsuccessfulNearbyResult(Status status) {
         if (status.getStatusCode() == NearbyMessagesStatusCodes.APP_NOT_OPTED_IN) {
             if (!resolvingPermissionError) {
                 try {
@@ -229,7 +237,7 @@ public class CodeManager {
         }
     }
 
-    private static void showNearbyErrorDialog(String title, String message){
+    private void showNearbyErrorDialog(String title, String message){
         new AlertDialog.Builder(ctx)
                 .setTitle(title)
                 .setMessage(message)

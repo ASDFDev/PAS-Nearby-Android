@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -31,6 +32,10 @@
         <activity
             android:name="org.sp.attendance.CodeReceiveActivity"
             android:label="@string/title_receive" />
+
+        <activity
+            android:name="org.sp.attendance.AttendanceActivity"
+            android:label="Attendance" />
 
         <meta-data
             android:name="com.google.android.gms.nearby.connection.SERVICE_ID"

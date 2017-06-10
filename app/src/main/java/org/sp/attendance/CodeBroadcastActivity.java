@@ -32,6 +32,9 @@ import org.sp.attendance.utils.DatabaseManager;
 
 public class CodeBroadcastActivity extends AppCompatActivity {
 
+    CodeManager codeManager = new CodeManager(this);
+    DatabaseManager databaseManager = new DatabaseManager(this);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,15 +44,15 @@ public class CodeBroadcastActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        CodeManager.destroy();
-        DatabaseManager.destroy();
+        codeManager.destroy();
+        databaseManager.destroy();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        CodeManager.destroy();
-        DatabaseManager.destroy();
+        codeManager.destroy();
+        databaseManager.destroy();
     }
 
     public void startBroadcast(View view) {
@@ -67,14 +70,14 @@ public class CodeBroadcastActivity extends AppCompatActivity {
             return;
         }
         new AlertDialog.Builder(CodeBroadcastActivity.this)
-                .setTitle(R.string.title_warning)
+                .setTitle(R.string.confirmation)
                 .setMessage(getResources().getString(R.string.continue_confirmation) + code + getResources().getString(R.string.continue_confirmation2))
                 .setIcon(R.drawable.ic_question_answer_black_24dp)
                 .setCancelable(false)
                 .setPositiveButton(R.string.yes, (dialog, id) -> {
                     (findViewById(R.id.layout_code_input)).setVisibility(ScrollView.GONE);
                     (findViewById(R.id.layout_code_broadcasting)).setVisibility(ScrollView.VISIBLE);
-                    CodeManager.setupLecturerEnvironment(CodeBroadcastActivity.this, code);
+                    codeManager.setupLecturerEnvironment(CodeBroadcastActivity.this, code);
                     hideKeyboard();
                     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 })
@@ -84,13 +87,17 @@ public class CodeBroadcastActivity extends AppCompatActivity {
     }
 
     public void stopBroadcast(View view) {
-        CodeManager.destroy();
-        DatabaseManager.destroy();
+        codeManager.destroy();
+        databaseManager.destroy();
+        Intent attendanceActivityIntent = new Intent(this, AttendanceActivity.class);
         new AlertDialog.Builder(CodeBroadcastActivity.this)
                 .setTitle("Are you sure?")
                 .setCancelable(false)
                 .setIcon(R.drawable.ic_question_answer_black_24dp)
-                .setPositiveButton(R.string.yes, (dialog, id) -> finish())
+                .setPositiveButton(R.string.yes, (dialog, id) ->
+                        finish()
+                //this.startActivity(attendanceActivityIntent);
+                )
                 .setNegativeButton(R.string.no, (dialog, id) -> dialog.cancel())
                 .create()
                 .show();;
