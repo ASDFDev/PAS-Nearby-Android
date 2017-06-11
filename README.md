@@ -2,12 +2,6 @@
 
 Presence checking using Nearby API
 
-
-## NOTE: (24 April 2017) This project has been deprecated in favour of Quiet's library. 
-
-The namespace will remain the same to avoid errors with users using this project.
-
-
 *Designed to improve the current Attendance Taking System(ATS) used in Singapore Polytechnic.*
 
 
@@ -46,11 +40,13 @@ for the package name.
 
 1. Copy the API key generated, and paste it in `gradle.properties` file.
 
-So, your file should have this line `AppKey=1337shamaladingdong420`.
+See [gradle.properties.sample](materials/gradle.properties.sample) file for more info on using the keys.
+
+Personally for me, I have 2 keys; 1 for debugging and 1 for production. You **SHOULD** add your package name and SHA-1 signing-certificate fingerprint to restrict usage to your Android apps during key creation to prevent abuse. 
 
 1. Create a new project on [Firebase Developer Console](https://console.firebase.google.com/).
 1. Click on `Add Firebase to your Android app`. Enter `org.sp.attendance` for the package name and click next.
-1. `google-services.json` will be downloaded. Put the file in under ATS_Nearby/app
+1. `google-services.json` will be downloaded. Put the file in app/
 
 
 Start building!

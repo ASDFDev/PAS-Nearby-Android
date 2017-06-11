@@ -1,0 +1,5 @@
+DebugAppKey="placeholder_debug_key"
+ReleaseAppKey="placeholder_release_key"
+keystoreFile="setsuna_nearby.keystore"
+keyPassword="sample_password"
+keyAlias="setsuna_nearby"
