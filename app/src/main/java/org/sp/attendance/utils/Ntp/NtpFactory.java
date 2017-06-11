@@ -53,5 +53,4 @@ public class NtpFactory extends AsyncTask<Void, Void, Date> {
         super.onPostExecute(date);
         progressDialog.dismiss();
     }
-
 }

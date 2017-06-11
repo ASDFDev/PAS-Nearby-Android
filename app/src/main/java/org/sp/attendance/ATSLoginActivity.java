@@ -26,22 +26,25 @@ import android.widget.EditText;
 
 import org.sp.attendance.utils.AccountsManager;
 import org.sp.attendance.utils.CodeManager;
+import org.sp.attendance.utils.StartUpManager;
 
 public class ATSLoginActivity extends AppCompatActivity{
 
     CodeManager codeManager = new CodeManager(this);
+    private Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_atslogin);
         hideKeyboard();
+        StartUpManager startUpManager = new StartUpManager(this);
+        startUpManager.checkNetwork();
         showKeyboard();
         if (!codeManager.isDestroyed) {
             codeManager.destroy();
         }
     }
-
 
     public void signIn(View view) {
         if (!((EditText) findViewById(R.id.textEdit_userID)).getText().toString().equals("") &&

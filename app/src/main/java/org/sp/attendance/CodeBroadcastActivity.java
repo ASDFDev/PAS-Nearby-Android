@@ -24,16 +24,29 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ScrollView;
+import android.widget.ListView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import org.sp.attendance.models.NtpModel;
 import org.sp.attendance.utils.CodeManager;
 import org.sp.attendance.utils.DatabaseManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CodeBroadcastActivity extends AppCompatActivity {
 
-    CodeManager codeManager = new CodeManager(this);
-    DatabaseManager databaseManager = new DatabaseManager(this);
+    private CodeManager codeManager = new CodeManager(this);
+    private DatabaseManager databaseManager = new DatabaseManager(this);
+    private NtpModel ntpModel = new NtpModel(this);
+    private String studentAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,11 +88,41 @@ public class CodeBroadcastActivity extends AppCompatActivity {
                 .setIcon(R.drawable.ic_question_answer_black_24dp)
                 .setCancelable(false)
                 .setPositiveButton(R.string.yes, (dialog, id) -> {
-                    (findViewById(R.id.layout_code_input)).setVisibility(ScrollView.GONE);
-                    (findViewById(R.id.layout_code_broadcasting)).setVisibility(ScrollView.VISIBLE);
-                    codeManager.setupLecturerEnvironment(CodeBroadcastActivity.this, code);
+                    /* Bad code, we will do something about it later on....
+                    TODO: Refactor this...
+                    */
+                    setContentView(R.layout.activity_attendance);
+                    codeManager.setupLecturerEnvironment(this, code);
                     hideKeyboard();
                     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                    List<String> studentArrayList = new ArrayList<>();
+                    ListView listView = findViewById(R.id.ListView);
+                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
+                            this,
+                            android.R.layout.simple_list_item_1,
+                            studentArrayList);
+                    DatabaseReference classReference = FirebaseDatabase.getInstance()
+                            .getReference(ntpModel.getTrueYear())
+                            .child(ntpModel.getTrueMonth())
+                            .child(ntpModel.getTrueDay())
+                            .child(code);
+                    classReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
+                                studentAccount = childSnapshot.getKey();
+                                arrayAdapter.notifyDataSetChanged();
+                                studentArrayList.add(studentAccount);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            System.out.println("Database Error! Message: " + databaseError);
+                        }
+                    });
+                    arrayAdapter.notifyDataSetChanged();
+                    listView.setAdapter(arrayAdapter);
                 })
                 .setNegativeButton(R.string.no, (dialog, id) -> dialog.cancel())
                 .create()
@@ -89,14 +132,14 @@ public class CodeBroadcastActivity extends AppCompatActivity {
     public void stopBroadcast(View view) {
         codeManager.destroy();
         databaseManager.destroy();
-        Intent attendanceActivityIntent = new Intent(this, AttendanceActivity.class);
+        Intent loginActivity = new Intent(this, ATSLoginActivity.class);
         new AlertDialog.Builder(CodeBroadcastActivity.this)
                 .setTitle("Are you sure?")
                 .setCancelable(false)
                 .setIcon(R.drawable.ic_question_answer_black_24dp)
                 .setPositiveButton(R.string.yes, (dialog, id) ->
                         finish()
-                //this.startActivity(attendanceActivityIntent);
+                //this.startActivity(loginActivity);
                 )
                 .setNegativeButton(R.string.no, (dialog, id) -> dialog.cancel())
                 .create()

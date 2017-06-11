@@ -30,6 +30,8 @@ import org.sp.attendance.models.NtpModel;
 import org.sp.attendance.R;
 import org.sp.attendance.models.DatabaseModel;
 
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class DatabaseManager {
@@ -123,20 +125,21 @@ public class DatabaseManager {
     }
 
     // TODO: Migrate to this function in AttendanceActivity
-    String getStudent(){
+    public String getStudent(){
+        List<String> studentArrayList = new ArrayList<>();
         DatabaseReference classReference = FirebaseDatabase.getInstance()
-                .getReference("YEAR")
-                .child("MONTH")
-                .child("DAY")
-                .child("ATTENDANCE_CODE");
+                .getReference("2017")
+                .child("June")
+                .child("25")
+                .child("12345");
         classReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
                     studentAccount = childSnapshot.getKey();
+                    studentArrayList.add(studentAccount);
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 System.out.println("Database Error! Message: " + databaseError);
@@ -145,8 +148,6 @@ public class DatabaseManager {
         // Currently this returns null
         return studentAccount;
     }
-
-
 
     private void showDatabaseResult(String title, String message){
         new AlertDialog.Builder(context)

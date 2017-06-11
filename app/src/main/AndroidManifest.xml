@@ -33,10 +33,6 @@
             android:name="org.sp.attendance.CodeReceiveActivity"
             android:label="@string/title_receive" />
 
-        <activity
-            android:name="org.sp.attendance.AttendanceActivity"
-            android:label="Attendance" />
-
         <meta-data
             android:name="com.google.android.gms.nearby.connection.SERVICE_ID"
             android:value="@string/service_id" />

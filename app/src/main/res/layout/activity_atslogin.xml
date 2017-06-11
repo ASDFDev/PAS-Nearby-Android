@@ -68,7 +68,6 @@
                 android:layout_gravity="center_horizontal"
                 android:onClick="signIn"
                 android:text="@string/label_login" />
-
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
