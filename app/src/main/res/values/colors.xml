@@ -23,7 +23,11 @@
     <color name="colorBlack">#000105</color>
 
     <!-- Startup background color-->
-    <color name="startupScreen1">#f64c73</color>
-    <color name="startupScreen2">#20d2bb</color>
-    <color name="startupScreen3">#3395ff</color>
+    <color name="color_startup_screen1">#6A1B9A</color>
+    <color name="color_dark_startup_screen1">#4A148C</color>
+    <color name="color_startup_screen2">#E0E0E0</color>
+    <color name="color_dark_startup_screen2">#BDBDBD</color>
+    <color name="color_startup_screen3">#EC407A</color>
+    <color name="color_dark_startup_screen3">#D81B60</color>
+
 </resources>

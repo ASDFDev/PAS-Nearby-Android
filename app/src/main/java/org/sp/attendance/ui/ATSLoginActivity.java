@@ -1,4 +1,4 @@
-package org.sp.attendance;
+package org.sp.attendance.ui;
 
 /*
  * Copyright 2016-2017 Daniel Quah and Justin Xin
@@ -24,6 +24,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 
+
+import org.sp.attendance.R;
+import org.sp.attendance.ui.intro.SlideIntro;
 import org.sp.attendance.utils.AccountsManager;
 import org.sp.attendance.utils.CodeManager;
 import org.sp.attendance.utils.StartUpManager;
@@ -32,7 +35,6 @@ public class ATSLoginActivity extends AppCompatActivity{
 
     public static final int REQUEST_CODE_INTRO = 1;
     public static final String firstRun = "org.sp.attendance.firstRun";
-
 
     CodeManager codeManager = new CodeManager(this);
     StartUpManager startUpManager = new StartUpManager(this);
@@ -97,6 +99,5 @@ public class ATSLoginActivity extends AppCompatActivity{
             }
         }
     }
-
 
 }

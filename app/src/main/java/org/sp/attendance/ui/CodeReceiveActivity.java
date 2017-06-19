@@ -1,4 +1,4 @@
-package org.sp.attendance;
+package org.sp.attendance.ui;
 
 /*
  * Copyright 2016-2017 Daniel Quah and Justin Xin
@@ -24,6 +24,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 
+import org.sp.attendance.R;
 import org.sp.attendance.utils.AccountsManager;
 import org.sp.attendance.utils.CodeManager;
 import org.sp.attendance.utils.DatabaseManager;

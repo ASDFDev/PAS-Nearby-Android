@@ -1,5 +1,5 @@
 
-package org.sp.attendance
+package org.sp.attendance.ui.intro
 
 /*
  * Copyright 2017 Daniel Quah and Justin Xin
@@ -22,8 +22,10 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
 import android.view.View
+import org.sp.attendance.R
 import org.sp.attendance.R.anim.abc_fade_in
 import org.sp.attendance.R.anim.abc_fade_out
+import org.sp.attendance.ui.ATSLoginActivity
 import java.lang.Thread.sleep
 
 class SplashScreen: AppCompatActivity() {

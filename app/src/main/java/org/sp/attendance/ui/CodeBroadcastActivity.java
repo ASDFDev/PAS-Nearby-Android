@@ -1,4 +1,4 @@
-package org.sp.attendance;
+package org.sp.attendance.ui;
 
 /*
  * Copyright 2016-2017 Daniel Quah and Justin Xin
@@ -34,6 +34,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.sp.attendance.R;
 import org.sp.attendance.models.NtpModel;
 import org.sp.attendance.utils.CodeManager;
 import org.sp.attendance.utils.DatabaseManager;

@@ -1,4 +1,4 @@
-package org.sp.attendance
+package org.sp.attendance.ui.intro
 
 /*
  * Copyright 2017 Daniel Quah and Justin Xin
@@ -19,6 +19,7 @@ package org.sp.attendance
 import android.os.Bundle
 import com.heinrichreimersoftware.materialintro.app.IntroActivity
 import com.heinrichreimersoftware.materialintro.slide.SimpleSlide
+import org.sp.attendance.R
 
 class SlideIntro : IntroActivity() {
 
@@ -33,7 +34,8 @@ class SlideIntro : IntroActivity() {
         addSlide(SimpleSlide.Builder()
                 .title(R.string.app_name)
                 .description("Presence checking using Nearby API")
-                .background(R.color.startupScreen1)
+                .background(R.color.color_startup_screen1)
+                .backgroundDark(R.color.color_dark_startup_screen1)
                 .scrollable(true)
                 .build())
 
@@ -42,17 +44,18 @@ class SlideIntro : IntroActivity() {
                 .description("Manage your student's attendance in real time!")
                 .image(R.drawable.ic_people_black_50dp)
                 .canGoBackward(true)
-                .background(R.color.startupScreen2)
+                .background(R.color.color_startup_screen2)
+                .backgroundDark(R.color.color_dark_startup_screen2)
                 .scrollable(true)
                 .build())
 
         addSlide(SimpleSlide.Builder()
                 .title("Highly accurate time")
                 .image(R.drawable.ic_access_time_black_24dp)
-                .background(R.color.startupScreen3)
+                .background(R.color.color_startup_screen3)
+                .backgroundDark(R.color.color_dark_startup_screen3)
                 .canGoBackward(true)
                 .scrollable(true)
                 .build())
     }
-
 }

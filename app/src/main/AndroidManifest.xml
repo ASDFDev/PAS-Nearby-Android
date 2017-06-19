@@ -17,21 +17,20 @@
             android:value="@string/GoogleAPIKey"/>
 
         <activity
-            android:name=".ATSLoginActivity"
-            android:label="@string/title_login"
-            android:noHistory="true" />
+            android:name=".ui.ATSLoginActivity"
+            android:label="@string/title_login" />
         <activity
-            android:name=".CodeBroadcastActivity"
+            android:name=".ui.CodeBroadcastActivity"
             android:label="@string/title_broadcast" />
         <activity
-            android:name=".CodeReceiveActivity"
+            android:name=".ui.CodeReceiveActivity"
             android:label="@string/title_receive" />
         <activity
-            android:name=".SlideIntro"
+            android:name=".ui.intro.SlideIntro"
             android:noHistory="true"
             android:theme="@style/Theme.Intro"/>
         <activity
-            android:name=".SplashScreen"
+            android:name=".ui.intro.SplashScreen"
             android:noHistory="true"
             android:theme="@style/AppFullScreenTheme">
             <intent-filter>

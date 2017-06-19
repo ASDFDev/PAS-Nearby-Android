@@ -23,8 +23,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
-import org.sp.attendance.CodeBroadcastActivity;
-import org.sp.attendance.CodeReceiveActivity;
+import org.jetbrains.annotations.Contract;
+import org.sp.attendance.ui.CodeBroadcastActivity;
+import org.sp.attendance.ui.CodeReceiveActivity;
 import org.sp.attendance.R;
 
 public class AccountsManager extends AsyncTask<String, Integer, String> {
@@ -145,6 +146,7 @@ public class AccountsManager extends AsyncTask<String, Integer, String> {
                 .create()
                 .show();
     }
+
 
     private String updateUI() {
         return result;
