@@ -16,7 +16,7 @@
 
 <resources>
 
-    <string name="app_name">Attendance Taking</string>
+    <string name="app_name">Setsuna</string>
     <string name="title_error_login">Could not log in</string>
     <string name="title_login">Login to SPICE</string>
     <string name="title_broadcast">Broadcasting Code</string>

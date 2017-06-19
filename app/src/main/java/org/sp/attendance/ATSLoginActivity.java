@@ -16,12 +16,12 @@ package org.sp.attendance;
  * GNU General Public License for more details.
  */
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import org.sp.attendance.utils.AccountsManager;
@@ -30,19 +30,30 @@ import org.sp.attendance.utils.StartUpManager;
 
 public class ATSLoginActivity extends AppCompatActivity{
 
+    public static final int REQUEST_CODE_INTRO = 1;
+    public static final String firstRun = "org.sp.attendance.firstRun";
+
+
     CodeManager codeManager = new CodeManager(this);
-    private Activity activity;
+    StartUpManager startUpManager = new StartUpManager(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_atslogin);
-        hideKeyboard();
-        StartUpManager startUpManager = new StartUpManager(this);
+        checkFirstRun();
         startUpManager.checkNetwork();
-        showKeyboard();
+        startUpManager.checkPlayServices(this);
         if (!codeManager.isDestroyed) {
             codeManager.destroy();
+        }
+    }
+
+    private void checkFirstRun(){
+        boolean firstStart = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(firstRun,true);
+        if (firstStart) {
+            Intent IntroSlideActivity = new Intent(this, SlideIntro.class);
+            startActivityForResult(IntroSlideActivity, REQUEST_CODE_INTRO);
         }
     }
 
@@ -70,14 +81,22 @@ public class ATSLoginActivity extends AppCompatActivity{
                 .show();
     }
 
-    private void hideKeyboard(){
-        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_INTRO) {
+            if (resultCode == RESULT_OK) {
+                PreferenceManager.getDefaultSharedPreferences(this).edit()
+                        .putBoolean(firstRun, false)
+                        .apply();
+            } else {
+                PreferenceManager.getDefaultSharedPreferences(this).edit()
+                        .putBoolean(firstRun, true)
+                        .apply();
+                finish();
+            }
+        }
     }
 
-    private void showKeyboard(){
-        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-    }
 
 }

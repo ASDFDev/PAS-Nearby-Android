@@ -19,5 +19,11 @@
     <color name="colorPrimary">#f44336</color>
     <color name="colorPrimaryDark">#d32f2f</color>
     <color name="colorAccent">#2979ff</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorBlack">#000105</color>
 
+    <!-- Startup background color-->
+    <color name="startupScreen1">#f64c73</color>
+    <color name="startupScreen2">#20d2bb</color>
+    <color name="startupScreen3">#3395ff</color>
 </resources>
