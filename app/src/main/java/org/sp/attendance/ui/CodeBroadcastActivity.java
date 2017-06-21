@@ -155,7 +155,7 @@ public class CodeBroadcastActivity extends AppCompatActivity {
     private void setTextView(int min_duration) {
         int millisec_duration = min_duration * 60000;
         new CountDownTimer(millisec_duration, 1000
-                /* textView will be updated every min(60000 milliseconds) */) {
+                /* textView will be updated every sec(1000 milliseconds) */) {
 
             public void onTick(long millisUntilFinished) {
                 textView = findViewById(R.id.timeLeft);
