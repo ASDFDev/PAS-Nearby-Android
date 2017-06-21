@@ -19,6 +19,7 @@ package org.sp.attendance.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -27,6 +28,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -41,6 +43,8 @@ import org.sp.attendance.utils.DatabaseManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 
 public class CodeBroadcastActivity extends AppCompatActivity {
 
@@ -48,6 +52,9 @@ public class CodeBroadcastActivity extends AppCompatActivity {
     private DatabaseManager databaseManager = new DatabaseManager(this);
     private NtpModel ntpModel = new NtpModel(this);
     private String studentAccount;
+    private TextView textView;
+    private CountDownTimer countDownTimer;
+    private static final String FORMAT = "%02d:%02d:%02d";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +78,23 @@ public class CodeBroadcastActivity extends AppCompatActivity {
 
     public void startBroadcast(View view) {
         final String code = ((EditText) findViewById((R.id.textCode))).getText().toString();
-        if (code.matches("")) {
+        final String stringDuration = ((EditText) findViewById((R.id.textDuration))).getText().toString();
+        final int intDuration = Integer.parseInt(stringDuration);
+        if (code.matches("") || stringDuration.matches("")) {
             new AlertDialog.Builder(CodeBroadcastActivity.this)
                     .setTitle(R.string.title_warning)
-                    .setMessage(R.string.error_code_disappeared)
+                    .setMessage(R.string.error_empty_editText_boardcast)
+                    .setCancelable(false)
+                    .setIcon(R.drawable.ic_warning_black_24dp)
+                    .setPositiveButton(R.string.dismiss, (dialog, which) -> {
+                    })
+                    .create()
+                    .show();
+            return;
+        } else if(intDuration == 0 || intDuration >= 1440) {
+            new AlertDialog.Builder(CodeBroadcastActivity.this)
+                    .setTitle(R.string.title_warning)
+                    .setMessage(R.string.error_invalid_timing)
                     .setCancelable(false)
                     .setIcon(R.drawable.ic_warning_black_24dp)
                     .setPositiveButton(R.string.dismiss, (dialog, which) -> {
@@ -93,9 +113,11 @@ public class CodeBroadcastActivity extends AppCompatActivity {
                     TODO: Refactor this...
                     */
                     setContentView(R.layout.activity_attendance);
-                    codeManager.setupLecturerEnvironment(this, code);
+                    int intDurationSeconds = intDuration * 60;
+                    codeManager.setupLecturerEnvironment(this, code, intDurationSeconds);
                     hideKeyboard();
                     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                    setTextView(intDuration);
                     List<String> studentArrayList = new ArrayList<>();
                     ListView listView = findViewById(R.id.ListView);
                     ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
@@ -129,6 +151,28 @@ public class CodeBroadcastActivity extends AppCompatActivity {
                 .create()
                 .show();
     }
+
+    private void setTextView(int min_duration) {
+        int millisec_duration = min_duration * 60000;
+        new CountDownTimer(millisec_duration, 1000
+                /* textView will be updated every min(60000 milliseconds) */) {
+
+            public void onTick(long millisUntilFinished) {
+                textView = findViewById(R.id.timeLeft);
+                textView.setText("Time remaining: " + String.format(FORMAT,
+                        TimeUnit.MILLISECONDS.toHours(millisUntilFinished),
+                        TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) - TimeUnit.HOURS.toMinutes(
+                                TimeUnit.MILLISECONDS.toHours(millisUntilFinished)),
+                        TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) - TimeUnit.MINUTES.toSeconds(
+                                TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))) );
+            }
+
+            public void onFinish() {
+                textView.setText(R.string.attendance_ended);
+            }
+        }.start();
+    }
+
 
     public void stopBroadcast(View view) {
         codeManager.destroy();

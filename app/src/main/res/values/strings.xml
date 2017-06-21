@@ -50,7 +50,7 @@
     <string name="error_credentials_disappeared">Please enter your user ID and password. </string>
     <string name="error_credentials_timed_out">Session timed out. </string>
     <string name="error_code_invalid">Invalid attendance code. </string>
-    <string name="error_code_disappeared">No code entered. </string>
+    <string name="error_empty_editText_boardcast">No duration or code entered. </string>
     <string name="error_code_ended">The class corresponding to the attendance code has ended. </string>
     <string name="error_code_unenrolled">Code not valid for your class. </string>
     <string name="error_connection_invalid">Invalid connection type. </string>
@@ -87,4 +87,6 @@
     <string name="ntp_init_failed">Unable to reach NTP server!</string>
     <string name="ntp_init_message">Getting time from NTP server…</string>
     <string name="confirmation">Are you sure?</string>
+    <string name="error_invalid_timing">Invalid time entered. Please enter a number between 0 and 1440</string>
+    <string name="attendance_ended">Attendance Ended!</string>
 </resources>

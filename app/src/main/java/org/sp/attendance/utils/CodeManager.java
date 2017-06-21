@@ -46,43 +46,42 @@ import org.sp.attendance.R;
 import java.nio.charset.Charset;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
+import static com.google.android.gms.nearby.messages.Strategy.TTL_SECONDS_INFINITE;
 
 public class CodeManager {
 
-    // 30 minutes time out for students to submit code
-    private static final Strategy PUB_SUB_STRATEGY = new Strategy.Builder()
-            .setTtlSeconds(1800).build();
     public boolean isDestroyed = true;
     private static boolean isGoogleApiClientInitialized = false;
     public static boolean resolvingPermissionError = false;
     private static GoogleApiClient googleApiClient;
     private Context ctx;
-    private static Message attendanceCode;
     private static MessageListener messageListener;
     private static ManagerType globalManagerType;
     private static Message globalCode;
-    private static String globalStudentID;
-    private static String deviceID, timeStamp;
+    private static String deviceID, timeStamp, globalStudentID;
+    private static int duration;
 
     public CodeManager(Context context){
         this.ctx = context;
     }
 
-    public void setupLecturerEnvironment(Context context, String code) {
+    public void setupLecturerEnvironment(Context context, String code, int duration) {
         DatabaseManager databaseManager = new DatabaseManager(context);
         globalCode = new Message((databaseManager.generateMessage(code)).getBytes(Charset.forName("UTF-8")));
         globalStudentID = null;
         databaseManager.openDatabaseForLecturer();
-        initialize(context, ManagerType.Send);
+        initialize(context, ManagerType.Send, duration);
     }
 
     public void setupStudentEnvironment(Context context, String studentID) {
         globalCode = null;
         globalStudentID = studentID;
-        initialize(context, ManagerType.Receive);
+        initialize(context, ManagerType.Receive, duration);
     }
 
-    private void initialize(Context context, ManagerType managerType) {
+
+
+    private void initialize(Context context, ManagerType managerType, int duration) {
         DatabaseManager databaseManager = new DatabaseManager(context);
         ctx = context;
         if (!databaseManager.isDestroyed) {
@@ -112,7 +111,7 @@ public class CodeManager {
                             if (globalManagerType == ManagerType.Receive) {
                                 receiveCode();
                             } else if (globalManagerType == ManagerType.Send) {
-                                broadcastCode();
+                                broadcastCode(duration);
                             } else {
                                 destroy();
                             }
@@ -165,6 +164,7 @@ public class CodeManager {
         if (!checkNetwork()) {
             return;
         }
+        Strategy PUB_SUB_STRATEGY = new Strategy.Builder().setTtlSeconds(TTL_SECONDS_INFINITE).build();
         SubscribeOptions options = new SubscribeOptions.Builder()
                 .setStrategy(PUB_SUB_STRATEGY)
                 .setCallback(new SubscribeCallback() {
@@ -192,18 +192,17 @@ public class CodeManager {
         LECTURER CODE BROADCAST
      */
 
-    private void broadcastCode() {
+    private void broadcastCode(int duration) {
         if (!checkNetwork()) {
             return;
         }
+        Strategy PUB_SUB_STRATEGY = new Strategy.Builder().setTtlSeconds(duration).build();
         PublishOptions options = new PublishOptions.Builder()
                 .setStrategy(PUB_SUB_STRATEGY)
                 .setCallback(new PublishCallback() {
                     @Override
                     public void onExpired() {
                         super.onExpired();
-                        showNearbyErrorDialog(ctx.getResources().getString(R.string.title_nearby_error),
-                                ctx.getResources().getString(R.string.error_nearby_timed_out));
                     }
                 }).build();
         Nearby.Messages.publish(googleApiClient, globalCode, options)

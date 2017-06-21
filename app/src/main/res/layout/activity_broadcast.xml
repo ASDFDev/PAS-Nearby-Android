@@ -1,116 +1,64 @@
-<!--
-	Copyright 2016-2017 Daniel Quah and Justin Xin
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-	This file is part of org.sp.attendance
- 
-	ATS_Nearby is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
- 
-	ATS_Nearby is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
--->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    <TextView
+        android:id="@+id/textView_prompt_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/label_prompt_code"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginTop="76dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/textView_duration" />
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/layout_code_input"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal"
-        android:visibility="visible" >
+    <EditText
+        android:id="@+id/textCode"
+        android:layout_width="122dp"
+        android:layout_height="wrap_content"
+        android:digits="1234567890"
+        android:ems="10"
+        android:inputType="number"
+        android:maxLines="1"
+        android:layout_alignBaseline="@+id/textView_prompt_code"
+        android:layout_alignBottom="@+id/textView_prompt_code"
+        android:layout_alignStart="@+id/textDuration" />
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical" >
+    <TextView
+        android:id="@+id/textView_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:text="Enter duration(mins):"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_alignBaseline="@+id/textDuration"
+        android:layout_alignBottom="@+id/textDuration"
+        android:layout_alignParentStart="true" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/label_prompt_code"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+    <Button
+        android:id="@+id/broadcast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="startBroadcast"
+        android:text="@string/broadcast"
+        android:layout_below="@+id/textView_duration"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="135dp" />
 
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|bottom">
+    <EditText
+        android:id="@+id/textDuration"
+        android:layout_width="122dp"
+        android:layout_height="wrap_content"
+        android:digits="1234567890"
+        android:ems="10"
+        android:inputType="number"
+        android:selectAllOnFocus="false"
+        android:maxLines="1"
+        android:layout_marginStart="13dp"
+        android:layout_below="@+id/textCode"
+        android:layout_toEndOf="@+id/textView_duration" />
 
-                <EditText
-                    android:id="@+id/textCode"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_weight="1"
-                    android:digits="1234567890"
-                    android:inputType="number" />
-
-                <Button
-                    android:id="@+id/button_send"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal|bottom"
-                    android:onClick="startBroadcast"
-                    android:text="@string/broadcast" />
-
-            </LinearLayout>
-
-            <!-- Not using fragments yet, doing cheap visibility change -->
-
-        </LinearLayout>
-
-    </ScrollView>
-
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/layout_code_broadcasting"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal"
-        android:visibility="gone" >
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
-
-        <com.github.ybq.android.spinkit.SpinKitView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/spin_kit"
-            style="@style/SpinKitView.Large.ThreeBounce"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            app:SpinKit_Color="@color/colorAccent" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:paddingTop="16dp"
-            android:text="@string/action_broadcasting"
-            android:textAlignment="center"
-            android:textAppearance="@android:style/TextAppearance.Large" />
-
-        <Button
-            android:id="@+id/button_stop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|bottom"
-            android:onClick="stopBroadcast"
-            android:text="@string/stop_broadcast" />
-
-        <!-- Reserved for database management tools for staff -->
-
-    </LinearLayout>
-
-</ScrollView>
-
-</LinearLayout>
+</RelativeLayout>
