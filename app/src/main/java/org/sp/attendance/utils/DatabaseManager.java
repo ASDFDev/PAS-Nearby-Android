@@ -39,11 +39,8 @@ public class DatabaseManager {
     Boolean isDestroyed = true;
     private static FirebaseDatabase database = FirebaseDatabase.getInstance();
     private static final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-    private static String deviceHardwareID;
     private static DatabaseModel databaseModel;
-    private static String globalClassValue;
-    private static String databaseArray;
-    private static String studentAccount;
+    private static String globalClassValue, databaseArray, studentAccount, deviceHardwareID;
     private Context context;
 
     public DatabaseManager(Context context){
