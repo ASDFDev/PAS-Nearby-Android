@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@color/colorWhite"
+    android:background="#03A9F4"
     tools:context=".ui.intro.SplashScreen">
 
     <RelativeLayout
@@ -18,24 +18,24 @@
             android:id="@+id/textView_splash"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center"
-            android:layout_marginBottom="210dp"
             android:text="@string/app_name"
             android:textAllCaps="true"
+            android:gravity="center|center_horizontal"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            android:textColor="@color/colorBlack" />
+            android:textColor="#212121"
+            android:layout_below="@+id/app_icon_splash"
+            android:layout_centerHorizontal="true" />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/app_icon_splash"
             android:layout_width="107dp"
             android:layout_height="101dp"
-            android:layout_marginBottom="30dp"
+            android:gravity="center|center_horizontal"
             android:contentDescription="App Icon"
             app:srcCompat="@drawable/ic_icon"
-            android:layout_above="@+id/textView_splash"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:orientation="vertical" />
 
     </RelativeLayout>
 </FrameLayout>
