@@ -115,12 +115,6 @@ public class DatabaseManager {
         return code;
     }
 
-    void openDatabaseForLecturer(){
-        NtpModel ntpModel = new NtpModel(context);
-        String currentTime = ntpModel.getTrueYear() + "/" + ntpModel.getTrueMonth() + "/" + ntpModel.getTrueDay();
-        reference.child(currentTime).setValue(globalClassValue);
-    }
-
     // TODO: Migrate to this function in AttendanceActivity
     public String getStudent(){
         List<String> studentArrayList = new ArrayList<>();

@@ -69,7 +69,6 @@ public class CodeManager {
         DatabaseManager databaseManager = new DatabaseManager(context);
         globalCode = new Message((databaseManager.generateMessage(code)).getBytes(Charset.forName("UTF-8")));
         globalStudentID = null;
-        databaseManager.openDatabaseForLecturer();
         initialize(context, ManagerType.Send, duration);
     }
 
