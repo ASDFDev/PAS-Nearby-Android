@@ -60,6 +60,8 @@ dependencies {
     compile 'com.github.ybq:Android-SpinKit:1.1.0'
     compile 'com.heinrichreimersoftware:material-intro:1.6.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.mcxiaoke.koi:core:0.5.4'
+
     testCompile 'junit:junit:4.12'
 }
 

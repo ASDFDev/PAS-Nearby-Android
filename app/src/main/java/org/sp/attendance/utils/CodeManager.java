@@ -40,7 +40,8 @@ import com.google.android.gms.nearby.messages.Strategy;
 import com.google.android.gms.nearby.messages.SubscribeCallback;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
 
-import org.sp.attendance.models.NtpModel;
+import org.sp.attendance.models.DateTime;
+import org.sp.attendance.utils.Ntp.SntpConsumer;
 import org.sp.attendance.R;
 
 import java.nio.charset.Charset;
@@ -86,8 +87,8 @@ public class CodeManager {
         if (!databaseManager.isDestroyed) {
             databaseManager.initialize(ctx);
         }
-        NtpModel ntpModel = new NtpModel(context);
-        timeStamp = ntpModel.getTrueTime();
+        SntpConsumer sntpConsumer = new SntpConsumer(context);
+        timeStamp = DateTime.INSTANCE.getTrueTime(sntpConsumer.getNtpTime());
         deviceID = Secure.getString(ctx.getContentResolver(), Secure.ANDROID_ID);
         globalManagerType = managerType;
         messageListener = new MessageListener() {

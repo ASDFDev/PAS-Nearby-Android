@@ -26,7 +26,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.sp.attendance.models.NtpModel;
+import org.sp.attendance.models.DateTime;
+import org.sp.attendance.utils.Ntp.SntpConsumer;
 import org.sp.attendance.R;
 import org.sp.attendance.models.DatabaseModel;
 
@@ -66,8 +67,10 @@ public class DatabaseManager {
     void submitStudentDevice(final String message, final String deviceID, final String timeStamp) {
         deviceHardwareID = deviceID;
         databaseModel = new DatabaseModel();
-        NtpModel ntpModel = new NtpModel(context);
-        String currentTime = ntpModel.getTrueYear() + "/" + ntpModel.getTrueMonth() + "/" + ntpModel.getTrueDay();
+        SntpConsumer sntpConsumer = new SntpConsumer(context);
+        String currentTime = DateTime.INSTANCE.getTrueYear(sntpConsumer.getNtpTime()) +
+                "/" + DateTime.INSTANCE.getTrueMonth(sntpConsumer.getNtpTime()) +
+                "/" + DateTime.INSTANCE.getTrueDay(sntpConsumer.getNtpTime());
         reference.child(currentTime + "/" + message)
                 .addListenerForSingleValueEvent(
                 new ValueEventListener() {

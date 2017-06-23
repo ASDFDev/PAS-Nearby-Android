@@ -37,7 +37,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import org.sp.attendance.R;
-import org.sp.attendance.models.NtpModel;
+import org.sp.attendance.models.DateTime;
+import org.sp.attendance.utils.Ntp.SntpConsumer;
 import org.sp.attendance.utils.CodeManager;
 import org.sp.attendance.utils.DatabaseManager;
 
@@ -50,10 +51,9 @@ public class CodeBroadcastActivity extends AppCompatActivity {
 
     private CodeManager codeManager = new CodeManager(this);
     private DatabaseManager databaseManager = new DatabaseManager(this);
-    private NtpModel ntpModel = new NtpModel(this);
+    private SntpConsumer sntpConsumer = new SntpConsumer(this);
     private String studentAccount;
     private TextView textView;
-    private CountDownTimer countDownTimer;
     private static final String FORMAT = "%02d:%02d:%02d";
 
     @Override
@@ -125,9 +125,9 @@ public class CodeBroadcastActivity extends AppCompatActivity {
                             android.R.layout.simple_list_item_1,
                             studentArrayList);
                     DatabaseReference classReference = FirebaseDatabase.getInstance()
-                            .getReference(ntpModel.getTrueYear())
-                            .child(ntpModel.getTrueMonth())
-                            .child(ntpModel.getTrueDay())
+                            .getReference(DateTime.INSTANCE.getTrueYear(sntpConsumer.getNtpTime()))
+                            .child(DateTime.INSTANCE.getTrueMonth(sntpConsumer.getNtpTime()))
+                            .child(DateTime.INSTANCE.getTrueDay(sntpConsumer.getNtpTime()))
                             .child(code);
                     classReference.addValueEventListener(new ValueEventListener() {
                         @Override
