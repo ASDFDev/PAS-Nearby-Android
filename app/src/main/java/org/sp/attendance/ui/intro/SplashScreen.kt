@@ -17,11 +17,11 @@ package org.sp.attendance.ui.intro
  * GNU General Public License for more details.
  */
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
 import android.view.View
+import com.mcxiaoke.koi.ext.newIntent
 import org.sp.attendance.R
 import org.sp.attendance.R.anim.abc_fade_in
 import org.sp.attendance.R.anim.abc_fade_out
@@ -37,7 +37,7 @@ class SplashScreen: AppCompatActivity() {
         val runnable = {
             // Because why not?
             sleep(1500)
-            startActivity(Intent(this, ATSLoginActivity::class.java))
+            newIntent<ATSLoginActivity>()
             finish()
         }
 
