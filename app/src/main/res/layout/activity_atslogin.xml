@@ -2,14 +2,13 @@
 
 <!--
 	Copyright 2016-2017 Daniel Quah and Justin Xin
-
 	This file is part of org.sp.attendance
- 
+
 	ATS_Nearby is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
- 
+
 	ATS_Nearby is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -19,6 +18,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp">
 
@@ -54,14 +54,19 @@
                 android:text="@string/label_password"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <EditText
-                android:id="@+id/textEdit_password"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:paddingBottom="16dp"
-                android:paddingTop="8dp"
-                android:maxLines="1" />
+                app:passwordToggleEnabled="true">
+                <EditText
+                    android:id="@+id/textEdit_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:paddingBottom="16dp"
+                    android:paddingTop="8dp"
+                    android:maxLines="1" />
+            </android.support.design.widget.TextInputLayout>
 
             <Button
                 android:id="@+id/button"
