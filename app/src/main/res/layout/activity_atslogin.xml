@@ -45,7 +45,8 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/hint_username"
                 android:paddingBottom="16dp"
-                android:paddingTop="8dp" />
+                android:paddingTop="8dp"
+                android:maxLines="1" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -59,7 +60,8 @@
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:paddingBottom="16dp"
-                android:paddingTop="8dp" />
+                android:paddingTop="8dp"
+                android:maxLines="1" />
 
             <Button
                 android:id="@+id/button"
