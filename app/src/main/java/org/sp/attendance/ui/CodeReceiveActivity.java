@@ -25,7 +25,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import org.sp.attendance.R;
-import org.sp.attendance.utils.AccountsManager;
+import org.sp.attendance.utils.account.AccountsManager;
 import org.sp.attendance.utils.CodeManager;
 import org.sp.attendance.utils.DatabaseManager;
 

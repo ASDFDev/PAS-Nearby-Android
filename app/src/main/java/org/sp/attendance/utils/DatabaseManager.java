@@ -30,6 +30,8 @@ import org.sp.attendance.models.DateTime;
 import org.sp.attendance.utils.Ntp.SntpConsumer;
 import org.sp.attendance.R;
 import org.sp.attendance.models.DatabaseModel;
+import org.sp.attendance.utils.account.AccountCheck;
+import org.sp.attendance.utils.account.AccountsManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,13 +80,13 @@ public class DatabaseManager {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot != null) {
                             databaseArray = String.valueOf(dataSnapshot.getValue());
-                                if (dataSnapshot.hasChild(AccountsManager.loggedInUserID) ||
+                                if (dataSnapshot.hasChild(AccountCheck.areWeDemoAccountOrSpiceAccount()) ||
                                         databaseArray.contains(deviceID)) {
                                     // Device and username exists
                                     showDatabaseResult(context.getResources().getString(R.string.title_code_failed),
                                             context.getResources().getString(R.string.error_already_submitted));
                                 } else {
-                                    final String key = dataSnapshot.child(AccountsManager.loggedInUserID).getKey();
+                                    final String key = dataSnapshot.child(AccountCheck.areWeDemoAccountOrSpiceAccount()).getKey();
                                     databaseModel.setDeviceID(deviceHardwareID);
                                     databaseModel.setTimeStamp(timeStamp);
                                     final DatabaseReference databaseReference =

@@ -27,9 +27,10 @@ import android.widget.EditText;
 
 import org.sp.attendance.R;
 import org.sp.attendance.ui.intro.SlideIntro;
-import org.sp.attendance.utils.AccountsManager;
+import org.sp.attendance.utils.account.AccountsManager;
 import org.sp.attendance.utils.CodeManager;
 import org.sp.attendance.utils.StartUpManager;
+import org.sp.attendance.utils.account.spice.ConnectionManager;
 
 public class ATSLoginActivity extends AppCompatActivity{
 
@@ -60,12 +61,21 @@ public class ATSLoginActivity extends AppCompatActivity{
     }
 
     public void signIn(View view) {
-        if (!((EditText) findViewById(R.id.textEdit_userID)).getText().toString().equals("") &&
-                !((EditText) findViewById(R.id.textEdit_password)).getText().toString().equals("")) {
+        if (((EditText) findViewById(R.id.textEdit_userID)).getText().toString().startsWith("s")){
             new AccountsManager(ATSLoginActivity.this).execute("SignInOnly",
                     ((EditText) findViewById(R.id.textEdit_userID)).getText().toString(),
                     ((EditText) findViewById(R.id.textEdit_password)).getText().toString());
-        } else {
+        } else if (((EditText) findViewById(R.id.textEdit_userID)).getText().toString().toLowerCase().startsWith("p")) {
+            new ConnectionManager(this).execute("SignInOnly",
+                    ((EditText) findViewById(R.id.textEdit_userID)).getText().toString(),
+                    ((EditText) findViewById(R.id.textEdit_password)).getText().toString());
+        } /* Backdoor student account*/
+        else if(((EditText) findViewById(R.id.textEdit_userID)).getText().toString().contains("stud")){
+            new AccountsManager(ATSLoginActivity.this).execute("SignInOnly",
+                    ((EditText) findViewById(R.id.textEdit_userID)).getText().toString(),
+                    ((EditText) findViewById(R.id.textEdit_password)).getText().toString());
+        }
+        else {
             showDialog(this.getResources().getString(R.string.title_sign_in_failed),
                     this.getResources().getString(R.string.error_credentials_disappeared));
         }
@@ -82,6 +92,7 @@ public class ATSLoginActivity extends AppCompatActivity{
                 .create()
                 .show();
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

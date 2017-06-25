@@ -1,4 +1,4 @@
-package org.sp.attendance.utils;
+package org.sp.attendance.utils.account;
 
 /*
  * Copyright 2016-2017 Daniel Quah and Justin Xin
@@ -27,11 +27,14 @@ import org.jetbrains.annotations.Contract;
 import org.sp.attendance.ui.CodeBroadcastActivity;
 import org.sp.attendance.ui.CodeReceiveActivity;
 import org.sp.attendance.R;
+import org.sp.attendance.utils.account.spice.ConnectionManager;
 
 public class AccountsManager extends AsyncTask<String, Integer, String> {
 
-    // Pseudo-accounts manager, provides a small database of pre-set accounts for testing use
-    // Can be replaced with actual connection code
+    /* Pseudo-accounts manager for lecturer.
+       Provides a small database of pre-set accounts for testing use
+       Can be replaced with actual connection code
+     */
 
     public static String loggedInUserID;
 
@@ -59,17 +62,11 @@ public class AccountsManager extends AsyncTask<String, Integer, String> {
                     signInState = SignInResponse.SignedIn;
                     loggedInUserID = userID.toUpperCase();
                     saveCredentials(userID, password);
-                } else if ((userID.toLowerCase().equals("p1001000") ||
-                        userID.toLowerCase().equals("p1001001") ||
-                        userID.toLowerCase().equals("p1001002") ||
-                        userID.toLowerCase().equals("p1001003") ||
-                        userID.toLowerCase().equals("p1001004") ||
-                        userID.toLowerCase().equals("p1001005") ||
-                        userID.toLowerCase().equals("p1001006") ||
-                        userID.toLowerCase().equals("p1001007") ||
-                        userID.toLowerCase().equals("p1001008") ||
-                        userID.toLowerCase().equals("p1001009") ||
-                        userID.toLowerCase().equals("p1001010")) && password.equals("student")) {
+                } else if ((userID.toLowerCase().equals("stud1") ||
+                        userID.toLowerCase().equals("stud2") ||
+                        userID.toLowerCase().equals("stud3") ||
+                        userID.toLowerCase().equals("stud4") ||
+                        userID.toLowerCase().equals("stud5")) && password.equals("student")) {
                     signInType = SignInType.Student;
                     signInState = SignInResponse.SignedIn;
                     loggedInUserID = userID.toUpperCase();
