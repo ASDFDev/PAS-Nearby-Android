@@ -34,8 +34,8 @@ public class SntpConsumer {
         SntpFactory sntpFactory = new SntpFactory(context);
         try {
             currentTime = sntpFactory.execute().get();
-        } catch (ExecutionException | InterruptedException executionExecption){
-            System.out.println(executionExecption);
+        } catch (ExecutionException | InterruptedException executionException){
+            System.out.println(executionException);
         }
         return currentTime;
     }

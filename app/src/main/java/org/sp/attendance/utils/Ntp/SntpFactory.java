@@ -28,13 +28,13 @@ import org.sp.attendance.R;
 
 import java.util.Date;
 
-public class SntpFactory extends AsyncTask<Void, Void, Date> {
+class SntpFactory extends AsyncTask<Void, Void, Date> {
 
     private Context context;
     private ProgressDialog progressDialog;
     private static Date date;
 
-    public SntpFactory(Context context){
+    SntpFactory(Context context){
         this.context = context;
     }
 
