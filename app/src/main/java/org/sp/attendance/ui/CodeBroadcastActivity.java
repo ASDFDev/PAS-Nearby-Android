@@ -113,8 +113,7 @@ public class CodeBroadcastActivity extends AppCompatActivity {
                     TODO: Refactor this...
                     */
                     setContentView(R.layout.activity_attendance);
-                    int intDurationSeconds = intDuration * 60;
-                    codeManager.setupLecturerEnvironment(this, code, intDurationSeconds);
+                    codeManager.setupLecturerEnvironment(this, code, DateTime.INSTANCE.convertSecondsToMins(intDuration));
                     hideKeyboard();
                     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                     setTextView(intDuration);
@@ -125,9 +124,9 @@ public class CodeBroadcastActivity extends AppCompatActivity {
                             android.R.layout.simple_list_item_1,
                             studentArrayList);
                     DatabaseReference classReference = FirebaseDatabase.getInstance()
-                            .getReference(DateTime.INSTANCE.getTrueYear(sntpConsumer.getNtpTime()))
-                            .child(DateTime.INSTANCE.getTrueMonth(sntpConsumer.getNtpTime()))
-                            .child(DateTime.INSTANCE.getTrueDay(sntpConsumer.getNtpTime()))
+                            .getReference(DateTime.INSTANCE.getTrueYearToString(sntpConsumer.getNtpTime()))
+                            .child(DateTime.INSTANCE.getTrueMonthToString(sntpConsumer.getNtpTime()))
+                            .child(DateTime.INSTANCE.getTrueDayToString(sntpConsumer.getNtpTime()))
                             .child(code);
                     classReference.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -153,10 +152,8 @@ public class CodeBroadcastActivity extends AppCompatActivity {
     }
 
     private void setTextView(int min_duration) {
-        int millisec_duration = min_duration * 60000;
-        new CountDownTimer(millisec_duration, 1000
+        new CountDownTimer(DateTime.INSTANCE.convertMilliToSecs(min_duration), 1000
                 /* textView will be updated every sec(1000 milliseconds) */) {
-
             public void onTick(long millisUntilFinished) {
                 textView = findViewById(R.id.timeLeft);
                 textView.setText("Time remaining: " + String.format(FORMAT,
@@ -171,24 +168,6 @@ public class CodeBroadcastActivity extends AppCompatActivity {
                 textView.setText(R.string.attendance_ended);
             }
         }.start();
-    }
-
-
-    public void stopBroadcast(View view) {
-        codeManager.destroy();
-        databaseManager.destroy();
-        Intent loginActivity = new Intent(this, ATSLoginActivity.class);
-        new AlertDialog.Builder(CodeBroadcastActivity.this)
-                .setTitle("Are you sure?")
-                .setCancelable(false)
-                .setIcon(R.drawable.ic_question_answer_black_24dp)
-                .setPositiveButton(R.string.yes, (dialog, id) ->
-                        finish()
-                //this.startActivity(loginActivity);
-                )
-                .setNegativeButton(R.string.no, (dialog, id) -> dialog.cancel())
-                .create()
-                .show();;
     }
 
     @Override

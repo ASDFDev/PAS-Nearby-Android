@@ -88,7 +88,7 @@ public class CodeManager {
             databaseManager.initialize(ctx);
         }
         SntpConsumer sntpConsumer = new SntpConsumer(context);
-        timeStamp = DateTime.INSTANCE.getTrueTime(sntpConsumer.getNtpTime());
+        timeStamp = DateTime.INSTANCE.getTrueTimeToString(sntpConsumer.getNtpTime());
         deviceID = Secure.getString(ctx.getContentResolver(), Secure.ANDROID_ID);
         globalManagerType = managerType;
         messageListener = new MessageListener() {

@@ -31,7 +31,6 @@ import org.sp.attendance.utils.Ntp.SntpConsumer;
 import org.sp.attendance.R;
 import org.sp.attendance.models.DatabaseModel;
 import org.sp.attendance.utils.account.AccountCheck;
-import org.sp.attendance.utils.account.AccountsManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,9 +69,9 @@ public class DatabaseManager {
         deviceHardwareID = deviceID;
         databaseModel = new DatabaseModel();
         SntpConsumer sntpConsumer = new SntpConsumer(context);
-        String currentTime = DateTime.INSTANCE.getTrueYear(sntpConsumer.getNtpTime()) +
-                "/" + DateTime.INSTANCE.getTrueMonth(sntpConsumer.getNtpTime()) +
-                "/" + DateTime.INSTANCE.getTrueDay(sntpConsumer.getNtpTime());
+        String currentTime = DateTime.INSTANCE.getTrueYearToString(sntpConsumer.getNtpTime()) +
+                "/" + DateTime.INSTANCE.getTrueMonthToString(sntpConsumer.getNtpTime()) +
+                "/" + DateTime.INSTANCE.getTrueDayToString(sntpConsumer.getNtpTime());
         reference.child(currentTime + "/" + message)
                 .addListenerForSingleValueEvent(
                 new ValueEventListener() {

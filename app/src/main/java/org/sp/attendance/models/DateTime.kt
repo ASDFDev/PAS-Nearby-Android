@@ -7,28 +7,35 @@ import java.util.*
 
 object DateTime {
 
-    fun getTrueCalendar(date: Date): String {
+    fun getTrueCalendarToString(date: Date): String {
         return date.asString(SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()))
     }
 
-    fun getTrueDate(date: Date): String {
+    fun getTrueDateToString(date: Date): String {
         return date.asString(SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()))
     }
 
-    fun getTrueTime(date: Date): String {
+    fun getTrueTimeToString(date: Date): String {
         return date.asString(SimpleDateFormat("HH:mm:ss", Locale.getDefault()))
     }
 
-    fun getTrueYear(date: Date): String {
+    fun getTrueYearToString(date: Date): String {
         return date.asString(SimpleDateFormat("yyyy", Locale.getDefault()))
     }
 
-    fun getTrueMonth(date: Date): String {
+    fun getTrueMonthToString(date: Date): String {
         return date.asString(SimpleDateFormat("LLLL", Locale.getDefault()))
     }
 
-    fun getTrueDay(date : Date): String {
+    fun getTrueDayToString(date : Date): String {
         return date.asString(SimpleDateFormat("dd", Locale.getDefault()))
     }
 
+    fun convertMilliToSecs(time : Int): Int {
+        return time * 60000
+    }
+
+    fun convertSecondsToMins(time: Int): Int{
+        return time * 60
+    }
 }
