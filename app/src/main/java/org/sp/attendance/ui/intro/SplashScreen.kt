@@ -18,9 +18,11 @@ package org.sp.attendance.ui.intro
  */
 
 import android.os.Bundle
+import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
 import android.view.View
+import com.mcxiaoke.koi.ext.delayed
 import com.mcxiaoke.koi.ext.startActivity
 import org.sp.attendance.R
 import org.sp.attendance.R.anim.abc_fade_in
@@ -34,14 +36,8 @@ class SplashScreen: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splashscreen)
-        val runnable = {
-            // Because why not?
-            sleep(1500)
-            startActivity<ATSLoginActivity>()
-            finish()
-        }
-
-        Thread(runnable).start()
+        val handler = Handler()
+        handler.delayed(1500, { startActivity<ATSLoginActivity>() })
         overridePendingTransition(abc_fade_in, abc_fade_out)
     }
 
