@@ -41,8 +41,8 @@ import com.google.android.gms.nearby.messages.SubscribeCallback;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
 
 import org.sp.attendance.models.DateTime;
-import org.sp.attendance.utils.Ntp.SntpConsumer;
 import org.sp.attendance.R;
+import org.sp.attendance.utils.Ntp.SntpConsumer;
 
 import java.nio.charset.Charset;
 

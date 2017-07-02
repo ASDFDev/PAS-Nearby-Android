@@ -38,9 +38,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.sp.attendance.R;
 import org.sp.attendance.models.DateTime;
-import org.sp.attendance.utils.Ntp.SntpConsumer;
 import org.sp.attendance.utils.CodeManager;
 import org.sp.attendance.utils.DatabaseManager;
+import org.sp.attendance.utils.Ntp.SntpConsumer;
 
 import java.util.ArrayList;
 import java.util.List;
