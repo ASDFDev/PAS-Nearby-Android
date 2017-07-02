@@ -44,9 +44,6 @@ import org.sp.attendance.utils.DatabaseManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import static java.lang.Character.FORMAT;
 
 
 public class CodeBroadcastActivity extends AppCompatActivity {
@@ -157,8 +154,9 @@ public class CodeBroadcastActivity extends AppCompatActivity {
                 /* textView will be updated every sec(1000 milliseconds) */) {
             public void onTick(long millisUntilFinished) {
                 textView = findViewById(R.id.timeLeft);
-                textView.setText(getResources().getString(R.string.time_remaining) +
-                        DateTime.INSTANCE.timeInHourMinSecs(millisUntilFinished) );
+                String timeRemainingFormatted = String.format(getResources().getString(R.string.time_remaining),
+                DateTime.INSTANCE.timeInHourMinSecs(millisUntilFinished));
+                textView.setText(timeRemainingFormatted);
             }
             public void onFinish() {
                 textView.setText(R.string.attendance_ended);
