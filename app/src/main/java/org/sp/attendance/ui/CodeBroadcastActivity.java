@@ -44,22 +44,20 @@ import org.sp.attendance.utils.DatabaseManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 
 public class CodeBroadcastActivity extends AppCompatActivity {
 
     private CodeManager codeManager = new CodeManager(this);
     private DatabaseManager databaseManager = new DatabaseManager(this);
-    private SntpConsumer sntpConsumer = new SntpConsumer(this);
     private String studentAccount;
     private TextView textView;
-    private static final String FORMAT = "%02d:%02d:%02d";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_broadcast);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     @Override
@@ -80,6 +78,7 @@ public class CodeBroadcastActivity extends AppCompatActivity {
         final String code = ((EditText) findViewById((R.id.textCode))).getText().toString();
         final String stringDuration = ((EditText) findViewById((R.id.textDuration))).getText().toString();
         final int intDuration = Integer.parseInt(stringDuration);
+        SntpConsumer sntpConsumer = new SntpConsumer(this);
         if (code.matches("") || stringDuration.matches("")) {
             new AlertDialog.Builder(CodeBroadcastActivity.this)
                     .setTitle(R.string.title_warning)
@@ -112,10 +111,9 @@ public class CodeBroadcastActivity extends AppCompatActivity {
                     /* Bad code, we will do something about it later on....
                     TODO: Refactor this...
                     */
+                    hideKeyboard();
                     setContentView(R.layout.activity_attendance);
                     codeManager.setupLecturerEnvironment(this, code, DateTime.INSTANCE.convertSecondsToMins(intDuration));
-                    hideKeyboard();
-                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                     setTextView(intDuration);
                     List<String> studentArrayList = new ArrayList<>();
                     ListView listView = findViewById(R.id.ListView);
@@ -156,12 +154,7 @@ public class CodeBroadcastActivity extends AppCompatActivity {
                 /* textView will be updated every sec(1000 milliseconds) */) {
             public void onTick(long millisUntilFinished) {
                 textView = findViewById(R.id.timeLeft);
-                textView.setText("Time remaining: " + String.format(FORMAT,
-                        TimeUnit.MILLISECONDS.toHours(millisUntilFinished),
-                        TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) - TimeUnit.HOURS.toMinutes(
-                                TimeUnit.MILLISECONDS.toHours(millisUntilFinished)),
-                        TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) - TimeUnit.MINUTES.toSeconds(
-                                TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))) );
+                textView.setText(R.string.time_remaining + DateTime.INSTANCE.timeInHourMinSecs(millisUntilFinished));
             }
 
             public void onFinish() {
