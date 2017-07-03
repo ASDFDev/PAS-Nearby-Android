@@ -68,6 +68,8 @@ public class ConnectionManager extends AsyncTask<String, Integer, String> {
     private String atsLoginPostURL = "https://" + atsHost + "/psc/cs90atstd/EMPLOYEE/HRMS/c/A_STDNT_ATTENDANCE.A_ATS_STDNT_SBMIT.GBL?cmd=login&languageCd=ENG";
     private String atsCodeURL = "https://" + atsHost + "/psc/cs90atstd/EMPLOYEE/HRMS/c/A_STDNT_ATTENDANCE.A_ATS_STDNT_SBMIT.GBL";
     private String atsCodePostURL = "https://" + atsHost + "/psc/cs90atstd/EMPLOYEE/HRMS/s/WEBLIB_A_ATS.ISCRIPT1.FieldFormula.IScript_SubmitAttendance";
+    public static String loggedInUser;
+
     public ConnectionManager(Context context) {
         globalContext = context;
     }
@@ -374,6 +376,7 @@ public class ConnectionManager extends AsyncTask<String, Integer, String> {
                 CookiesManager.isCookiesStored = true;
                 result = stringBuffer.toString();
                 signInState = SignInResponse.SignedIn;
+                loggedInUser = userID.toUpperCase();
             } else {
                 result = stringBuffer.toString();
                 signInState = SignInResponse.Unknown;

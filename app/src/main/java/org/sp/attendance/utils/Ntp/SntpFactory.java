@@ -98,7 +98,6 @@ class SntpFactory extends AsyncTask<Void, Void, Date> {
     protected void onPostExecute(Date currentTime){
         progressDialog.dismiss();
         super.onPostExecute(date);
-
     }
 
 }
