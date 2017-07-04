@@ -29,10 +29,10 @@ import android.widget.EditText;
 
 import org.sp.attendance.R;
 import org.sp.attendance.ui.intro.SlideIntro;
-import org.sp.attendance.utils.account.AccountsManager;
+import org.sp.attendance.utils.account.TempAccountManager;
 import org.sp.attendance.utils.CodeManager;
 import org.sp.attendance.utils.StartUpManager;
-import org.sp.attendance.utils.account.spice.ConnectionManager;
+import org.sp.attendance.utils.account.spice.SpiceManager;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -69,16 +69,16 @@ public class ATSLoginActivity extends AppCompatActivity{
     public void signIn(View view) {
         hideKeyboard();
         if (((EditText) findViewById(R.id.textEdit_userID)).getText().toString().startsWith("s")){
-            new AccountsManager(ATSLoginActivity.this).execute("SignInOnly",
+            new TempAccountManager(ATSLoginActivity.this).execute("SignInOnly",
                     ((EditText) findViewById(R.id.textEdit_userID)).getText().toString(),
                     ((EditText) findViewById(R.id.textEdit_password)).getText().toString());
         } else if (((EditText) findViewById(R.id.textEdit_userID)).getText().toString().startsWith("p")) {
-            new ConnectionManager(this).execute("SignInOnly",
+            new SpiceManager(this).execute("SignInOnly",
                     ((EditText) findViewById(R.id.textEdit_userID)).getText().toString(),
                     ((EditText) findViewById(R.id.textEdit_password)).getText().toString());
         } /* Backdoor student account*/
         else if(((EditText) findViewById(R.id.textEdit_userID)).getText().toString().contains("stud")){
-            new AccountsManager(ATSLoginActivity.this).execute("SignInOnly",
+            new TempAccountManager(ATSLoginActivity.this).execute("SignInOnly",
                     ((EditText) findViewById(R.id.textEdit_userID)).getText().toString(),
                     ((EditText) findViewById(R.id.textEdit_password)).getText().toString());
         }

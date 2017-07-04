@@ -42,7 +42,7 @@ import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class ConnectionManager extends AsyncTask<String, Integer, String> {
+public class SpiceManager extends AsyncTask<String, Integer, String> {
 
     private ProgressDialog progressDialog;
     private Context globalContext;
@@ -57,7 +57,7 @@ public class ConnectionManager extends AsyncTask<String, Integer, String> {
     private String atsCodeURL = "https://" + atsHost + "/psc/cs90atstd/EMPLOYEE/HRMS/c/A_STDNT_ATTENDANCE.A_ATS_STDNT_SBMIT.GBL";
     public static String loggedInUser;
 
-    public ConnectionManager(Context context) {
+    public SpiceManager(Context context) {
         globalContext = context;
     }
 

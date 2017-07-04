@@ -20,14 +20,13 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
 import org.sp.attendance.ui.CodeBroadcastActivity;
 import org.sp.attendance.ui.CodeReceiveActivity;
 import org.sp.attendance.R;
 
-public class AccountsManager extends AsyncTask<String, Integer, String> {
+public class TempAccountManager extends AsyncTask<String, Integer, String> {
 
     /* Pseudo-accounts manager for lecturer.
        Provides a small database of pre-set accounts for testing use
@@ -44,7 +43,7 @@ public class AccountsManager extends AsyncTask<String, Integer, String> {
     private SignInType signInType;
     private String connectionType;
 
-    public AccountsManager(Context context) {
+    public TempAccountManager(Context context) {
         globalContext = context;
     }
 
@@ -59,7 +58,6 @@ public class AccountsManager extends AsyncTask<String, Integer, String> {
                     signInType = SignInType.Staff;
                     signInState = SignInResponse.SignedIn;
                     loggedInUserID = userID.toUpperCase();
-                    saveCredentials(userID, password);
                 } else if ((userID.toLowerCase().equals("stud1") ||
                         userID.toLowerCase().equals("stud2") ||
                         userID.toLowerCase().equals("stud3") ||
@@ -68,7 +66,6 @@ public class AccountsManager extends AsyncTask<String, Integer, String> {
                     signInType = SignInType.Student;
                     signInState = SignInResponse.SignedIn;
                     loggedInUserID = userID.toUpperCase();
-                    saveCredentials(userID, password);
                 } else {
                     signInState = SignInResponse.InvalidCredentials;
                 }
@@ -118,16 +115,6 @@ public class AccountsManager extends AsyncTask<String, Integer, String> {
             }
         } catch (Exception e) {
             showPostExecuteDialog("", (e.toString()));
-        }
-    }
-
-    private void saveCredentials(String userID, String password) {
-        SharedPreferences sharedPref = globalContext.getSharedPreferences("org.sp.ats.accounts", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        if (sharedPref.getString("ats_userid", "").equals("") && sharedPref.getString("ats_pwd", "").equals("")) {
-            editor.putString("ats_userid", userID);
-            editor.putString("ats_pwd", password);
-            editor.apply();
         }
     }
 

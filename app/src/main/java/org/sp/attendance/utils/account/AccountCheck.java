@@ -17,7 +17,7 @@ package org.sp.attendance.utils.account;
  * GNU General Public License for more details.
  */
 
-import org.sp.attendance.utils.account.spice.ConnectionManager;
+import org.sp.attendance.utils.account.spice.SpiceManager;
 
 public class AccountCheck {
 
@@ -27,10 +27,10 @@ public class AccountCheck {
 
     public static String areWeDemoAccountOrSpiceAccount(){
         // if Account manager is null, it means we are logged in via SPICE
-        if(AccountsManager.loggedInUserID == null){
-           account = ConnectionManager.loggedInUser;
-        } else if(ConnectionManager.loggedInUser == null){
-            account = AccountsManager.loggedInUserID;
+        if(TempAccountManager.loggedInUserID == null){
+           account = SpiceManager.loggedInUser;
+        } else if(SpiceManager.loggedInUser == null){
+            account = TempAccountManager.loggedInUserID;
         }
         return account;
     }
