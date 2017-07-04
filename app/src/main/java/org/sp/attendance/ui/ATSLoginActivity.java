@@ -16,12 +16,14 @@ package org.sp.attendance.ui;
  * GNU General Public License for more details.
  */
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 
@@ -65,6 +67,7 @@ public class ATSLoginActivity extends AppCompatActivity{
     }
 
     public void signIn(View view) {
+        hideKeyboard();
         if (((EditText) findViewById(R.id.textEdit_userID)).getText().toString().startsWith("s")){
             new AccountsManager(ATSLoginActivity.this).execute("SignInOnly",
                     ((EditText) findViewById(R.id.textEdit_userID)).getText().toString(),
@@ -83,6 +86,11 @@ public class ATSLoginActivity extends AppCompatActivity{
             showDialog(this.getResources().getString(R.string.title_sign_in_failed),
                     this.getResources().getString(R.string.error_credentials_disappeared));
         }
+    }
+
+    private void hideKeyboard(){
+        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
     }
 
     private void showDialog(String title, String message){
