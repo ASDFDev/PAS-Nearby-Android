@@ -33,6 +33,9 @@ class CookiesManager {
     }
 
     static void setCookies(List<String> cookies) {
+        if (isCookiesStored = false) {
+            storedCookies = cookies;
+        }
     }
 
     static void clearCookies() {

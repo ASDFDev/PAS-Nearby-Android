@@ -25,7 +25,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import org.sp.attendance.R;
-import org.sp.attendance.utils.account.AccountsManager;
+import org.sp.attendance.utils.account.AccountCheck;
 import org.sp.attendance.utils.CodeManager;
 import org.sp.attendance.utils.DatabaseManager;
 
@@ -38,7 +38,7 @@ public class CodeReceiveActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receive);
-        codeManager.setupStudentEnvironment(this, AccountsManager.loggedInUserID);
+        codeManager.setupStudentEnvironment(this, AccountCheck.areWeDemoAccountOrSpiceAccount());
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 

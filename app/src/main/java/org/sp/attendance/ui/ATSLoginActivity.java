@@ -32,6 +32,9 @@ import org.sp.attendance.utils.CodeManager;
 import org.sp.attendance.utils.StartUpManager;
 import org.sp.attendance.utils.account.spice.ConnectionManager;
 
+import java.net.CookieHandler;
+import java.net.CookieManager;
+
 public class ATSLoginActivity extends AppCompatActivity{
 
     public static final int REQUEST_CODE_INTRO = 1;
@@ -45,6 +48,7 @@ public class ATSLoginActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_atslogin);
         checkFirstRun();
+        CookieHandler.setDefault(new CookieManager());
         startUpManager.checkNetwork();
         startUpManager.checkPlayServices(this);
         if (!codeManager.isDestroyed) {
@@ -65,7 +69,7 @@ public class ATSLoginActivity extends AppCompatActivity{
             new AccountsManager(ATSLoginActivity.this).execute("SignInOnly",
                     ((EditText) findViewById(R.id.textEdit_userID)).getText().toString(),
                     ((EditText) findViewById(R.id.textEdit_password)).getText().toString());
-        } else if (((EditText) findViewById(R.id.textEdit_userID)).getText().toString().toLowerCase().startsWith("p")) {
+        } else if (((EditText) findViewById(R.id.textEdit_userID)).getText().toString().startsWith("p")) {
             new ConnectionManager(this).execute("SignInOnly",
                     ((EditText) findViewById(R.id.textEdit_userID)).getText().toString(),
                     ((EditText) findViewById(R.id.textEdit_password)).getText().toString());

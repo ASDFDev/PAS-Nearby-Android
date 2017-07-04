@@ -23,11 +23,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
-import org.jetbrains.annotations.Contract;
 import org.sp.attendance.ui.CodeBroadcastActivity;
 import org.sp.attendance.ui.CodeReceiveActivity;
 import org.sp.attendance.R;
-import org.sp.attendance.utils.account.spice.ConnectionManager;
 
 public class AccountsManager extends AsyncTask<String, Integer, String> {
 

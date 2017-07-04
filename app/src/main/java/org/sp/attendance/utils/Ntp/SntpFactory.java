@@ -61,11 +61,12 @@ class SntpFactory extends AsyncTask<Void, Void, Date> {
         SntpClient client = new SntpClient();
         String REMOTE_SERVER = "time.google.com";
         if (client.requestTime(REMOTE_SERVER, 2000 /* 2 seconds timeout */)) {
-                long now =
-                        client.getNtpTime() + SystemClock.elapsedRealtime() - client.getNtpTimeReference();
-                date = new Date(now);
-                return date;
-            }
+            long now =
+                    client.getNtpTime() + SystemClock.elapsedRealtime() - client.getNtpTimeReference();
+            date = new Date(now);
+            System.out.println("NTP time");
+            return date;
+        }
         /*
         On certain networks(such as Singapore Polytechnic), NTP requests are blocked by the firewall,
         a workaround is used. We will send header requests to a remote server and read the header reply.
@@ -84,6 +85,7 @@ class SntpFactory extends AsyncTask<Void, Void, Date> {
                     long dateTime = conn.getHeaderFieldDate("Date", 0);
                     if (dateTime > 0) {
                         date = new Date(dateTime);
+                        System.out.println("NTP over HTTP");
                         return date;
                     }
                 }
