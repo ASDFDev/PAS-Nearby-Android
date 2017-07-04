@@ -23,7 +23,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+
+import com.github.ybq.android.spinkit.style.Wave;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -93,6 +96,10 @@ public class SpiceManager extends AsyncTask<String, Integer, String> {
         progressDialog = new ProgressDialog(globalContext);
         progressDialog.setCancelable(false);
         progressDialog.setMessage(globalContext.getResources().getString(R.string.please_wait));
+        Wave mWaveDrawable = new Wave();
+        mWaveDrawable.setBounds(0, 0, 100, 100);
+        mWaveDrawable.setColor(ContextCompat.getColor(globalContext, R.color.colorAccent));
+        progressDialog.setIndeterminateDrawable(mWaveDrawable);
         progressDialog.show();
     }
 
