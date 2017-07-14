@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'me.tatarka.retrolambda'
-apply from: "$project.rootDir/script-pmd.gradle"
+apply from: "$project.rootDir/tools/script-pmd.gradle"
 
 def keystorePropertiesFile = rootProject.file("gradle.properties");
 def keystoreProperties = new Properties()
