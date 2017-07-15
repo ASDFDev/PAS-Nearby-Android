@@ -26,6 +26,8 @@ import org.sp.attendance.ui.CodeBroadcastActivity;
 import org.sp.attendance.ui.CodeReceiveActivity;
 import org.sp.attendance.R;
 
+import java.util.Locale;
+
 public class TempAccountManager extends AsyncTask<String, Integer, String> {
 
     /* Pseudo-accounts manager for lecturer.
@@ -54,18 +56,19 @@ public class TempAccountManager extends AsyncTask<String, Integer, String> {
             try {
                 String userID = params[1];
                 String password = params[2];
-                if (userID.toLowerCase().equals("s10001") && password.equals("staff")) {
+                String _userID = userID.toLowerCase(Locale.ENGLISH);
+                if (_userID.equals("s10001") && password.equals("staff")) {
                     signInType = SignInType.Staff;
                     signInState = SignInResponse.SignedIn;
-                    loggedInUserID = userID.toUpperCase();
-                } else if ((userID.toLowerCase().equals("stud1") ||
-                        userID.toLowerCase().equals("stud2") ||
-                        userID.toLowerCase().equals("stud3") ||
-                        userID.toLowerCase().equals("stud4") ||
-                        userID.toLowerCase().equals("stud5")) && password.equals("student")) {
+                    loggedInUserID = userID.toUpperCase(Locale.ENGLISH);
+                } else if ((_userID.equals("stud1") ||
+                        _userID.equals("stud2") ||
+                        _userID.equals("stud3") ||
+                        _userID.equals("stud4") ||
+                        _userID.equals("stud5")) && password.equals("student")) {
                     signInType = SignInType.Student;
                     signInState = SignInResponse.SignedIn;
-                    loggedInUserID = userID.toUpperCase();
+                    loggedInUserID = userID.toUpperCase(Locale.ENGLISH);
                 } else {
                     signInState = SignInResponse.InvalidCredentials;
                 }
