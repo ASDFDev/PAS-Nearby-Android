@@ -31,12 +31,29 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
+import java.util.Random;
 
 class SntpFactory extends AsyncTask<Void, Void, Date> {
 
     private Context context;
     private ProgressDialog progressDialog;
     private static Date date;
+    // If one server ever goes down, we still have backups
+    private String[] ntpServers = { "time.apple.com",
+            "time.google.com",
+            "sin01.ntp.znx.cc",
+            "time.nist.gov",
+            "ntp6.leontp.com"};
+
+    private String [] webServers = { "google.com",
+            /*Student portal */
+            "esp.sp.edu.sg",
+            /*SP email service provider */
+            "pod51057.outlook.com",
+            "www.sp.edu.sg",
+            "facebook.com"};
+
+    private boolean nonNullTime = false;
 
     SntpFactory(Context context){
         this.context = context;
@@ -59,25 +76,25 @@ class SntpFactory extends AsyncTask<Void, Void, Date> {
     @Override
     protected Date doInBackground(Void... params) {
         SntpClient client = new SntpClient();
-        String REMOTE_SERVER = "time.google.com";
-        if (client.requestTime(REMOTE_SERVER, 2000 /* 2 seconds timeout */)) {
-            long now =
-                    client.getNtpTime() + SystemClock.elapsedRealtime() - client.getNtpTimeReference();
-            date = new Date(now);
-            System.out.println("NTP time");
-            return date;
+        String RANDOM_NTP_SERVER = ntpServers[new Random().nextInt(ntpServers.length)];
+            if (client.requestTime(RANDOM_NTP_SERVER, 2000 /* 2 seconds timeout */)) {
+                long now =
+                        client.getNtpTime() + SystemClock.elapsedRealtime() - client.getNtpTimeReference();
+                date = new Date(now);
+                System.out.println("Using NTP from: " + RANDOM_NTP_SERVER);
+                return date;
         }
         /*
         On certain networks(such as Singapore Polytechnic), NTP requests are blocked by the firewall,
-        a workaround is used. We will send header requests to a remote server and read the header reply.
+        a workaround is used. We will send HTTP GET requests to a remote server and read the header reply.
         A typical web server will reply with tons of information, one of which contain a date.
 
-        This is known as NTP over https. It is much more secure however, we will not be conforming with
-        RFC 4330 (SNTP)
+        This is known as NTP over https.
         */
         if(date == null) {
             try {
-                URL url = new URL("https://" + REMOTE_SERVER);
+                String RANDOM_WEB_SERVER = webServers[new Random().nextInt(webServers.length)];
+                URL url = new URL("https://" + RANDOM_WEB_SERVER);
                 URLConnection conn = url.openConnection();
                 if (conn instanceof HttpURLConnection) {
                     HttpURLConnection httpConn = (HttpURLConnection) conn;
@@ -85,7 +102,7 @@ class SntpFactory extends AsyncTask<Void, Void, Date> {
                     long dateTime = conn.getHeaderFieldDate("Date", 0);
                     if (dateTime > 0) {
                         date = new Date(dateTime);
-                        System.out.println("NTP over HTTP");
+                        System.out.println("Using NTP over HTTP from: " + RANDOM_WEB_SERVER);
                         return date;
                     }
                 }
