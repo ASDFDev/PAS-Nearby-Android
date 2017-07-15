@@ -30,7 +30,7 @@ import org.sp.attendance.R;
 
 public class StartUpManager{
 
-    private Context context;
+    private final Context context;
 
     public StartUpManager(Context context){
         this.context = context;

@@ -36,7 +36,7 @@ public class TempAccountManager extends AsyncTask<String, Integer, String> {
     public static String loggedInUserID;
 
     private ProgressDialog progressDialog;
-    private Context globalContext;
+    private final Context context;
     private String result;
     private SignInResponse signInState;
     private CodeResponse codeState;
@@ -44,7 +44,7 @@ public class TempAccountManager extends AsyncTask<String, Integer, String> {
     private String connectionType;
 
     public TempAccountManager(Context context) {
-        globalContext = context;
+        this.context = context;
     }
 
     @Override
@@ -70,20 +70,20 @@ public class TempAccountManager extends AsyncTask<String, Integer, String> {
                     signInState = SignInResponse.InvalidCredentials;
                 }
             } catch (Exception e) {
-                result = (globalContext.getResources().getString((R.string.error_unknown)));
+                result = (context.getResources().getString((R.string.error_unknown)));
                 signInState = SignInResponse.Unknown;
             }
         } else {
-            result = globalContext.getResources().getString((R.string.error_connection_invalid));
+            result = context.getResources().getString((R.string.error_connection_invalid));
         }
         return result;
     }
 
     @Override
     protected void onPreExecute() {
-        progressDialog = new ProgressDialog(globalContext);
+        progressDialog = new ProgressDialog(context);
         progressDialog.setCancelable(false);
-        progressDialog.setMessage(globalContext.getResources().getString(R.string.please_wait));
+        progressDialog.setMessage(context.getResources().getString(R.string.please_wait));
         progressDialog.show();
     }
 
@@ -96,22 +96,22 @@ public class TempAccountManager extends AsyncTask<String, Integer, String> {
             if (connectionType.equals("SignInOnly")) {
                 if (signInState.equals(SignInResponse.SignedIn)) {
                     if (signInType == SignInType.Student) {
-                        Intent codeReceiveIntent = new Intent(globalContext, CodeReceiveActivity.class);
-                        globalContext.startActivity(codeReceiveIntent);
+                        Intent codeReceiveIntent = new Intent(context, CodeReceiveActivity.class);
+                        context.startActivity(codeReceiveIntent);
                     } else if (signInType == SignInType.Staff) {
-                        Intent codeBroadcastIntent = new Intent(globalContext, CodeBroadcastActivity.class);
-                        globalContext.startActivity(codeBroadcastIntent);
+                        Intent codeBroadcastIntent = new Intent(context, CodeBroadcastActivity.class);
+                        context.startActivity(codeBroadcastIntent);
                     }
                     updateUI();
                 } else if (signInState.equals(SignInResponse.InvalidCredentials)) {
-                    showPostExecuteDialog(globalContext.getResources().getString(R.string.title_sign_in_failed),
-                            globalContext.getResources().getString(R.string.error_credentials_invalid));
+                    showPostExecuteDialog(context.getResources().getString(R.string.title_sign_in_failed),
+                            context.getResources().getString(R.string.error_credentials_invalid));
                 } else if (signInState.equals(SignInResponse.OutsideSP)) {
-                    showPostExecuteDialog(globalContext.getResources().getString(R.string.title_sign_in_failed),
-                            globalContext.getResources().getString(R.string.error_outside_sp));
+                    showPostExecuteDialog(context.getResources().getString(R.string.title_sign_in_failed),
+                            context.getResources().getString(R.string.error_outside_sp));
                 }
             } else {
-                showPostExecuteDialog(globalContext.getResources().getString(R.string.title_internal), "");
+                showPostExecuteDialog(context.getResources().getString(R.string.title_internal), "");
             }
         } catch (Exception e) {
             showPostExecuteDialog("", (e.toString()));
@@ -119,11 +119,11 @@ public class TempAccountManager extends AsyncTask<String, Integer, String> {
     }
 
     private void showPostExecuteDialog(String title, String message){
-        new AlertDialog.Builder(globalContext)
+        new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setMessage(message)
                 .setCancelable(false)
-                .setPositiveButton(globalContext.getResources().getString(R.string.dismiss), (dialog, which) -> {
+                .setPositiveButton(context.getResources().getString(R.string.dismiss), (dialog, which) -> {
                 })
                 .create()
                 .show();

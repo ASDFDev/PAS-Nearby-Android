@@ -48,8 +48,8 @@ import java.util.List;
 
 public class CodeBroadcastActivity extends AppCompatActivity {
 
-    private CodeManager codeManager = new CodeManager(this);
-    private DatabaseManager databaseManager = new DatabaseManager(this);
+    private final CodeManager codeManager = new CodeManager(this);
+    private final DatabaseManager databaseManager = new DatabaseManager(this);
     private String studentAccount;
     private TextView textView;
 

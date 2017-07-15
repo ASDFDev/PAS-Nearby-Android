@@ -35,25 +35,23 @@ import java.util.Random;
 
 class SntpFactory extends AsyncTask<Void, Void, Date> {
 
-    private Context context;
+    private final Context context;
     private ProgressDialog progressDialog;
     private static Date date;
     // If one server ever goes down, we still have backups
-    private String[] ntpServers = { "time.apple.com",
+    private final String[] ntpServers = { "time.apple.com",
             "time.google.com",
             "sin01.ntp.znx.cc",
             "time.nist.gov",
             "ntp6.leontp.com"};
 
-    private String [] webServers = { "google.com",
+    private final String [] webServers = { "google.com",
             /*Student portal */
             "esp.sp.edu.sg",
             /*SP email service provider */
             "pod51057.outlook.com",
             "www.sp.edu.sg",
             "facebook.com"};
-
-    private boolean nonNullTime = false;
 
     SntpFactory(Context context){
         this.context = context;

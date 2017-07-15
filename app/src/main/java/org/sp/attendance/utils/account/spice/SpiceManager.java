@@ -48,20 +48,15 @@ import javax.net.ssl.HttpsURLConnection;
 public class SpiceManager extends AsyncTask<String, Integer, String> {
 
     private ProgressDialog progressDialog;
-    private Context globalContext;
+    private final Context context;
     private String result;
     private SignInResponse signInState;
     private CodeResponse codeState;
     private String connectionType;
-    private String atsHost = "myats.sp.edu.sg";
-    private String atsPublicURL = "https://" + atsHost + "/";
-    private String atsLoginURL = "https://" + atsHost + "/psc/cs90atstd/EMPLOYEE/HRMS/c/A_STDNT_ATTENDANCE.A_ATS_STDNT_SBMIT.GBL";
-    private String atsLoginPostURL = "https://" + atsHost + "/psc/cs90atstd/EMPLOYEE/HRMS/c/A_STDNT_ATTENDANCE.A_ATS_STDNT_SBMIT.GBL?cmd=login&languageCd=ENG";
-    private String atsCodeURL = "https://" + atsHost + "/psc/cs90atstd/EMPLOYEE/HRMS/c/A_STDNT_ATTENDANCE.A_ATS_STDNT_SBMIT.GBL";
     public static String loggedInUser;
 
     public SpiceManager(Context context) {
-        globalContext = context;
+        this.context = context;
     }
 
     @Override
@@ -75,10 +70,10 @@ public class SpiceManager extends AsyncTask<String, Integer, String> {
                     if (userID.length() > 0 && password.length() > 0) {
                         signIn(userID, password);
                     } else {
-                        result = globalContext.getResources().getString((R.string.error_credentials_disappeared));
+                        result = context.getResources().getString((R.string.error_credentials_disappeared));
                     }
                 } catch (Exception e) {
-                    result = (globalContext.getResources().getString((R.string.error_unknown)) + e.toString() + "\n\nWeb trace: \n" + result);
+                    result = (context.getResources().getString((R.string.error_unknown)) + e.toString() + "\n\nWeb trace: \n" + result);
                     signInState = SignInResponse.Unknown;
                 }
                 break;
@@ -93,12 +88,12 @@ public class SpiceManager extends AsyncTask<String, Integer, String> {
 
     @Override
     protected void onPreExecute() {
-        progressDialog = new ProgressDialog(globalContext);
+        progressDialog = new ProgressDialog(context);
         progressDialog.setCancelable(false);
-        progressDialog.setMessage(globalContext.getResources().getString(R.string.please_wait));
+        progressDialog.setMessage(context.getResources().getString(R.string.please_wait));
         Wave mWaveDrawable = new Wave();
         mWaveDrawable.setBounds(0, 0, 100, 100);
-        mWaveDrawable.setColor(ContextCompat.getColor(globalContext, R.color.colorAccent));
+        mWaveDrawable.setColor(ContextCompat.getColor(context, R.color.colorAccent));
         progressDialog.setIndeterminateDrawable(mWaveDrawable);
         progressDialog.show();
     }
@@ -112,62 +107,62 @@ public class SpiceManager extends AsyncTask<String, Integer, String> {
             switch (connectionType) {
                 case "SignInOnly":
                     if (signInState.equals(SignInResponse.SignedIn)) {
-                        Intent codeInputIntent = new Intent(globalContext, CodeReceiveActivity.class);
-                        globalContext.startActivity(codeInputIntent);
+                        Intent codeInputIntent = new Intent(context, CodeReceiveActivity.class);
+                        context.startActivity(codeInputIntent);
                         updateUI();
                     } else if (signInState.equals(SignInResponse.InvalidCredentials)) {
-                        new AlertDialog.Builder(globalContext)
+                        new AlertDialog.Builder(context)
                                 .setTitle(R.string.title_sign_in_failed)
                                 .setMessage(R.string.error_credentials_invalid)
                                 .setCancelable(false)
-                                .setPositiveButton(globalContext.getResources().getString(R.string.dismiss), (dialog, which) -> {
+                                .setPositiveButton(context.getResources().getString(R.string.dismiss), (dialog, which) -> {
                                 })
                                 .create()
                                 .show();
                     } else if (signInState.equals(SignInResponse.OutsideSP)) {
-                        new AlertDialog.Builder(globalContext)
+                        new AlertDialog.Builder(context)
                                 .setTitle(R.string.title_sign_in_failed)
                                 .setMessage(R.string.error_outside_sp)
                                 .setCancelable(false)
-                                .setPositiveButton(globalContext.getResources().getString(R.string.dismiss), (dialog, which) -> {
+                                .setPositiveButton(context.getResources().getString(R.string.dismiss), (dialog, which) -> {
                                 })
                                 .create()
                                 .show();
                     } else if (signInState.equals(null) && codeState.equals(CodeResponse.NotSignedIn)) {
-                        new AlertDialog.Builder(globalContext)
+                        new AlertDialog.Builder(context)
                                 .setTitle(R.string.title_code_failed)
                                 .setMessage(R.string.error_timed_out)
                                 .setCancelable(false)
-                                .setPositiveButton(globalContext.getResources().getString(R.string.dismiss), (dialog, which) -> {
+                                .setPositiveButton(context.getResources().getString(R.string.dismiss), (dialog, which) -> {
                                 })
                                 .create()
                                 .show();
                     } else {
-                        new AlertDialog.Builder(globalContext)
+                        new AlertDialog.Builder(context)
                                 .setTitle(R.string.title_code)
-                                .setMessage(globalContext.getResources().getString(R.string.error_unknown) + "\n\n" + result)
+                                .setMessage(context.getResources().getString(R.string.error_unknown) + "\n\n" + result)
                                 .setCancelable(false)
-                                .setPositiveButton(globalContext.getResources().getString(R.string.dismiss), (dialog, which) -> {
+                                .setPositiveButton(context.getResources().getString(R.string.dismiss), (dialog, which) -> {
                                 })
                                 .create()
                                 .show();
                     }
                     break;
                 default:
-                    new AlertDialog.Builder(globalContext)
+                    new AlertDialog.Builder(context)
                             .setTitle(R.string.title_internal)
                             .setCancelable(false)
-                            .setPositiveButton(globalContext.getResources().getString(R.string.dismiss), (dialog, which) -> {
+                            .setPositiveButton(context.getResources().getString(R.string.dismiss), (dialog, which) -> {
                             })
                             .create()
                             .show();
                     break;
             }
         } catch (Exception e) {
-            new AlertDialog.Builder(globalContext)
+            new AlertDialog.Builder(context)
                     .setMessage(R.string.error_unknown)
                     .setCancelable(false)
-                    .setPositiveButton(globalContext.getResources().getString(R.string.dismiss), (dialog, which) -> {
+                    .setPositiveButton(context.getResources().getString(R.string.dismiss), (dialog, which) -> {
                     })
                     .create()
                     .show();
@@ -176,8 +171,12 @@ public class SpiceManager extends AsyncTask<String, Integer, String> {
 
     private void signIn(String userID, String password) throws Exception {
         BufferedReader bufferedReader;
+        String atsHost = "myats.sp.edu.sg";
+        String atsPublicURL = "https://" + atsHost + "/";
         URL publicURL = new URL(atsPublicURL);
+        String atsLoginPostURL = "https://" + atsHost + "/psc/cs90atstd/EMPLOYEE/HRMS/c/A_STDNT_ATTENDANCE.A_ATS_STDNT_SBMIT.GBL?cmd=login&languageCd=ENG";
         URL loginPostURL = new URL(atsLoginPostURL);
+        String atsCodeURL = "https://" + atsHost + "/psc/cs90atstd/EMPLOYEE/HRMS/c/A_STDNT_ATTENDANCE.A_ATS_STDNT_SBMIT.GBL";
         URL codeURL = new URL(atsCodeURL);
         StringBuffer stringBuffer;
         //Prepare environment
@@ -254,6 +253,7 @@ public class SpiceManager extends AsyncTask<String, Integer, String> {
             }
             connection.setRequestProperty("Connection", "keep-alive");
             connection.setRequestProperty("Origin", atsPublicURL);
+            String atsLoginURL = "https://" + atsHost + "/psc/cs90atstd/EMPLOYEE/HRMS/c/A_STDNT_ATTENDANCE.A_ATS_STDNT_SBMIT.GBL";
             connection.setRequestProperty("Referer", atsLoginURL);
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             connection.setRequestProperty("Content-Length", Integer.toString(postParams.length()));
