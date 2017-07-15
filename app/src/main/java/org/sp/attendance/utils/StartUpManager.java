@@ -28,6 +28,8 @@ import com.google.android.gms.common.GoogleApiAvailability;
 
 import org.sp.attendance.R;
 
+import java.util.Arrays;
+
 public class StartUpManager{
 
     private final Context context;
@@ -35,7 +37,7 @@ public class StartUpManager{
     public StartUpManager(Context context){
         this.context = context;
     }
-
+    private final String[] spNetwork = {"SPStudent", "SPStaff", "SPGuest"};
 
     public void checkNetwork() {
         WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -45,7 +47,7 @@ public class StartUpManager{
                 if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
                     if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
                         ssid = wifiInfo.getSSID();
-                        if (ssid.equals("\"SPStudent\"") || ssid.equals("\"SPStaff\"") || ssid.equals("\"SPGuest\"")) {
+                        if (Arrays.asList(spNetwork).contains(ssid)) {
                             // Valid network, should implement real account auth soon....
                         } else {
                             showWifiDialog(context.getResources().getString(R.string.title_warning),
