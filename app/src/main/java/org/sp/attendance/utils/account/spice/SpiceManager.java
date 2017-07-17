@@ -106,8 +106,6 @@ public class SpiceManager extends AsyncTask<String, Integer, String> {
             if (progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
-            switch (connectionType) {
-                case "SignInOnly":
                     if (signInState.equals(SignInResponse.SignedIn)) {
                         Intent codeInputIntent = new Intent(context, CodeReceiveActivity.class);
                         context.startActivity(codeInputIntent);
@@ -149,17 +147,6 @@ public class SpiceManager extends AsyncTask<String, Integer, String> {
                                 .create()
                                 .show();
                     }
-                    break;
-                default:
-                    new AlertDialog.Builder(context)
-                            .setTitle(R.string.title_internal)
-                            .setCancelable(false)
-                            .setPositiveButton(context.getResources().getString(R.string.dismiss), (dialog, which) -> {
-                            })
-                            .create()
-                            .show();
-                    break;
-            }
         } catch (Exception e) {
             Log.e(TAG, "Stacktrace: " + e);
             new AlertDialog.Builder(context)
