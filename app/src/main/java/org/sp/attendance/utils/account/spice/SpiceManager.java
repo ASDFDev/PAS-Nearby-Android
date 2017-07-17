@@ -53,7 +53,6 @@ public class SpiceManager extends AsyncTask<String, Integer, String> {
     private String result;
     private SignInResponse signInState;
     private CodeResponse codeState;
-    private String connectionType;
     public static String loggedInUser;
     private static final String TAG = "SpiceManager";
 
@@ -63,9 +62,6 @@ public class SpiceManager extends AsyncTask<String, Integer, String> {
 
     @Override
     protected String doInBackground(String... params) {
-        connectionType = params[0];
-        switch (connectionType) {
-            case "SignInOnly":
                 try {
                     String userID = params[1];
                     String password = params[2];
@@ -78,13 +74,6 @@ public class SpiceManager extends AsyncTask<String, Integer, String> {
                     result = (context.getResources().getString((R.string.error_unknown)) + e.toString() + "\n\nWeb trace: \n" + result);
                     signInState = SignInResponse.Unknown;
                 }
-                break;
-            default:
-                result = "Invalid connection type";
-                signInState = null;
-                codeState = null;
-                break;
-        }
         return result;
     }
 

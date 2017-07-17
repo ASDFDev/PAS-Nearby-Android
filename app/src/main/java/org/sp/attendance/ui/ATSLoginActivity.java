@@ -73,7 +73,7 @@ public class ATSLoginActivity extends AppCompatActivity{
                     ((EditText) findViewById(R.id.textEdit_userID)).getText().toString(),
                     ((EditText) findViewById(R.id.textEdit_password)).getText().toString());
         } else if (((EditText) findViewById(R.id.textEdit_userID)).getText().toString().startsWith("p")) {
-            new SpiceManager(this).execute("SignInOnly",
+            new SpiceManager(this).execute(
                     ((EditText) findViewById(R.id.textEdit_userID)).getText().toString(),
                     ((EditText) findViewById(R.id.textEdit_password)).getText().toString());
         } /* Backdoor student account*/
