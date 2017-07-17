@@ -21,6 +21,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import com.github.ybq.android.spinkit.style.Wave;
 
@@ -53,6 +54,9 @@ class SntpFactory extends AsyncTask<Void, Void, Date> {
             "www.sp.edu.sg",
             "facebook.com"};
 
+    private static final String TAG = "SntpFactory";
+
+
     SntpFactory(Context context){
         this.context = context;
     }
@@ -79,7 +83,7 @@ class SntpFactory extends AsyncTask<Void, Void, Date> {
                 long now =
                         client.getNtpTime() + SystemClock.elapsedRealtime() - client.getNtpTimeReference();
                 date = new Date(now);
-                System.out.println("Using NTP from: " + RANDOM_NTP_SERVER);
+                Log.i(TAG,"Using NTP server: " + RANDOM_NTP_SERVER);
                 return date;
         }
         /*
@@ -100,12 +104,12 @@ class SntpFactory extends AsyncTask<Void, Void, Date> {
                     long dateTime = conn.getHeaderFieldDate("Date", 0);
                     if (dateTime > 0) {
                         date = new Date(dateTime);
-                        System.out.println("Using NTP over HTTP from: " + RANDOM_WEB_SERVER);
+                        Log.i(TAG,"Using web server time from: " + RANDOM_WEB_SERVER);
                         return date;
                     }
                 }
             } catch (IOException ioe) {
-                System.out.println("Unable to get any clock! " + ioe);
+                Log.e(TAG,"Unable to get time from anywhere! Stacktrace: " + ioe);
             }
         }
         return date;

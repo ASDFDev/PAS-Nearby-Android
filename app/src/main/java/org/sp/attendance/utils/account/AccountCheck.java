@@ -17,19 +17,24 @@ package org.sp.attendance.utils.account;
  * GNU General Public License for more details.
  */
 
+import android.util.Log;
+
 import org.sp.attendance.utils.account.spice.SpiceManager;
 
 public class AccountCheck {
 
     private static String account;
+    private static final String TAG = "AccountCheck";
 
     // I can't believe this class is necessary.....
 
     public static String areWeDemoAccountOrSpiceAccount(){
         // if Account manager is null, it means we are logged in via SPICE
         if(TempAccountManager.loggedInUserID == null){
+            Log.i(TAG,"Hard coded account");
            account = SpiceManager.loggedInUser;
         } else if(SpiceManager.loggedInUser == null){
+            Log.i(TAG,"SPICE");
             account = TempAccountManager.loggedInUserID;
         }
         return account;

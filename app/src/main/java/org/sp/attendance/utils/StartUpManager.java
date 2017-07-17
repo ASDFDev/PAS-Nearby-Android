@@ -22,6 +22,7 @@ import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -33,6 +34,7 @@ import java.util.Arrays;
 public class StartUpManager{
 
     private final Context context;
+    private static final String TAG = "StartUpManager";
 
     public StartUpManager(Context context){
         this.context = context;
@@ -68,6 +70,7 @@ public class StartUpManager{
                 apiAvailability.getErrorDialog(activity, resultCode, 9000)
                         .show();
             } else {
+                Log.w(TAG, "");
                 ((Activity)context).finish();
             }
             return false;

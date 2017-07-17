@@ -25,6 +25,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 
 import com.github.ybq.android.spinkit.style.Wave;
 
@@ -54,6 +55,7 @@ public class SpiceManager extends AsyncTask<String, Integer, String> {
     private CodeResponse codeState;
     private String connectionType;
     public static String loggedInUser;
+    private static final String TAG = "SpiceManager";
 
     public SpiceManager(Context context) {
         this.context = context;
@@ -159,6 +161,7 @@ public class SpiceManager extends AsyncTask<String, Integer, String> {
                     break;
             }
         } catch (Exception e) {
+            Log.e(TAG, "Stacktrace: " + e);
             new AlertDialog.Builder(context)
                     .setMessage(R.string.error_unknown)
                     .setCancelable(false)
@@ -205,6 +208,7 @@ public class SpiceManager extends AsyncTask<String, Integer, String> {
         //TODO: Parse page and find string instead
         if (stringBuffer.toString().contains("Please connect to SPStudent wifi profile before accessing ATS")) {
             result = stringBuffer.toString();
+            Log.i(TAG, "Not connected to SP WiFi");
             signInState = SignInResponse.OutsideSP;
         } else if (stringBuffer.toString().contains("PeopleSoft Enterprise Sign-in")) {
             //Get login params
@@ -297,12 +301,14 @@ public class SpiceManager extends AsyncTask<String, Integer, String> {
                 result = stringBuffer.toString();
                 loggedInUser = userID;
                 signInState = SignInResponse.SignedIn;
+                Log.i(TAG, "Sign in success!");
             } else {
                 result = stringBuffer.toString();
                 signInState = SignInResponse.Unknown;
             }
         } else {
             result = ("Invalid page type");
+            Log.e(TAG, "Failed to sign in.Cookies not enabled?");
             signInState = SignInResponse.Unknown;
         }
     }

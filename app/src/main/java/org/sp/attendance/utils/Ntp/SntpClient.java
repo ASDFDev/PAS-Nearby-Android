@@ -23,6 +23,8 @@ package org.sp.attendance.utils.Ntp;
  */
 
 import android.os.SystemClock;
+import android.util.Log;
+
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -65,6 +67,8 @@ class SntpClient {
 
     // value of SystemClock.elapsedRealtime() corresponding to ntpTime
     private long ntpTimeReference;
+
+    private static final String TAG = "SntpClient";
 
     private static class InvalidServerReplyException extends Exception {
         InvalidServerReplyException(String message) {
@@ -143,6 +147,7 @@ class SntpClient {
             ntpTime = responseTime + clockOffset;
             ntpTimeReference = responseTicks;
         } catch (Exception e) {
+            Log.d(TAG, "Requesting time failed! Stacktrace: " + e);
             return false;
         } finally {
             if (socket != null) {
