@@ -69,7 +69,7 @@ public class ATSLoginActivity extends AppCompatActivity{
     public void signIn(View view) {
         hideKeyboard();
         if (((EditText) findViewById(R.id.textEdit_userID)).getText().toString().startsWith("s")){
-            new TempAccountManager(ATSLoginActivity.this).execute("SignInOnly",
+            new TempAccountManager(ATSLoginActivity.this).execute(
                     ((EditText) findViewById(R.id.textEdit_userID)).getText().toString(),
                     ((EditText) findViewById(R.id.textEdit_password)).getText().toString());
         } else if (((EditText) findViewById(R.id.textEdit_userID)).getText().toString().startsWith("p")) {
@@ -78,7 +78,7 @@ public class ATSLoginActivity extends AppCompatActivity{
                     ((EditText) findViewById(R.id.textEdit_password)).getText().toString());
         } /* Backdoor student account*/
         else if(((EditText) findViewById(R.id.textEdit_userID)).getText().toString().contains("stud")){
-            new TempAccountManager(ATSLoginActivity.this).execute("SignInOnly",
+            new TempAccountManager(ATSLoginActivity.this).execute(
                     ((EditText) findViewById(R.id.textEdit_userID)).getText().toString(),
                     ((EditText) findViewById(R.id.textEdit_password)).getText().toString());
         }

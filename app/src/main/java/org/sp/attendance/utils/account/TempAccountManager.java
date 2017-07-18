@@ -41,9 +41,7 @@ public class TempAccountManager extends AsyncTask<String, Integer, String> {
     private final Context context;
     private String result;
     private SignInResponse signInState;
-    private CodeResponse codeState;
     private SignInType signInType;
-    private String connectionType;
 
     public TempAccountManager(Context context) {
         this.context = context;
@@ -51,11 +49,9 @@ public class TempAccountManager extends AsyncTask<String, Integer, String> {
 
     @Override
     protected String doInBackground(String... params) {
-        connectionType = params[0];
-        if (connectionType.equals("SignInOnly")) {
             try {
-                String userID = params[1];
-                String password = params[2];
+                String userID = params[0];
+                String password = params[1];
                 String _userID = userID.toLowerCase(Locale.ENGLISH);
                 if (_userID.equals("s10001") && password.equals("staff")) {
                     signInType = SignInType.Staff;
@@ -76,9 +72,6 @@ public class TempAccountManager extends AsyncTask<String, Integer, String> {
                 result = (context.getResources().getString((R.string.error_unknown)));
                 signInState = SignInResponse.Unknown;
             }
-        } else {
-            result = context.getResources().getString((R.string.error_connection_invalid));
-        }
         return result;
     }
 
@@ -96,7 +89,6 @@ public class TempAccountManager extends AsyncTask<String, Integer, String> {
             if (progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
-            if (connectionType.equals("SignInOnly")) {
                 if (signInState.equals(SignInResponse.SignedIn)) {
                     if (signInType == SignInType.Student) {
                         Intent codeReceiveIntent = new Intent(context, CodeReceiveActivity.class);
@@ -113,9 +105,6 @@ public class TempAccountManager extends AsyncTask<String, Integer, String> {
                     showPostExecuteDialog(context.getResources().getString(R.string.title_sign_in_failed),
                             context.getResources().getString(R.string.error_outside_sp));
                 }
-            } else {
-                showPostExecuteDialog(context.getResources().getString(R.string.title_internal), "");
-            }
         } catch (Exception e) {
             showPostExecuteDialog("", (e.toString()));
         }
@@ -135,10 +124,6 @@ public class TempAccountManager extends AsyncTask<String, Integer, String> {
 
     private String updateUI() {
         return result;
-    }
-
-    private enum CodeResponse {
-        NotSignedIn
     }
 
     private enum SignInResponse {
