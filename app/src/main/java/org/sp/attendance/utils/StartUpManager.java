@@ -29,6 +29,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 
 import org.sp.attendance.R;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 
 public class StartUpManager{
@@ -39,7 +40,7 @@ public class StartUpManager{
     public StartUpManager(Context context){
         this.context = context;
     }
-    private final String[] spNetwork = {"SPStudent", "SPStaff", "SPGuest"};
+    private String[] spNetwork = new String[]{"\"SPStudent\"", "\"SPStaff\"","\"SPGuest\""};
 
     public void checkNetwork() {
         WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
