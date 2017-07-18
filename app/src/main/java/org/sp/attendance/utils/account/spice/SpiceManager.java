@@ -62,18 +62,18 @@ public class SpiceManager extends AsyncTask<String, Integer, String> {
 
     @Override
     protected String doInBackground(String... params) {
-                try {
-                    String userID = params[1];
-                    String password = params[2];
-                    if (userID.length() > 0 && password.length() > 0) {
-                        signIn(userID, password);
-                    } else {
-                        result = context.getResources().getString((R.string.error_credentials_disappeared));
-                    }
-                } catch (Exception e) {
-                    result = (context.getResources().getString((R.string.error_unknown)) + e.toString() + "\n\nWeb trace: \n" + result);
-                    signInState = SignInResponse.Unknown;
-                }
+        try {
+            String userID = params[0];
+            String password = params[1];
+            if (userID.length() > 0 && password.length() > 0) {
+                signIn(userID, password);
+            } else {
+                result = context.getResources().getString((R.string.error_credentials_disappeared));
+            }
+        } catch (Exception e) {
+            result = (context.getResources().getString((R.string.error_unknown)) + e.toString() + "\n\nWeb trace: \n" + result);
+            signInState = SignInResponse.Unknown;
+        }
         return result;
     }
 
@@ -95,47 +95,47 @@ public class SpiceManager extends AsyncTask<String, Integer, String> {
             if (progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
-                    if (signInState.equals(SignInResponse.SignedIn)) {
-                        Intent codeInputIntent = new Intent(context, CodeReceiveActivity.class);
-                        context.startActivity(codeInputIntent);
-                        updateUI();
-                    } else if (signInState.equals(SignInResponse.InvalidCredentials)) {
-                        new AlertDialog.Builder(context)
-                                .setTitle(R.string.title_sign_in_failed)
-                                .setMessage(R.string.error_credentials_invalid)
-                                .setCancelable(false)
-                                .setPositiveButton(context.getResources().getString(R.string.dismiss), (dialog, which) -> {
-                                })
-                                .create()
-                                .show();
-                    } else if (signInState.equals(SignInResponse.OutsideSP)) {
-                        new AlertDialog.Builder(context)
-                                .setTitle(R.string.title_sign_in_failed)
-                                .setMessage(R.string.error_outside_sp)
-                                .setCancelable(false)
-                                .setPositiveButton(context.getResources().getString(R.string.dismiss), (dialog, which) -> {
-                                })
-                                .create()
-                                .show();
-                    } else if (signInState.equals(null) && codeState.equals(CodeResponse.NotSignedIn)) {
-                        new AlertDialog.Builder(context)
-                                .setTitle(R.string.title_code_failed)
-                                .setMessage(R.string.error_timed_out)
-                                .setCancelable(false)
-                                .setPositiveButton(context.getResources().getString(R.string.dismiss), (dialog, which) -> {
-                                })
-                                .create()
-                                .show();
-                    } else {
-                        new AlertDialog.Builder(context)
-                                .setTitle(R.string.title_code)
-                                .setMessage(context.getResources().getString(R.string.error_unknown) + "\n\n" + result)
-                                .setCancelable(false)
-                                .setPositiveButton(context.getResources().getString(R.string.dismiss), (dialog, which) -> {
-                                })
-                                .create()
-                                .show();
-                    }
+            if (signInState.equals(SignInResponse.SignedIn)) {
+                Intent codeInputIntent = new Intent(context, CodeReceiveActivity.class);
+                context.startActivity(codeInputIntent);
+                updateUI();
+            } else if (signInState.equals(SignInResponse.InvalidCredentials)) {
+                new AlertDialog.Builder(context)
+                        .setTitle(R.string.title_sign_in_failed)
+                        .setMessage(R.string.error_credentials_invalid)
+                        .setCancelable(false)
+                        .setPositiveButton(context.getResources().getString(R.string.dismiss), (dialog, which) -> {
+                        })
+                        .create()
+                        .show();
+            } else if (signInState.equals(SignInResponse.OutsideSP)) {
+                new AlertDialog.Builder(context)
+                        .setTitle(R.string.title_sign_in_failed)
+                        .setMessage(R.string.error_outside_sp)
+                        .setCancelable(false)
+                        .setPositiveButton(context.getResources().getString(R.string.dismiss), (dialog, which) -> {
+                        })
+                        .create()
+                        .show();
+            } else if (signInState.equals(null) && codeState.equals(CodeResponse.NotSignedIn)) {
+                new AlertDialog.Builder(context)
+                        .setTitle(R.string.title_code_failed)
+                        .setMessage(R.string.error_timed_out)
+                        .setCancelable(false)
+                        .setPositiveButton(context.getResources().getString(R.string.dismiss), (dialog, which) -> {
+                        })
+                        .create()
+                        .show();
+            } else {
+                new AlertDialog.Builder(context)
+                        .setTitle(R.string.title_code)
+                        .setMessage(context.getResources().getString(R.string.error_unknown) + "\n\n" + result)
+                        .setCancelable(false)
+                        .setPositiveButton(context.getResources().getString(R.string.dismiss), (dialog, which) -> {
+                        })
+                        .create()
+                        .show();
+            }
         } catch (Exception e) {
             Log.e(TAG, "Stacktrace: " + e);
             new AlertDialog.Builder(context)
@@ -294,7 +294,7 @@ public class SpiceManager extends AsyncTask<String, Integer, String> {
     }
 
     private enum CodeResponse {
-       NotSignedIn
+        NotSignedIn
     }
 
     private enum SignInResponse {
