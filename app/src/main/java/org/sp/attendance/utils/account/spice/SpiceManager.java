@@ -19,6 +19,7 @@ package org.sp.attendance.utils.account.spice;
  * GNU General Public License for more details.
  */
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -99,6 +100,7 @@ public class SpiceManager extends AsyncTask<String, Integer, String> {
                 Intent codeInputIntent = new Intent(context, CodeReceiveActivity.class);
                 context.startActivity(codeInputIntent);
                 updateUI();
+                ((Activity)context).finish();
             } else if (signInState.equals(SignInResponse.InvalidCredentials)) {
                 new AlertDialog.Builder(context)
                         .setTitle(R.string.title_sign_in_failed)

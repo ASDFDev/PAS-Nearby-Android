@@ -16,6 +16,7 @@ package org.sp.attendance.utils.account;
  * GNU General Public License for more details.
  */
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -93,9 +94,11 @@ public class TempAccountManager extends AsyncTask<String, Integer, String> {
                     if (signInType == SignInType.Student) {
                         Intent codeReceiveIntent = new Intent(context, CodeReceiveActivity.class);
                         context.startActivity(codeReceiveIntent);
+                        ((Activity)context).finish();
                     } else if (signInType == SignInType.Staff) {
                         Intent codeBroadcastIntent = new Intent(context, CodeBroadcastActivity.class);
                         context.startActivity(codeBroadcastIntent);
+                        ((Activity)context).finish();
                     }
                     updateUI();
                 } else if (signInState.equals(SignInResponse.InvalidCredentials)) {
