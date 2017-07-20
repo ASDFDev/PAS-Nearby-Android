@@ -39,10 +39,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import org.sp.attendance.R;
 import org.sp.attendance.models.DateTime;
 import org.sp.attendance.service.sntp.SntpConsumer;
+import org.sp.attendance.utils.CacheManager;
 import org.sp.attendance.utils.CodeManager;
 import org.sp.attendance.utils.DatabaseManager;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -50,6 +52,7 @@ public class CodeBroadcastActivity extends AppCompatActivity {
 
     private final CodeManager codeManager = new CodeManager(this);
     private final DatabaseManager databaseManager = new DatabaseManager(this);
+    private final CacheManager cacheManager = new CacheManager();
     private String studentAccount;
     private TextView textView;
 
@@ -121,10 +124,16 @@ public class CodeBroadcastActivity extends AppCompatActivity {
                             this,
                             android.R.layout.simple_list_item_1,
                             studentArrayList);
+                    Date timeStampCache = cacheManager.getTimeStampCache();
+                    /*
+                     Previous implementation is crap as we query the NTP server 3 times!
+                     Currently, we query it 1 time.
+                    1. splash screen
+                    */
                     DatabaseReference classReference = FirebaseDatabase.getInstance()
-                            .getReference(DateTime.INSTANCE.getTrueYearToString(sntpConsumer.getNtpTime()))
-                            .child(DateTime.INSTANCE.getTrueMonthToString(sntpConsumer.getNtpTime()))
-                            .child(DateTime.INSTANCE.getTrueDayToString(sntpConsumer.getNtpTime()))
+                            .getReference(DateTime.INSTANCE.getTrueYearToString(timeStampCache))
+                            .child(DateTime.INSTANCE.getTrueMonthToString(timeStampCache))
+                            .child(DateTime.INSTANCE.getTrueDayToString(timeStampCache))
                             .child(code);
                     classReference.addChildEventListener(new ChildEventListener() {
                         @Override

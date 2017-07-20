@@ -49,5 +49,4 @@ object DateTime {
                 TimeUnit.MILLISECONDS.toSeconds(time) - TimeUnit.MINUTES.toSeconds(
                         TimeUnit.MILLISECONDS.toMinutes(time)))
     }
-
 }

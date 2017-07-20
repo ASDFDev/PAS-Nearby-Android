@@ -22,9 +22,9 @@ import java.util.*
 
 class SntpConsumer(private var context: Context){
 
-    private var currentTime: Date? = null
+    lateinit var currentTime: Date
 
-    fun getNtpTime(): Date? {
+    fun getNtpTime(): Date {
         val sntpFactory = SntpFactory(context)
         currentTime = sntpFactory.execute().get()
         return currentTime
