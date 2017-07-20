@@ -12,6 +12,7 @@ public class CacheManager {
     private DualCache<Date> cache;
 
     private void initCache(){
+        cache.invalidateRAM();
         String cacheId = "timeStamp";
         CacheSerializer<Date> jsonSerializer = new JsonSerializer<>(Date.class);
         int ramCacheSize = 40;
