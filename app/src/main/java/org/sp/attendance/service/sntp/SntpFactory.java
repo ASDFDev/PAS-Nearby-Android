@@ -1,4 +1,4 @@
-package org.sp.attendance.utils.Ntp;
+package org.sp.attendance.service.sntp;
 
 /*
  * Copyright 2017 Daniel Quah and Justin Xin
@@ -26,6 +26,8 @@ import android.util.Log;
 import com.github.ybq.android.spinkit.style.Wave;
 
 import org.sp.attendance.R;
+import org.sp.attendance.service.NtpHttp;
+import org.sp.attendance.utils.SntpClient;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -94,23 +96,8 @@ class SntpFactory extends AsyncTask<Void, Void, Date> {
         This is known as NTP over https.
         */
         if(date == null) {
-            try {
-                String RANDOM_WEB_SERVER = webServers[new Random().nextInt(webServers.length)];
-                URL url = new URL("https://" + RANDOM_WEB_SERVER);
-                URLConnection conn = url.openConnection();
-                if (conn instanceof HttpURLConnection) {
-                    HttpURLConnection httpConn = (HttpURLConnection) conn;
-                    httpConn.setRequestMethod("HEAD");
-                    long dateTime = conn.getHeaderFieldDate("Date", 0);
-                    if (dateTime > 0) {
-                        date = new Date(dateTime);
-                        Log.i(TAG,"Using web server time from: " + RANDOM_WEB_SERVER);
-                        return date;
-                    }
-                }
-            } catch (IOException ioe) {
-                Log.e(TAG,"Unable to get time from anywhere! Stacktrace: " + ioe);
-            }
+            NtpHttp ntpHttp = new NtpHttp();
+            ntpHttp.getRemoteTime();
         }
         return date;
     }

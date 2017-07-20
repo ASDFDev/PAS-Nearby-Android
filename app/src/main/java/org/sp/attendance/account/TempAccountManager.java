@@ -1,4 +1,4 @@
-package org.sp.attendance.utils.account;
+package org.sp.attendance.account;
 
 /*
  * Copyright 2016-2017 Daniel Quah and Justin Xin

@@ -29,10 +29,10 @@ import android.widget.EditText;
 
 import org.sp.attendance.R;
 import org.sp.attendance.ui.intro.SlideIntro;
-import org.sp.attendance.utils.account.TempAccountManager;
+import org.sp.attendance.account.TempAccountManager;
 import org.sp.attendance.utils.CodeManager;
 import org.sp.attendance.utils.StartUpManager;
-import org.sp.attendance.utils.account.spice.SpiceManager;
+import org.sp.attendance.account.spice.SpiceManager;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;

@@ -1,4 +1,4 @@
-package org.sp.attendance.utils.Ntp;
+package org.sp.attendance.utils;
 
 /*
  * Copyright (C) 2008 The Android Open Source Project
@@ -41,7 +41,7 @@ import java.util.Arrays;
  * }
  * </pre>
  */
-class SntpClient {
+public class SntpClient {
 
     private static final int ORIGINATE_TIME_OFFSET = 24;
     private static final int RECEIVE_TIME_OFFSET = 32;
@@ -84,7 +84,7 @@ class SntpClient {
      * @param timeout network timeout in milliseconds.
      * @return true if the transaction was successful.
      */
-    boolean requestTime(String host, int timeout) {
+    public boolean requestTime(String host, int timeout) {
         InetAddress address;
         try {
             address = InetAddress.getByName(host);
@@ -164,7 +164,7 @@ class SntpClient {
      *
      * @return time value computed from NTP server response.
      */
-    long getNtpTime() {
+    public long getNtpTime() {
         return ntpTime;
     }
 
@@ -175,7 +175,7 @@ class SntpClient {
      *
      * @return reference clock corresponding to the NTP time.
      */
-    long getNtpTimeReference() {
+    public long getNtpTimeReference() {
         return ntpTimeReference;
     }
 

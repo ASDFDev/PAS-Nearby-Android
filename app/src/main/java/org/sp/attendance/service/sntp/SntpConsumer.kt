@@ -1,4 +1,4 @@
-package org.sp.attendance.utils.Ntp
+package org.sp.attendance.service.sntp
 
 /*
  * Copyright 2017 Daniel Quah and Justin Xin
@@ -17,6 +17,7 @@ package org.sp.attendance.utils.Ntp
  */
 
 import android.content.Context
+import org.sp.attendance.service.sntp.SntpFactory
 import java.util.*
 
 class SntpConsumer(private var context: Context){

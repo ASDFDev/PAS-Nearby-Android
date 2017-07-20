@@ -1,4 +1,4 @@
-package org.sp.attendance.utils.account.spice;
+package org.sp.attendance.account.spice;
 
 /* This file was originally part of ATS_NativeUI. It was adapted to suit the needs of this project.
  * ATS_NativeUI is also licensed under GPLv3. You can find the original code here:

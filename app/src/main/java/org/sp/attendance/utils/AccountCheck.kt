@@ -1,4 +1,4 @@
-package org.sp.attendance.utils.account;
+package org.sp.attendance.utils
 
 
 /*
@@ -17,27 +17,28 @@ package org.sp.attendance.utils.account;
  * GNU General Public License for more details.
  */
 
-import android.util.Log;
+import android.util.Log
 
-import org.sp.attendance.utils.account.spice.SpiceManager;
+import org.sp.attendance.account.spice.SpiceManager
+import org.sp.attendance.account.TempAccountManager
 
-public class AccountCheck {
+object AccountCheck {
 
-    private static String account;
-    private static final String TAG = "AccountCheck";
+    private var account: String? = null
+    private val TAG = "AccountCheck"
 
     // I can't believe this class is necessary.....
 
-    public static String areWeDemoAccountOrSpiceAccount(){
+    fun areWeDemoAccountOrSpiceAccount(): String? {
         // if Account manager is null, it means we are logged in via SPICE
-        if(TempAccountManager.loggedInUserID == null){
-            Log.i(TAG,"Hard coded account");
-           account = SpiceManager.loggedInUser;
-        } else if(SpiceManager.loggedInUser == null){
-            Log.i(TAG,"SPICE");
-            account = TempAccountManager.loggedInUserID;
+        if (TempAccountManager.loggedInUserID == null) {
+            Log.i(TAG, "Hard coded account")
+            account = SpiceManager.loggedInUser
+        } else if (SpiceManager.loggedInUser == null) {
+            Log.i(TAG, "SPICE")
+            account = TempAccountManager.loggedInUserID
         }
-        return account;
+        return account
     }
 
 }
