@@ -30,6 +30,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -126,14 +127,27 @@ public class CodeBroadcastActivity extends AppCompatActivity {
                             .child(DateTime.INSTANCE.getTrueMonthToString(sntpConsumer.getNtpTime()))
                             .child(DateTime.INSTANCE.getTrueDayToString(sntpConsumer.getNtpTime()))
                             .child(code);
-                    classReference.addValueEventListener(new ValueEventListener() {
+                    classReference.addChildEventListener(new ChildEventListener() {
                         @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
-                                studentAccount = childSnapshot.getKey();
-                                arrayAdapter.notifyDataSetChanged();
-                                studentArrayList.add(studentAccount);
-                            }
+                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                            studentAccount = dataSnapshot.getKey();
+                            studentArrayList.add(studentAccount);
+                            arrayAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
                         }
 
                         @Override
@@ -141,7 +155,6 @@ public class CodeBroadcastActivity extends AppCompatActivity {
                             System.out.println("Database Error! Message: " + databaseError);
                         }
                     });
-                    arrayAdapter.notifyDataSetChanged();
                     listView.setAdapter(arrayAdapter);
                 })
                 .setNegativeButton(R.string.no, (dialog, id) -> dialog.cancel())
