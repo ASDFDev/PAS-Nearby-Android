@@ -28,6 +28,7 @@ import android.widget.EditText;
 
 
 import org.sp.attendance.R;
+import org.sp.attendance.service.sntp.SntpConsumer;
 import org.sp.attendance.ui.intro.SlideIntro;
 import org.sp.attendance.account.TempAccountManager;
 import org.sp.attendance.utils.CodeManager;

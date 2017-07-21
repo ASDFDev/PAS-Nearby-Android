@@ -29,6 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 import org.sp.attendance.models.DateTime;
 import org.sp.attendance.R;
 import org.sp.attendance.models.DatabaseModel;
+import org.sp.attendance.service.sntp.SntpConsumer;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -67,14 +68,14 @@ public class DatabaseManager {
     void submitStudentDevice(final String message, final String deviceID, final String timeStamp) {
         deviceHardwareID = deviceID;
         databaseModel = new DatabaseModel();
-        CacheManager cacheManager = new CacheManager();
         /*
         Previous implementation is crap as we query the NTP server 4 times!
         Currently, we query it 2 times.
         1. splash screen
         2. get current time
         */
-        Date timeStampCache = cacheManager.getTimeStampCache();;
+        SntpConsumer sntpConsumer = new SntpConsumer(context);
+        Date timeStampCache = sntpConsumer.getNtpTime();
         String currentTime = DateTime.INSTANCE.getTrueYearToString(timeStampCache) +
                 "/" + DateTime.INSTANCE.getTrueMonthToString(timeStampCache) +
                 "/" + DateTime.INSTANCE.getTrueDayToString(timeStampCache);

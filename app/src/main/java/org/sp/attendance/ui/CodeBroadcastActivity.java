@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -39,7 +40,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import org.sp.attendance.R;
 import org.sp.attendance.models.DateTime;
 import org.sp.attendance.service.sntp.SntpConsumer;
-import org.sp.attendance.utils.CacheManager;
 import org.sp.attendance.utils.CodeManager;
 import org.sp.attendance.utils.DatabaseManager;
 
@@ -52,7 +52,7 @@ public class CodeBroadcastActivity extends AppCompatActivity {
 
     private final CodeManager codeManager = new CodeManager(this);
     private final DatabaseManager databaseManager = new DatabaseManager(this);
-    private final CacheManager cacheManager = new CacheManager();
+    private final SntpConsumer sntpConsumer = new SntpConsumer(this);
     private String studentAccount;
     private TextView textView;
 
@@ -81,7 +81,6 @@ public class CodeBroadcastActivity extends AppCompatActivity {
         final String code = ((EditText) findViewById((R.id.textCode))).getText().toString();
         final String stringDuration = ((EditText) findViewById((R.id.textDuration))).getText().toString();
         final int intDuration = Integer.parseInt(stringDuration);
-        SntpConsumer sntpConsumer = new SntpConsumer(this);
         if (code.matches("") || stringDuration.matches("")) {
             new AlertDialog.Builder(CodeBroadcastActivity.this)
                     .setTitle(R.string.title_warning)
@@ -124,7 +123,7 @@ public class CodeBroadcastActivity extends AppCompatActivity {
                             this,
                             android.R.layout.simple_list_item_1,
                             studentArrayList);
-                    Date timeStampCache = cacheManager.getTimeStampCache();
+                    Date timeStampCache = sntpConsumer.getNtpTime();
                     /*
                      Previous implementation is crap as we query the NTP server 3 times!
                      Currently, we query it 1 time.

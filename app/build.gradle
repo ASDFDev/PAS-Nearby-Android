@@ -19,11 +19,6 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
 
-    packagingOptions {
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/NOTICE'
-    }
-
     signingConfigs {
         release {
             storeFile file(keystoreProperties['keystoreFile'])
@@ -74,9 +69,6 @@ dependencies {
 
     compile 'com.heinrichreimersoftware:material-intro:1.6.2'
     compile 'org.jsoup:jsoup:1.10.3'
-
-    compile 'com.vincentbrison.openlibraries.android:dualcache:3.1.1'
-    compile 'com.vincentbrison.openlibraries.android:dualcache-jsonserializer:3.1.1'
 
     // Testing
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {

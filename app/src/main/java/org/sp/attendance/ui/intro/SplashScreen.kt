@@ -27,21 +27,15 @@ import com.mcxiaoke.koi.ext.startActivity
 import org.sp.attendance.R
 import org.sp.attendance.R.anim.abc_fade_in
 import org.sp.attendance.R.anim.abc_fade_out
-import org.sp.attendance.service.sntp.SntpConsumer
 import org.sp.attendance.ui.ATSLoginActivity
-import org.sp.attendance.utils.CacheManager
 
 class SplashScreen: AppCompatActivity() {
-
-    var sntpConsumer = SntpConsumer(this)
-    var cacheManager = CacheManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splashscreen)
         val handler = Handler()
         handler.delayed(1500, {
-            cacheManager.storeTimeStampCache(sntpConsumer.getNtpTime())
             startActivity<ATSLoginActivity>() })
         overridePendingTransition(abc_fade_in, abc_fade_out)
     }
