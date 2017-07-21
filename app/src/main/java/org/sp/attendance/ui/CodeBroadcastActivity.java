@@ -55,12 +55,14 @@ public class CodeBroadcastActivity extends AppCompatActivity {
     private final SntpConsumer sntpConsumer = new SntpConsumer(this);
     private String studentAccount;
     private TextView textView;
+    private Date currentTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_broadcast);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        currentTime = sntpConsumer.getNtpTime();
     }
 
     @Override
@@ -110,59 +112,11 @@ public class CodeBroadcastActivity extends AppCompatActivity {
                 .setIcon(R.drawable.ic_question_answer_black_24dp)
                 .setCancelable(false)
                 .setPositiveButton(R.string.yes, (dialog, id) -> {
-                    /* Bad code, we will do something about it later on....
-                    TODO: Refactor this...
-                    */
                     hideKeyboard();
                     setContentView(R.layout.activity_attendance);
                     codeManager.setupLecturerEnvironment(this, code, DateTime.INSTANCE.convertSecondsToMins(intDuration));
                     setTextView(intDuration);
-                    List<String> studentArrayList = new ArrayList<>();
-                    ListView listView = findViewById(R.id.ListView);
-                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
-                            this,
-                            android.R.layout.simple_list_item_1,
-                            studentArrayList);
-                    Date timeStampCache = sntpConsumer.getNtpTime();
-                    /*
-                     Previous implementation is crap as we query the NTP server 3 times!
-                     Currently, we query it 1 time.
-                    1. splash screen
-                    */
-                    DatabaseReference classReference = FirebaseDatabase.getInstance()
-                            .getReference(DateTime.INSTANCE.getTrueYearToString(timeStampCache))
-                            .child(DateTime.INSTANCE.getTrueMonthToString(timeStampCache))
-                            .child(DateTime.INSTANCE.getTrueDayToString(timeStampCache))
-                            .child(code);
-                    classReference.addChildEventListener(new ChildEventListener() {
-                        @Override
-                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                            studentAccount = dataSnapshot.getKey();
-                            studentArrayList.add(studentAccount);
-                            arrayAdapter.notifyDataSetChanged();
-                        }
-
-                        @Override
-                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                        }
-
-                        @Override
-                        public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                        }
-
-                        @Override
-                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            System.out.println("Database Error! Message: " + databaseError);
-                        }
-                    });
-                    listView.setAdapter(arrayAdapter);
+                    databaseManager.getStudent(code);
                 })
                 .setNegativeButton(R.string.no, (dialog, id) -> dialog.cancel())
                 .create()
