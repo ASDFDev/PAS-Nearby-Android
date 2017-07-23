@@ -20,7 +20,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -31,38 +30,24 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import org.sp.attendance.R;
 import org.sp.attendance.models.DateTime;
-import org.sp.attendance.service.sntp.SntpConsumer;
 import org.sp.attendance.utils.CodeManager;
 import org.sp.attendance.utils.DatabaseManager;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 
 public class CodeBroadcastActivity extends AppCompatActivity {
 
     private final CodeManager codeManager = new CodeManager(this);
     private final DatabaseManager databaseManager = new DatabaseManager(this);
-    private final SntpConsumer sntpConsumer = new SntpConsumer(this);
-    private String studentAccount;
     private TextView textView;
-    private Date currentTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_broadcast);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        currentTime = sntpConsumer.getNtpTime();
     }
 
     @Override
@@ -117,6 +102,7 @@ public class CodeBroadcastActivity extends AppCompatActivity {
                     codeManager.setupLecturerEnvironment(this, code, DateTime.INSTANCE.convertSecondsToMins(intDuration));
                     setTextView(intDuration);
                     databaseManager.getStudent(code);
+
                 })
                 .setNegativeButton(R.string.no, (dialog, id) -> dialog.cancel())
                 .create()

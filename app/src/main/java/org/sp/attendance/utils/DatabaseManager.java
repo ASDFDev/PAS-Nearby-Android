@@ -33,6 +33,7 @@ import org.sp.attendance.models.DateTime;
 import org.sp.attendance.R;
 import org.sp.attendance.models.DatabaseModel;
 import org.sp.attendance.service.sntp.SntpConsumer;
+import org.sp.attendance.ui.adapter.FirebaseAdapter;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,7 +53,6 @@ public class DatabaseManager {
 
     public DatabaseManager(Context context){
         this.context = context;
-        sntpConsumer = new SntpConsumer(context);
     }
 
     public void destroy() {
@@ -66,7 +66,7 @@ public class DatabaseManager {
         Student device operations
      */
 
-    void initialize(Context context) {
+    void initialize() {
         database.goOnline();
         isDestroyed = false;
     }
@@ -74,6 +74,7 @@ public class DatabaseManager {
     void submitStudentDevice(final String message, final String deviceID, final String timeStamp) {
         deviceHardwareID = deviceID;
         databaseModel = new DatabaseModel();
+        sntpConsumer = new SntpConsumer(context);
         timeStampCache = sntpConsumer.getNtpTime();
         String currentTime = DateTime.INSTANCE.getTrueYearToString(timeStampCache) +
                 "/" + DateTime.INSTANCE.getTrueMonthToString(timeStampCache) +
@@ -126,13 +127,9 @@ public class DatabaseManager {
     }
 
     public void getStudent(String code){
+        SntpConsumer sntpConsumer = new SntpConsumer(context);
+        FirebaseAdapter firebaseAdapter = new FirebaseAdapter(context);
         timeStampCache = sntpConsumer.getNtpTime();
-        List<String> studentArrayList = new ArrayList<>();
-        ListView listView = ((Activity)context).findViewById(R.id.ListView);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
-                context,
-                android.R.layout.simple_list_item_1,
-                studentArrayList);
         DatabaseReference classReference = FirebaseDatabase.getInstance()
                 .getReference(DateTime.INSTANCE.getTrueYearToString(timeStampCache))
                 .child(DateTime.INSTANCE.getTrueMonthToString(timeStampCache))
@@ -142,8 +139,7 @@ public class DatabaseManager {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 studentAccount = dataSnapshot.getKey();
-                studentArrayList.add(studentAccount);
-                arrayAdapter.notifyDataSetChanged();
+                firebaseAdapter.displayStudentsInClass(studentAccount);
             }
 
             @Override
@@ -166,17 +162,21 @@ public class DatabaseManager {
                 System.out.println("Database Error! Message: " + databaseError);
             }
         });
-        listView.setAdapter(arrayAdapter);
     }
 
-
     private void showDatabaseResult(String title, String message){
+        CodeManager codeManager = new CodeManager(context);
         new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setMessage(message)
                 .setCancelable(false)
                 .setPositiveButton(context.getResources().getString(R.string.dismiss),
-                        (dialog, which) -> ((Activity)context).finish())
+                        (dialog, which) ->
+                        {
+                            codeManager.destroy();
+                            ((Activity) context).finish();
+                        })
+
                 .create()
                 .show();
     }

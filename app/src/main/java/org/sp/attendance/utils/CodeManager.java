@@ -85,7 +85,7 @@ public class CodeManager {
         DatabaseManager databaseManager = new DatabaseManager(context);
         ctx = context;
         if (!databaseManager.isDestroyed) {
-            databaseManager.initialize(ctx);
+            databaseManager.initialize();
         }
         SntpConsumer sntpConsumer = new SntpConsumer(context);
         timeStamp = DateTime.INSTANCE.getTrueTimeToString(sntpConsumer.getNtpTime());
