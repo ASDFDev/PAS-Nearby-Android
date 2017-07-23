@@ -102,7 +102,6 @@ public class CodeBroadcastActivity extends AppCompatActivity {
                     codeManager.setupLecturerEnvironment(this, code, DateTime.INSTANCE.convertSecondsToMins(intDuration));
                     setTextView(intDuration);
                     databaseManager.getStudent(code);
-
                 })
                 .setNegativeButton(R.string.no, (dialog, id) -> dialog.cancel())
                 .create()

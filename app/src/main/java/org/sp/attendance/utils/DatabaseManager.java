@@ -149,7 +149,8 @@ public class DatabaseManager {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                studentAccount = dataSnapshot.getKey();
+                firebaseAdapter.removeStudentInClass(studentAccount);
             }
 
             @Override

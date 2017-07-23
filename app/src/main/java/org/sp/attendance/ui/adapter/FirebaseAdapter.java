@@ -3,8 +3,6 @@ package org.sp.attendance.ui.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -28,6 +26,17 @@ public class FirebaseAdapter {
                 android.R.layout.simple_list_item_1,
                 studentArrayList);
         studentArrayList.add(studentAccount);
+        arrayAdapter.notifyDataSetChanged();
+        listView.setAdapter(arrayAdapter);
+    }
+
+    public void removeStudentInClass(String studentAccount){
+        ListView listView = ((Activity)context).findViewById(R.id.ListView);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
+                context,
+                android.R.layout.simple_list_item_1,
+                studentArrayList);
+        studentArrayList.remove(studentAccount);
         arrayAdapter.notifyDataSetChanged();
         listView.setAdapter(arrayAdapter);
     }

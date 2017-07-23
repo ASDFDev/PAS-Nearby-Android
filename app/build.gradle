@@ -64,9 +64,10 @@ dependencies {
     compile 'com.android.support:design:26.0.0-beta2'
     // Google Play services library
     compile 'com.google.android.gms:play-services-nearby:11.0.2'
+    // Firebase
     compile 'com.google.firebase:firebase-database:11.0.2'
-    compile 'com.github.ybq:Android-SpinKit:1.1.0'
 
+    compile 'com.github.ybq:Android-SpinKit:1.1.0'
     compile 'com.heinrichreimersoftware:material-intro:1.6.2'
     compile 'org.jsoup:jsoup:1.10.3'
 
