@@ -62,7 +62,6 @@ public class CodeManager {
     private static Message globalCode;
     private static String deviceID, globalStudentID;
     private static int duration;
-    private Date timeStamp;
 
     public CodeManager(Context context){
         this.ctx = context;
@@ -89,15 +88,13 @@ public class CodeManager {
         if (!databaseManager.isDestroyed) {
             databaseManager.initialize();
         }
-        SntpConsumer sntpConsumer = new SntpConsumer(context);
-        timeStamp = sntpConsumer.getNtpTime();
         deviceID = Secure.getString(ctx.getContentResolver(), Secure.ANDROID_ID);
         globalManagerType = managerType;
         globalStudentID = AccountCheck.INSTANCE.areWeDemoAccountOrSpiceAccount();
         messageListener = new MessageListener() {
             @Override
             public void onFound(Message message) {
-                databaseManager.submitStudentDevice(globalStudentID, new String(message.getContent(), Charset.forName("UTF-8")), deviceID, timeStamp);
+                databaseManager.submitStudentDevice(globalStudentID, new String(message.getContent(), Charset.forName("UTF-8")), deviceID);
             }
 
             @Override

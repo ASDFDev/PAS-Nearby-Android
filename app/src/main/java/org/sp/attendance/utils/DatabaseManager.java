@@ -44,7 +44,6 @@ public class DatabaseManager {
     private static DatabaseModel databaseModel;
     private static String globalClassValue, databaseArray, studentAccount, deviceHardwareID;
     private Context context;
-    private SntpConsumer sntpConsumer;
     private Date timeStamp;
 
     public DatabaseManager(Context context){
@@ -67,9 +66,11 @@ public class DatabaseManager {
         isDestroyed = false;
     }
 
-    void submitStudentDevice(final String studentAccount, final String message, final String deviceID, final Date timeStamp) {
+    void submitStudentDevice(final String studentAccount, final String message, final String deviceID) {
         deviceHardwareID = deviceID;
         databaseModel = new DatabaseModel();
+        SntpConsumer sntpConsumer = new SntpConsumer(context);
+        timeStamp = sntpConsumer.getNtpTime();
         String currentDay = DateTime.INSTANCE.getTrueYearToString(timeStamp) +
                 "/" + DateTime.INSTANCE.getTrueMonthToString(timeStamp) +
                 "/" + DateTime.INSTANCE.getTrueDayToString(timeStamp);
