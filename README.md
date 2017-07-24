@@ -10,12 +10,6 @@ Presence checking using Nearby API
 ![](materials/receive-broadcast.png)
 ![](materials/database_layout.gif)
 
-Solution used:
-
-1. Check for WiFi SSID to ensure that Student is actually in campus ground before allowing student to sign into the system.
-1. Check to ensure that student is in class by using near-ultrasound.
-1. Check to ensure that the device used by student has not been used to submit attendance for the past 30 minutes. 
-
 	
 Getting Started
 ---------------
@@ -50,6 +44,11 @@ Personally for me, I have 2 keys; 1 for debugging and 1 for production. You **SH
 
 
 Start building!
+
+
+TODO
+------------
+- Use fragment instead of starting activities for lecturer interface. 
 
 
 Team members
