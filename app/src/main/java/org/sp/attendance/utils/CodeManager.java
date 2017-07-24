@@ -45,6 +45,7 @@ import org.sp.attendance.R;
 import org.sp.attendance.service.sntp.SntpConsumer;
 
 import java.nio.charset.Charset;
+import java.util.Date;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
 import static com.google.android.gms.nearby.messages.Strategy.TTL_SECONDS_INFINITE;
@@ -59,8 +60,9 @@ public class CodeManager {
     private static MessageListener messageListener;
     private static ManagerType globalManagerType;
     private static Message globalCode;
-    private static String deviceID, timeStamp, globalStudentID;
+    private static String deviceID, globalStudentID;
     private static int duration;
+    private Date timeStamp;
 
     public CodeManager(Context context){
         this.ctx = context;
@@ -88,13 +90,14 @@ public class CodeManager {
             databaseManager.initialize();
         }
         SntpConsumer sntpConsumer = new SntpConsumer(context);
-        timeStamp = DateTime.INSTANCE.getTrueTimeToString(sntpConsumer.getNtpTime());
+        timeStamp = sntpConsumer.getNtpTime();
         deviceID = Secure.getString(ctx.getContentResolver(), Secure.ANDROID_ID);
         globalManagerType = managerType;
+        globalStudentID = AccountCheck.INSTANCE.areWeDemoAccountOrSpiceAccount();
         messageListener = new MessageListener() {
             @Override
             public void onFound(Message message) {
-                databaseManager.submitStudentDevice(new String(message.getContent(), Charset.forName("UTF-8")), deviceID, timeStamp);
+                databaseManager.submitStudentDevice(globalStudentID, new String(message.getContent(), Charset.forName("UTF-8")), deviceID, timeStamp);
             }
 
             @Override

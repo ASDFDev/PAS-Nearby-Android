@@ -19,8 +19,6 @@ package org.sp.attendance.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v7.app.AlertDialog;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -35,9 +33,7 @@ import org.sp.attendance.models.DatabaseModel;
 import org.sp.attendance.service.sntp.SntpConsumer;
 import org.sp.attendance.ui.adapter.FirebaseAdapter;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 
 public class DatabaseManager {
@@ -49,7 +45,7 @@ public class DatabaseManager {
     private static String globalClassValue, databaseArray, studentAccount, deviceHardwareID;
     private Context context;
     private SntpConsumer sntpConsumer;
-    private Date timeStampCache;
+    private Date timeStamp;
 
     public DatabaseManager(Context context){
         this.context = context;
@@ -71,35 +67,34 @@ public class DatabaseManager {
         isDestroyed = false;
     }
 
-    void submitStudentDevice(final String message, final String deviceID, final String timeStamp) {
+    void submitStudentDevice(final String studentAccount, final String message, final String deviceID, final Date timeStamp) {
         deviceHardwareID = deviceID;
         databaseModel = new DatabaseModel();
-        sntpConsumer = new SntpConsumer(context);
-        timeStampCache = sntpConsumer.getNtpTime();
-        String currentTime = DateTime.INSTANCE.getTrueYearToString(timeStampCache) +
-                "/" + DateTime.INSTANCE.getTrueMonthToString(timeStampCache) +
-                "/" + DateTime.INSTANCE.getTrueDayToString(timeStampCache);
-        reference.child(currentTime + "/" + message)
+        String currentDay = DateTime.INSTANCE.getTrueYearToString(timeStamp) +
+                "/" + DateTime.INSTANCE.getTrueMonthToString(timeStamp) +
+                "/" + DateTime.INSTANCE.getTrueDayToString(timeStamp);
+        String currentTime = DateTime.INSTANCE.getTrueTimeToString(timeStamp);
+        reference.child(currentDay + "/" + message)
                 .addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot != null) {
                             databaseArray = String.valueOf(dataSnapshot.getValue());
-                                if (dataSnapshot.hasChild(AccountCheck.INSTANCE.areWeDemoAccountOrSpiceAccount()) ||
+                                if (dataSnapshot.hasChild(studentAccount) ||
                                         databaseArray.contains(deviceID)) {
                                     // Device and username exists
                                     showDatabaseResult(context.getResources().getString(R.string.title_code_failed),
                                             context.getResources().getString(R.string.error_already_submitted));
                                 } else {
-                                    final String key = dataSnapshot.child(AccountCheck.INSTANCE.areWeDemoAccountOrSpiceAccount()).getKey();
+                                    final String key = dataSnapshot.child(studentAccount).getKey();
                                     databaseModel.setDeviceID(deviceHardwareID);
-                                    databaseModel.setTimeStamp(timeStamp);
+                                    databaseModel.setTimeStamp(currentTime);
                                     final DatabaseReference databaseReference =
-                                            reference.child(currentTime + "/" + message).child(key);
+                                            reference.child(currentDay + "/" + message).child(key);
                                     databaseReference.setValue(databaseModel);
                                     showDatabaseResult(context.getResources().getString(R.string.title_code_success),
-                                            context.getResources().getString(R.string.submission_message) + timeStamp);
+                                            context.getResources().getString(R.string.submission_message) + currentTime);
                                 }
                             } else{
                                 showDatabaseResult(context.getResources().getString(R.string.title_code_failed),
@@ -129,11 +124,11 @@ public class DatabaseManager {
     public void getStudent(String code){
         SntpConsumer sntpConsumer = new SntpConsumer(context);
         FirebaseAdapter firebaseAdapter = new FirebaseAdapter(context);
-        timeStampCache = sntpConsumer.getNtpTime();
+        timeStamp = sntpConsumer.getNtpTime();
         DatabaseReference classReference = FirebaseDatabase.getInstance()
-                .getReference(DateTime.INSTANCE.getTrueYearToString(timeStampCache))
-                .child(DateTime.INSTANCE.getTrueMonthToString(timeStampCache))
-                .child(DateTime.INSTANCE.getTrueDayToString(timeStampCache))
+                .getReference(DateTime.INSTANCE.getTrueYearToString(timeStamp))
+                .child(DateTime.INSTANCE.getTrueMonthToString(timeStamp))
+                .child(DateTime.INSTANCE.getTrueDayToString(timeStamp))
                 .child(code);
         classReference.addChildEventListener(new ChildEventListener() {
             @Override

@@ -48,14 +48,6 @@ class SntpFactory extends AsyncTask<Void, Void, Date> {
             "time.nist.gov",
             "ntp6.leontp.com"};
 
-    private final String [] webServers = { "google.com",
-            /*Student portal */
-            "esp.sp.edu.sg",
-            /*SP email service provider */
-            "pod51057.outlook.com",
-            "www.sp.edu.sg",
-            "facebook.com"};
-
     private static final String TAG = "SntpFactory";
 
 
