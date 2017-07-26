@@ -22,7 +22,10 @@ import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
 import android.view.View
+import android.view.animation.AlphaAnimation
+import android.widget.TextView
 import com.mcxiaoke.koi.ext.delayed
+import com.mcxiaoke.koi.ext.find
 import com.mcxiaoke.koi.ext.startActivity
 import org.sp.attendance.R
 import org.sp.attendance.R.anim.abc_fade_in
@@ -35,7 +38,8 @@ class SplashScreen: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splashscreen)
         val handler = Handler()
-        handler.delayed(1500, {
+        textViewAnimation()
+        handler.delayed(2300, {
             startActivity<ATSLoginActivity>() })
         overridePendingTransition(abc_fade_in, abc_fade_out)
     }
@@ -45,13 +49,18 @@ class SplashScreen: AppCompatActivity() {
         if (hasFocus) {
             val flags =
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
                     View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                    View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
                     View.SYSTEM_UI_FLAG_FULLSCREEN or
                     View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
             window.decorView.systemUiVisibility = flags
         }
+    }
+
+    fun textViewAnimation(){
+        val textView = find<TextView>(R.id.textView_splash)
+        val fadeIn = AlphaAnimation(0.0f , 7.0f)
+        textView.startAnimation(fadeIn)
+        fadeIn.duration = 3500;
     }
 
     companion object {
