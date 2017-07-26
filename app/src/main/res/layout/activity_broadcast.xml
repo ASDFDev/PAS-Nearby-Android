@@ -1,64 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/textView_prompt_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_prompt_code"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_marginTop="76dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/textView_duration" />
 
-    <TextView
-        android:id="@+id/textView_prompt_code"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/label_prompt_code"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_marginTop="76dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/textView_duration" />
+        <EditText
+            android:id="@+id/textCode"
+            android:layout_width="122dp"
+            android:layout_height="wrap_content"
+            android:digits="1234567890"
+            android:ems="10"
+            android:inputType="number"
+            android:maxLines="1"
+            android:layout_alignBaseline="@+id/textView_prompt_code"
+            android:layout_alignBottom="@+id/textView_prompt_code"
+            android:layout_alignStart="@+id/textDuration" />
 
-    <EditText
-        android:id="@+id/textCode"
-        android:layout_width="122dp"
-        android:layout_height="wrap_content"
-        android:digits="1234567890"
-        android:ems="10"
-        android:inputType="number"
-        android:maxLines="1"
-        android:layout_alignBaseline="@+id/textView_prompt_code"
-        android:layout_alignBottom="@+id/textView_prompt_code"
-        android:layout_alignStart="@+id/textDuration" />
+        <TextView
+            android:id="@+id/textView_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:text="Enter duration(mins):"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_alignBaseline="@+id/textDuration"
+            android:layout_alignBottom="@+id/textDuration"
+            android:layout_alignParentStart="true" />
 
-    <TextView
-        android:id="@+id/textView_duration"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:text="Enter duration(mins):"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_alignBaseline="@+id/textDuration"
-        android:layout_alignBottom="@+id/textDuration"
-        android:layout_alignParentStart="true" />
+        <Button
+            android:id="@+id/broadcast"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="startBroadcast"
+            android:text="@string/broadcast"
+            android:layout_below="@+id/textView_duration"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="135dp" />
 
-    <Button
-        android:id="@+id/broadcast"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="startBroadcast"
-        android:text="@string/broadcast"
-        android:layout_below="@+id/textView_duration"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="135dp" />
-
-    <EditText
-        android:id="@+id/textDuration"
-        android:layout_width="122dp"
-        android:layout_height="wrap_content"
-        android:digits="1234567890"
-        android:ems="10"
-        android:inputType="number"
-        android:selectAllOnFocus="false"
-        android:maxLines="1"
-        android:layout_marginStart="13dp"
-        android:layout_below="@+id/textCode"
-        android:layout_toEndOf="@+id/textView_duration" />
+        <EditText
+            android:id="@+id/textDuration"
+            android:layout_width="122dp"
+            android:layout_height="wrap_content"
+            android:digits="1234567890"
+            android:ems="10"
+            android:inputType="number"
+            android:selectAllOnFocus="false"
+            android:maxLines="1"
+            android:layout_marginStart="13dp"
+            android:layout_below="@+id/textCode"
+            android:layout_toEndOf="@+id/textView_duration" />
 
 </RelativeLayout>

@@ -26,6 +26,7 @@ import android.os.AsyncTask;
 import org.sp.attendance.ui.CodeBroadcastActivity;
 import org.sp.attendance.ui.CodeReceiveActivity;
 import org.sp.attendance.R;
+import org.sp.attendance.ui.LecturerOptionsSelectorActivity;
 
 import java.util.Locale;
 
@@ -96,7 +97,7 @@ public class TempAccountManager extends AsyncTask<String, Integer, String> {
                         context.startActivity(codeReceiveIntent);
                         ((Activity)context).finish();
                     } else if (signInType == SignInType.Staff) {
-                        Intent codeBroadcastIntent = new Intent(context, CodeBroadcastActivity.class);
+                        Intent codeBroadcastIntent = new Intent(context, LecturerOptionsSelectorActivity.class);
                         context.startActivity(codeBroadcastIntent);
                         ((Activity)context).finish();
                     }

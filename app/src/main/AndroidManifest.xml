@@ -38,6 +38,12 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.LecturerOptionsSelectorActivity" />
+
+        <activity
+            android:name=".ui.CalendarActivity" />
+
         <meta-data
             android:name="com.google.android.gms.nearby.connection.SERVICE_ID"
             android:value="@string/service_id" />

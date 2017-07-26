@@ -42,7 +42,7 @@ public class DatabaseManager {
     private static FirebaseDatabase database = FirebaseDatabase.getInstance();
     private static final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
     private static DatabaseModel databaseModel;
-    private static String globalClassValue, databaseArray, studentAccount, deviceHardwareID;
+    private static String globalClassValue, databaseArray, studentAccount, deviceHardwareID, attendanceCode;
     private Context context;
     private Date timeStamp;
 
@@ -147,6 +147,41 @@ public class DatabaseManager {
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 studentAccount = dataSnapshot.getKey();
                 firebaseAdapter.removeStudentInClass(studentAccount);
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("Database Error! Message: " + databaseError);
+            }
+        });
+    }
+    public void showPastCode(String year, String month, String day){
+        FirebaseAdapter firebaseAdapter = new FirebaseAdapter(context);
+        DatabaseReference classReference = FirebaseDatabase.getInstance()
+                .getReference(year)
+                .child(month)
+                .child(day);
+        classReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                attendanceCode = dataSnapshot.getKey();
+                firebaseAdapter.showPreviousCode(attendanceCode);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                attendanceCode = dataSnapshot.getKey();
+                firebaseAdapter.removeAttendanceCode(attendanceCode);
             }
 
             @Override

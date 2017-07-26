@@ -34,6 +34,7 @@ import org.sp.attendance.models.DateTime;
 import org.sp.attendance.utils.CodeManager;
 import org.sp.attendance.utils.DatabaseManager;
 
+// TODO: USE FRAGMENT!!! What kind of code is this?
 
 public class CodeBroadcastActivity extends AppCompatActivity {
 
