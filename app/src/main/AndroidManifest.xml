@@ -39,9 +39,6 @@
         </activity>
 
         <activity
-            android:name=".ui.LecturerOptionsSelectorActivity" />
-
-        <activity
             android:name=".ui.CalendarActivity" />
 
         <meta-data

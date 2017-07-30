@@ -16,7 +16,9 @@ package org.sp.attendance.ui;
  * GNU General Public License for more details.
  */
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.CalendarView;
 
@@ -31,28 +33,36 @@ public class CalendarActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
+        showFab();
         showCalendar();
     }
 
     private void showCalendar(){
         CalendarView calendarView = findViewById(R.id.calendarView);
-        calendarView.setOnDateChangeListener((calendarView1, i, i1, i2) -> {
+        calendarView.setOnDateChangeListener((calendarView1, intYear, intMonth, intDay) -> {
             /*
-            Day = i2 , Month = i1, Year = i
-            i1 gives you an int(Month in numbering). We need to convert int to String then to month name
+            intDay gives you the month in numbering. We need to convert int to String then to month name
             since we are storing month name in Firebase
             */
             DatabaseManager databaseManager = new DatabaseManager(this);
             // We have to add 1 to the current month since array index _STARTS_ from 0
-            int i3 = i1 + 1;
+            int i3 = intMonth + 1;
             String month = Integer.toString(i3);
-            String day = Integer.toString(i2);
-            String year = Integer.toString(i);
+            String day = Integer.toString(intDay);
+            String year = Integer.toString(intYear);
             FirebaseAdapter firebaseAdapter = new FirebaseAdapter(this);
             firebaseAdapter.destroy();
             databaseManager.showPastCode(year,
                   DateTime.INSTANCE.getMonthInNumberToName(month),
                     day);
+        });
+    }
+
+    private void showFab(){
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(view -> {
+            Intent codeBroadcast = new Intent(CalendarActivity.this, CodeBroadcastActivity.class);
+            startActivity(codeBroadcast);
         });
     }
 }
