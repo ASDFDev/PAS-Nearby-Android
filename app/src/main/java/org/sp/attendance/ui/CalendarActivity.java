@@ -21,18 +21,31 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.CalendarView;
+import android.widget.ListView;
 
 import org.sp.attendance.R;
 import org.sp.attendance.models.DateTime;
 import org.sp.attendance.ui.adapter.FirebaseAdapter;
 import org.sp.attendance.utils.DatabaseManager;
 
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
+
 public class CalendarActivity extends AppCompatActivity {
+
+    private FloatingActionButton fab;
+    private ListView listView;
+    private static final String SHOWCASE_ID = "calendarActivity";
+    private DatabaseManager databaseManager = new DatabaseManager(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
+        fab = findViewById(R.id.fab);
+        listView = findViewById(R.id.calendarListView);
+        showCaseApp();
         showFab();
         showCalendar();
     }
@@ -44,7 +57,6 @@ public class CalendarActivity extends AppCompatActivity {
             intDay gives you the month in numbering. We need to convert int to String then to month name
             since we are storing month name in Firebase
             */
-            DatabaseManager databaseManager = new DatabaseManager(this);
             // We have to add 1 to the current month since array index _STARTS_ from 0
             int i3 = intMonth + 1;
             String month = Integer.toString(i3);
@@ -65,4 +77,25 @@ public class CalendarActivity extends AppCompatActivity {
             startActivity(codeBroadcast);
         });
     }
+
+    private void showCaseApp(){
+        ShowcaseConfig config = new ShowcaseConfig();
+        config.setDelay(500);
+        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, SHOWCASE_ID);
+        sequence.setConfig(config);
+        sequence.addSequenceItem(fab, "Click here to start attendance taking now!" , "Got it!");
+
+        sequence.addSequenceItem(
+                new MaterialShowcaseView.Builder(this)
+                        .setTarget(listView)
+                        .setDismissText("Got it!")
+                        .setContentText("This is the attendance code")
+                        .withRectangleShape()
+                        .build()
+        );
+        sequence.start();
+    }
+
+
+
 }
