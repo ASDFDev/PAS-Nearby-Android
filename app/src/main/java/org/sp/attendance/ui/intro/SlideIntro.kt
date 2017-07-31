@@ -50,7 +50,8 @@ class SlideIntro : IntroActivity() {
                 .build())
 
         addSlide(SimpleSlide.Builder()
-                .title("Highly accurate time")
+                .title("Device independent time")
+                .description("0 configuration required!")
                 .image(R.drawable.ic_access_time_black_24dp)
                 .background(R.color.color_startup_screen3)
                 .backgroundDark(R.color.color_dark_startup_screen3)
