@@ -95,7 +95,4 @@ public class CalendarActivity extends AppCompatActivity {
         );
         sequence.start();
     }
-
-
-
 }

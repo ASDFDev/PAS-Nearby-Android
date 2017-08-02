@@ -88,4 +88,9 @@ public class FirebaseAdapter {
         arrayAdapter.notifyDataSetChanged();
         listView.setAdapter(arrayAdapter);
     }
+
+    public int getStudentCount(){
+        ListView listView = ((Activity)context).findViewById(R.id.ListView);
+        return listView.getCount();
+    }
 }

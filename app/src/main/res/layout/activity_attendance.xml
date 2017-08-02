@@ -23,6 +23,12 @@
     <ListView
         android:id="@+id/ListView"
         android:layout_width="fill_parent"
+        android:layout_height="421dp" />
+
+    <TextView
+        android:id="@+id/studentCount"
+        android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
 
 </LinearLayout>

@@ -91,4 +91,5 @@
     <string name="attendance_ended">Attendance Ended!</string>
     <string name="error_code_disappeared">No code entered.</string>
     <string name="time_remaining">Time remaining: %1$s</string>
+    <string name="student_count">Number of students in class: %1$d</string>
 </resources>

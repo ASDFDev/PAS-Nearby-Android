@@ -31,8 +31,11 @@ import android.widget.TextView;
 
 import org.sp.attendance.R;
 import org.sp.attendance.models.DateTime;
+import org.sp.attendance.ui.adapter.FirebaseAdapter;
 import org.sp.attendance.utils.CodeManager;
 import org.sp.attendance.utils.DatabaseManager;
+
+import static android.view.View.VISIBLE;
 
 // TODO: USE FRAGMENT!!! What kind of code is this?
 
@@ -40,6 +43,7 @@ public class CodeBroadcastActivity extends AppCompatActivity {
 
     private final CodeManager codeManager = new CodeManager(this);
     private final DatabaseManager databaseManager = new DatabaseManager(this);
+    private final FirebaseAdapter firebaseAdapter = new FirebaseAdapter(this);
     private TextView textView;
 
     @Override
@@ -101,6 +105,7 @@ public class CodeBroadcastActivity extends AppCompatActivity {
                     codeManager.setupLecturerEnvironment(this, code, DateTime.INSTANCE.convertSecondsToMins(intDuration));
                     setTextView(intDuration);
                     databaseManager.getStudent(code);
+                    textView = findViewById(R.id.studentCount);
                 })
                 .setNegativeButton(R.string.no, (dialog, id) -> dialog.cancel())
                 .create()
@@ -118,6 +123,9 @@ public class CodeBroadcastActivity extends AppCompatActivity {
             }
             public void onFinish() {
                 textView.setText(R.string.attendance_ended);
+                String formattedStudentCount = String.format(getResources().getString(R.string.student_count),
+                        firebaseAdapter.getStudentCount());
+                textView.setText(formattedStudentCount);
             }
         }.start();
     }
