@@ -71,6 +71,6 @@ A sample of the file is in [assets/gradle.properties.sample](assets/gradle.prope
 
 7. Click on `Register App`
 
-`google-services.json` file will be downloaded. Copy the file to $$PROJECT_ROOT/app/  directory.
+`google-services.json` file will be downloaded. Copy the file to $PROJECT_ROOT/app/  directory.
 
 Start building!
