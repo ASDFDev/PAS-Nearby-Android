@@ -6,13 +6,12 @@ Presence checking using Nearby API
 
 For some background information on this project, please see this [link](https://asdfdev.github.io/background.html)
 
-# Screnshots
-![](materials/images/screenshot.png)
-![](materials/images/receive-broadcast.png)
-![](materials/images/database_layout.gif)
-
-	
 Please see [GettingStarted.md](GettingStarted.md) for information on building this project. 
+
+# Screnshots
+![](assets/images/screenshot.png)
+![](assets/images/receive-broadcast.png)
+![](assets/images/database_layout.gif)
 
 TODO
 ------------
