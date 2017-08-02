@@ -39,6 +39,9 @@ public class LecturerTest {
         onView(withId(R.id.button))
                 .perform(click());
 
+        onView(withId(R.id.fab))
+                .perform(click());
+
         onView(withId(R.id.textCode))
                 .perform(typeText(attendanceCode),
                 ViewActions.closeSoftKeyboard());

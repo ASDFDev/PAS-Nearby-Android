@@ -50,6 +50,11 @@ android {
     dataBinding {
         enabled = true
     }
+
+    defaultConfig {
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+    }
+
 }
 
 dependencies {
