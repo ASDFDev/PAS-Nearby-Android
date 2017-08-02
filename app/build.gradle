@@ -14,8 +14,8 @@ android {
         applicationId "org.sp.attendance"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 36
-        versionName "3.6"
+        versionCode 38
+        versionName "3.8"
         vectorDrawables.useSupportLibrary = true
     }
 
