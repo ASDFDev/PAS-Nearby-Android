@@ -58,19 +58,23 @@ android {
 }
 
 dependencies {
+
+    ext.support_version = '26.0.0'
+    ext.play_services_version = '11.0.4'
+
     compile fileTree(include: ['*.jar'], dir: 'libs')
     // Kotlin
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     compile 'com.mcxiaoke.koi:core:0.5.4'
 
     // Android support library
-    compile 'com.android.support:appcompat-v7:26.0.0'
+    compile "com.android.support:appcompat-v7:$support_version"
+    compile "com.android.support:design:$support_version"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:design:26.0.0'
     // Google Play services library
-    compile 'com.google.android.gms:play-services-nearby:11.0.4'
+    compile "com.google.android.gms:play-services-nearby:$play_services_version"
     // Firebase
-    compile 'com.google.firebase:firebase-database:11.0.4'
+    compile "com.google.firebase:firebase-database:$play_services_version"
 
     compile 'com.github.ybq:Android-SpinKit:1.1.0'
     compile 'com.heinrichreimersoftware:material-intro:1.6.2'
