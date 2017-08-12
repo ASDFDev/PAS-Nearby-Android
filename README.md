@@ -6,8 +6,6 @@ Presence checking using Nearby API
 
 For some background information on this project, please see this [link](https://asdfdev.github.io/background.html)
 
-Please see [GettingStarted.md](GettingStarted.md) for information on building this project. 
-
 # Screnshots
 ![](assets/images/screenshot.png)
 ![](assets/images/receive-broadcast.png)
@@ -16,6 +14,14 @@ Please see [GettingStarted.md](GettingStarted.md) for information on building th
 TODO
 ------------
 - Use fragment instead of starting activities for lecturer interface. 
+
+
+Running
+------------
+Please see [GettingStarted.md](GettingStarted.md) for information on building this project. 
+
+
+A pre-compiled binary is readily available in the [release page](https://github.com/ASDFDev/PAS-Nearby-Android/releases)
 
 
 Team members
