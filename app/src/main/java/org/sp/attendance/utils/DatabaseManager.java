@@ -27,7 +27,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.sp.attendance.models.DateTime;
 import org.sp.attendance.R;
 import org.sp.attendance.models.DatabaseModel;
 import org.sp.attendance.service.sntp.SntpConsumer;
@@ -122,14 +121,12 @@ public class DatabaseManager {
         return code;
     }
 
-    public void getStudent(String code){
-        SntpConsumer sntpConsumer = new SntpConsumer(context);
+    public void getStudent(String code, Date time){
         FirebaseAdapter firebaseAdapter = new FirebaseAdapter(context);
-        timeStamp = sntpConsumer.getNtpTime();
         DatabaseReference classReference = FirebaseDatabase.getInstance()
-                .getReference(DateTime.INSTANCE.getTrueYearToString(timeStamp))
-                .child(DateTime.INSTANCE.getTrueMonthToString(timeStamp))
-                .child(DateTime.INSTANCE.getTrueDayToString(timeStamp))
+                .getReference(DateTime.INSTANCE.getTrueYearToString(time))
+                .child(DateTime.INSTANCE.getTrueMonthToString(time))
+                .child(DateTime.INSTANCE.getTrueDayToString(time))
                 .child(code);
         classReference.addChildEventListener(new ChildEventListener() {
             @Override
@@ -160,6 +157,7 @@ public class DatabaseManager {
             }
         });
     }
+
     public void showPastCode(String year, String month, String day){
         FirebaseAdapter firebaseAdapter = new FirebaseAdapter(context);
         DatabaseReference classReference = FirebaseDatabase.getInstance()

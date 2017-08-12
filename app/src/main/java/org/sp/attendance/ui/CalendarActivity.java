@@ -24,7 +24,7 @@ import android.widget.CalendarView;
 import android.widget.ListView;
 
 import org.sp.attendance.R;
-import org.sp.attendance.models.DateTime;
+import org.sp.attendance.utils.DateTime;
 import org.sp.attendance.ui.adapter.FirebaseAdapter;
 import org.sp.attendance.utils.DatabaseManager;
 

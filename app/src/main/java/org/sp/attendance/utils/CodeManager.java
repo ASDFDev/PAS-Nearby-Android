@@ -40,12 +40,12 @@ import com.google.android.gms.nearby.messages.Strategy;
 import com.google.android.gms.nearby.messages.SubscribeCallback;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
 
-import org.sp.attendance.models.DateTime;
 import org.sp.attendance.R;
-import org.sp.attendance.service.sntp.SntpConsumer;
+import org.sp.attendance.models.MessageModel;
 
+import java.io.ByteArrayInputStream;
+import java.io.ObjectInputStream;
 import java.nio.charset.Charset;
-import java.util.Date;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
 import static com.google.android.gms.nearby.messages.Strategy.TTL_SECONDS_INFINITE;
@@ -94,7 +94,9 @@ public class CodeManager {
         messageListener = new MessageListener() {
             @Override
             public void onFound(Message message) {
-                databaseManager.submitStudentDevice(globalStudentID, new String(message.getContent(), Charset.forName("UTF-8")), deviceID);
+                databaseManager.submitStudentDevice(globalStudentID,
+                        deserializedMessage(new String(message.getContent(), Charset.forName("UTF-8"))),
+                        deviceID);
             }
 
             @Override
@@ -181,6 +183,22 @@ public class CodeManager {
                         handleUnsuccessfulNearbyResult(status);
                     }
                 });
+    }
+
+    /* For now, we do not introduce user facing breaking change.
+     Deserialize and get the attendance code only.*/
+    private String deserializedMessage(String serializedObject){
+        String nearbyMessage = "";
+        try {
+            byte bYte[] = serializedObject.getBytes();
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bYte);
+            ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
+            MessageModel messageModel = (MessageModel) objectInputStream.readObject();
+            nearbyMessage = messageModel.getNearbyMessage();
+        } catch (Exception e) {
+            showNearbyErrorDialog(ctx.getString(R.string.error_generic), "Message received was corrupted.");
+        }
+        return nearbyMessage;
     }
 
     private void stopReceiveCode() {

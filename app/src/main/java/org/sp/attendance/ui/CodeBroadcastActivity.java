@@ -22,6 +22,8 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -30,12 +32,17 @@ import android.widget.TextView;
 
 
 import org.sp.attendance.R;
-import org.sp.attendance.models.DateTime;
+import org.sp.attendance.models.MessageModel;
+import org.sp.attendance.service.sntp.SntpConsumer;
+import org.sp.attendance.utils.AccountCheck;
+import org.sp.attendance.utils.DateTime;
 import org.sp.attendance.ui.adapter.FirebaseAdapter;
 import org.sp.attendance.utils.CodeManager;
 import org.sp.attendance.utils.DatabaseManager;
 
-import static android.view.View.VISIBLE;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
+import java.util.Date;
 
 // TODO: USE FRAGMENT!!! What kind of code is this?
 
@@ -44,7 +51,12 @@ public class CodeBroadcastActivity extends AppCompatActivity {
     private final CodeManager codeManager = new CodeManager(this);
     private final DatabaseManager databaseManager = new DatabaseManager(this);
     private final FirebaseAdapter firebaseAdapter = new FirebaseAdapter(this);
+    private final SntpConsumer sntpConsumer = new SntpConsumer(this);
+
     private TextView textView;
+    private String serializedMessage = "";
+    private static final String TAG = "CodeBroadcastActivity";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,9 +114,10 @@ public class CodeBroadcastActivity extends AppCompatActivity {
                 .setPositiveButton(R.string.yes, (dialog, id) -> {
                     hideKeyboard();
                     setContentView(R.layout.activity_attendance);
-                    codeManager.setupLecturerEnvironment(this, code, DateTime.INSTANCE.convertSecondsToMins(intDuration));
+                    Date timeStamp = sntpConsumer.getNtpTime();
+                    codeManager.setupLecturerEnvironment(this, serializedMessage(code,timeStamp), DateTime.INSTANCE.convertSecondsToMins(intDuration));
                     setTextView(intDuration);
-                    databaseManager.getStudent(code);
+                    databaseManager.getStudent(code, timeStamp);
                     textView = findViewById(R.id.studentCount);
                 })
                 .setNegativeButton(R.string.no, (dialog, id) -> dialog.cancel())
@@ -158,6 +171,24 @@ public class CodeBroadcastActivity extends AppCompatActivity {
     private void hideKeyboard(){
         InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+    }
+
+    private String serializedMessage(String code, Date timeStamp){
+        MessageModel messageModel = new MessageModel();
+        messageModel.setNearbyMessage(code);
+        messageModel.setTimeStamp(timeStamp);
+        messageModel.setUsername(AccountCheck.INSTANCE.areWeDemoAccountOrSpiceAccount());
+        try{
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+            objectOutputStream.writeObject(messageModel);
+            objectOutputStream.flush();
+            serializedMessage = byteArrayOutputStream.toString();
+        } catch (Exception exception){
+            /* This should *NEVER* happen. But weird things happen all the time...*/
+            Log.wtf(TAG,exception);
+        }
+        return serializedMessage;
     }
 
 }

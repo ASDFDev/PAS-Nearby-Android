@@ -1,4 +1,4 @@
-package org.sp.attendance.models
+package org.sp.attendance.utils
 
 /*
  * Copyright 2017 Daniel Quah and Justin Xin
