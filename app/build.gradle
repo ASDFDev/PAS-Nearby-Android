@@ -59,7 +59,7 @@ android {
 
 dependencies {
 
-    ext.support_version = '26.0.0'
+    ext.support_version = '26.0.1'
     ext.play_services_version = '11.0.4'
 
     compile fileTree(include: ['*.jar'], dir: 'libs')
