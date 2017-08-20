@@ -9,7 +9,7 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26"
+    buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "org.sp.attendance"
         minSdkVersion 19
