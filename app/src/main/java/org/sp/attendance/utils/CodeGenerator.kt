@@ -34,8 +34,7 @@ class CodeGenerator {
     fun trimATSCode(message: String): String{
         val firstSevenChar = message.substring(0,7)
         val lastSevenChar = message.substring(57, 64)
-        val concacateChar = firstSevenChar + lastSevenChar
-        return concacateChar
+        return firstSevenChar + lastSevenChar
     }
 
 }
