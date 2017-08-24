@@ -17,8 +17,10 @@ package org.sp.attendance.ui;
  */
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import org.sp.attendance.R;
@@ -66,6 +68,8 @@ public class CalendarActivity extends AppCompatActivity {
     }
 
     private void showFab(){
+        binding.fab.setBackgroundTintList(ColorStateList.valueOf
+                (ContextCompat.getColor(this,R.color.colorPrimary)));
         binding.fab.setOnClickListener(view -> {
             Intent codeBroadcast = new Intent(CalendarActivity.this, CodeBroadcastActivity.class);
             startActivity(codeBroadcast);
