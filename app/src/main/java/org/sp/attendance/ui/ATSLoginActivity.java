@@ -37,6 +37,7 @@ import org.sp.attendance.account.spice.SpiceManager;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 
+
 public class ATSLoginActivity extends AppCompatActivity{
 
     public static final int REQUEST_CODE_INTRO = 1;

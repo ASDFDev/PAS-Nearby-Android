@@ -22,7 +22,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -35,6 +34,7 @@ import org.sp.attendance.R;
 import org.sp.attendance.models.MessageModel;
 import org.sp.attendance.service.sntp.SntpConsumer;
 import org.sp.attendance.utils.AccountCheck;
+import org.sp.attendance.utils.CodeGenerator;
 import org.sp.attendance.utils.DateTime;
 import org.sp.attendance.ui.adapter.FirebaseAdapter;
 import org.sp.attendance.utils.CodeManager;
@@ -56,7 +56,6 @@ public class CodeBroadcastActivity extends AppCompatActivity {
     private TextView textView;
     private String serializedMessage = "";
     private static final String TAG = "CodeBroadcastActivity";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,21 +79,10 @@ public class CodeBroadcastActivity extends AppCompatActivity {
     }
 
     public void startBroadcast(View view) {
-        final String code = ((EditText) findViewById((R.id.textCode))).getText().toString();
+        final String code = generateAttendanceCodeNow();
         final String stringDuration = ((EditText) findViewById((R.id.textDuration))).getText().toString();
         final int intDuration = Integer.parseInt(stringDuration);
-        if (code.matches("") || stringDuration.matches("")) {
-            new AlertDialog.Builder(CodeBroadcastActivity.this)
-                    .setTitle(R.string.title_warning)
-                    .setMessage(R.string.error_empty_editText_boardcast)
-                    .setCancelable(false)
-                    .setIcon(R.drawable.ic_warning_black_24dp)
-                    .setPositiveButton(R.string.dismiss, (dialog, which) -> {
-                    })
-                    .create()
-                    .show();
-            return;
-        } else if(intDuration == 0 || intDuration >= 1440) {
+        if (intDuration == 0 || intDuration >= 1440) {
             new AlertDialog.Builder(CodeBroadcastActivity.this)
                     .setTitle(R.string.title_warning)
                     .setMessage(R.string.error_invalid_timing)
@@ -106,23 +94,14 @@ public class CodeBroadcastActivity extends AppCompatActivity {
                     .show();
             return;
         }
-        new AlertDialog.Builder(CodeBroadcastActivity.this)
-                .setTitle(R.string.confirmation)
-                .setMessage(getResources().getString(R.string.continue_confirmation) + code + getResources().getString(R.string.continue_confirmation2))
-                .setIcon(R.drawable.ic_question_answer_black_24dp)
-                .setCancelable(false)
-                .setPositiveButton(R.string.yes, (dialog, id) -> {
-                    hideKeyboard();
-                    setContentView(R.layout.activity_attendance);
-                    Date timeStamp = sntpConsumer.getNtpTime();
-                    codeManager.setupLecturerEnvironment(this, serializedMessage(code,timeStamp), DateTime.INSTANCE.convertSecondsToMins(intDuration));
-                    setTextView(intDuration);
-                    databaseManager.getStudent(code, timeStamp);
-                    textView = findViewById(R.id.studentCount);
-                })
-                .setNegativeButton(R.string.no, (dialog, id) -> dialog.cancel())
-                .create()
-                .show();
+        hideKeyboard();
+        setContentView(R.layout.activity_attendance);
+        Date timeStamp = sntpConsumer.getNtpTime();
+        codeManager.setupLecturerEnvironment(this, serializedMessage(code, timeStamp),
+                DateTime.INSTANCE.convertSecondsToMins(intDuration));
+        setTextView(intDuration);
+        databaseManager.getStudent(code, timeStamp);
+        textView = findViewById(R.id.studentCount);
     }
 
     private void setTextView(int min_duration) {
@@ -189,6 +168,12 @@ public class CodeBroadcastActivity extends AppCompatActivity {
             Log.wtf(TAG,exception);
         }
         return serializedMessage;
+    }
+
+    private String generateAttendanceCodeNow(){
+        CodeGenerator codeGenerator = new CodeGenerator();
+        return codeGenerator.trimATSCode(codeGenerator.generateATSCode(
+                codeGenerator.getMessageToGenerate(this)));
     }
 
 }

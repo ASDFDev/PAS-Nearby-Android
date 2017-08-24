@@ -29,7 +29,7 @@
     <string name="label_login">Login</string>
     <string name="label_end_broadcast">End Broadcast</string>
     <string name="label_cancel">Cancel</string>
-    <string name="label_prompt_code">Enter ATS Code:</string>
+    <string name="label_code">ATS Code:</string>
     <string name="title_warning">Warning</string>
     <string name="title_sign_in_failed">Sign-in failed</string>
     <string name="title_code_failed">Attendance submission failed</string>

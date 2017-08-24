@@ -16,7 +16,9 @@ package org.sp.attendance.utils
  * GNU General Public License for more details.
  */
 
+import com.mcxiaoke.koi.ext.asDateString
 import com.mcxiaoke.koi.ext.asString
+import com.mcxiaoke.koi.ext.timestamp
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -69,5 +71,10 @@ object DateTime {
                         TimeUnit.MILLISECONDS.toHours(time)),
                 TimeUnit.MILLISECONDS.toSeconds(time) - TimeUnit.MINUTES.toSeconds(
                         TimeUnit.MILLISECONDS.toMinutes(time)))
+    }
+
+    fun getDeviceCurrentTime(): String{
+        val timeStampInLong = timestamp()
+        return timeStampInLong.asDateString()
     }
 }
