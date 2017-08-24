@@ -5,6 +5,7 @@ import android.os.Build
 import com.mcxiaoke.koi.HASH
 import com.mcxiaoke.koi.ext.getBatteryStatus
 import com.mcxiaoke.koi.ext.networkOperator
+import com.mcxiaoke.koi.utils.currentVersion
 import com.mcxiaoke.koi.utils.freeSpace
 
 
@@ -19,7 +20,7 @@ class CodeGenerator {
     fun getMessageToGenerate(context: Context): String{
         val deviceTime = DateTime.getDeviceCurrentTime()
         val manufacturer = Build.MANUFACTURER
-        val androidVersion = Build.VERSION.SDK_INT
+        val androidVersion = currentVersion()
         val deviceName = Build.DEVICE
         val deviceBrand = Build.BRAND
         val getDeviceFreeSpace = freeSpace()
