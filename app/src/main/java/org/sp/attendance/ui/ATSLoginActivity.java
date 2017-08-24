@@ -18,17 +18,16 @@ package org.sp.attendance.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-
 
 import org.sp.attendance.R;
-import org.sp.attendance.service.sntp.SntpConsumer;
+import org.sp.attendance.databinding.ActivityAtsloginBinding;
 import org.sp.attendance.ui.intro.SlideIntro;
 import org.sp.attendance.account.TempAccountManager;
 import org.sp.attendance.utils.CodeManager;
@@ -42,6 +41,7 @@ public class ATSLoginActivity extends AppCompatActivity{
 
     public static final int REQUEST_CODE_INTRO = 1;
     public static final String firstRun = "org.sp.attendance.firstRun";
+    private ActivityAtsloginBinding binding;
 
     CodeManager codeManager = new CodeManager(this);
     StartUpManager startUpManager = new StartUpManager(this);
@@ -49,7 +49,7 @@ public class ATSLoginActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_atslogin);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_atslogin);
         checkFirstRun();
         CookieHandler.setDefault(new CookieManager());
         startUpManager.checkNetwork();
@@ -69,19 +69,15 @@ public class ATSLoginActivity extends AppCompatActivity{
 
     public void signIn(View view) {
         hideKeyboard();
-        if (((EditText) findViewById(R.id.textEdit_userID)).getText().toString().startsWith("s")){
-            new TempAccountManager(ATSLoginActivity.this).execute(
-                    ((EditText) findViewById(R.id.textEdit_userID)).getText().toString(),
-                    ((EditText) findViewById(R.id.textEdit_password)).getText().toString());
-        } else if (((EditText) findViewById(R.id.textEdit_userID)).getText().toString().startsWith("p")) {
-            new SpiceManager(this).execute(
-                    ((EditText) findViewById(R.id.textEdit_userID)).getText().toString(),
-                    ((EditText) findViewById(R.id.textEdit_password)).getText().toString());
+        String userName = binding.textEditUserID.getText().toString();
+        String passWord = binding.textEditPassword.getText().toString();
+        if (userName.startsWith("s")){
+            new TempAccountManager(ATSLoginActivity.this).execute(userName, passWord);
+        } else if (userName.startsWith("p")) {
+            new SpiceManager(this).execute(userName, passWord);
         } /* Backdoor student account*/
-        else if(((EditText) findViewById(R.id.textEdit_userID)).getText().toString().contains("stud")){
-            new TempAccountManager(ATSLoginActivity.this).execute(
-                    ((EditText) findViewById(R.id.textEdit_userID)).getText().toString(),
-                    ((EditText) findViewById(R.id.textEdit_password)).getText().toString());
+        else if(userName.contains("stud")){
+            new TempAccountManager(ATSLoginActivity.this).execute(userName, passWord);
         }
         else {
             showDialog(this.getResources().getString(R.string.title_sign_in_failed),

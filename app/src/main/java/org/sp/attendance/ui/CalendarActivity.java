@@ -17,13 +17,12 @@ package org.sp.attendance.ui;
  */
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.CalendarView;
-import android.widget.ListView;
 
 import org.sp.attendance.R;
+import org.sp.attendance.databinding.ActivityCalendarBinding;
 import org.sp.attendance.utils.DateTime;
 import org.sp.attendance.ui.adapter.FirebaseAdapter;
 import org.sp.attendance.utils.DatabaseManager;
@@ -34,25 +33,21 @@ import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 public class CalendarActivity extends AppCompatActivity {
 
-    private FloatingActionButton fab;
-    private ListView listView;
     private static final String SHOWCASE_ID = "calendarActivity";
+    private ActivityCalendarBinding binding;
     private DatabaseManager databaseManager = new DatabaseManager(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_calendar);
-        fab = findViewById(R.id.fab);
-        listView = findViewById(R.id.calendarListView);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_calendar);
         showCaseApp();
         showFab();
         showCalendar();
     }
 
     private void showCalendar(){
-        CalendarView calendarView = findViewById(R.id.calendarView);
-        calendarView.setOnDateChangeListener((calendarView1, intYear, intMonth, intDay) -> {
+        binding.calendarView.setOnDateChangeListener((calendarView1, intYear, intMonth, intDay) -> {
             /*
             intDay gives you the month in numbering. We need to convert int to String then to month name
             since we are storing month name in Firebase
@@ -71,8 +66,7 @@ public class CalendarActivity extends AppCompatActivity {
     }
 
     private void showFab(){
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(view -> {
+        binding.fab.setOnClickListener(view -> {
             Intent codeBroadcast = new Intent(CalendarActivity.this, CodeBroadcastActivity.class);
             startActivity(codeBroadcast);
         });
@@ -83,11 +77,11 @@ public class CalendarActivity extends AppCompatActivity {
         config.setDelay(500);
         MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, SHOWCASE_ID);
         sequence.setConfig(config);
-        sequence.addSequenceItem(fab, "Click here to start attendance taking now!" , "Got it!");
+        sequence.addSequenceItem(binding.fab, "Click here to start attendance taking now!" , "Got it!");
 
         sequence.addSequenceItem(
                 new MaterialShowcaseView.Builder(this)
-                        .setTarget(listView)
+                        .setTarget(binding.calendarListView)
                         .setDismissText("Got it!")
                         .setContentText("This is the attendance code")
                         .withRectangleShape()
