@@ -41,6 +41,7 @@ import com.google.android.gms.nearby.messages.SubscribeCallback;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
 
 import org.sp.attendance.R;
+import org.sp.attendance.models.JsonEncoderDecoder;
 import org.sp.attendance.models.MessageModel;
 
 import java.io.ByteArrayInputStream;
@@ -60,7 +61,7 @@ public class CodeManager {
     private static MessageListener messageListener;
     private static ManagerType globalManagerType;
     private static Message globalCode;
-    private static String deviceID, globalStudentID;
+    private static String deviceID, globalStudentID, nearbyMessage;
     private static int duration;
 
     public CodeManager(Context context){
@@ -188,17 +189,8 @@ public class CodeManager {
     /* For now, we do not introduce user facing breaking change.
      Deserialize and get the attendance code only.*/
     private String deserializedMessage(String serializedObject){
-        String nearbyMessage = "";
-        try {
-            byte bYte[] = serializedObject.getBytes();
-            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bYte);
-            ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
-            MessageModel messageModel = (MessageModel) objectInputStream.readObject();
-            nearbyMessage = messageModel.getNearbyMessage();
-        } catch (Exception e) {
-            showNearbyErrorDialog(ctx.getString(R.string.error_generic), "Message received was corrupted.");
-        }
-        return nearbyMessage;
+        JsonEncoderDecoder jsonEncoderDecoder = new JsonEncoderDecoder();
+        return jsonEncoderDecoder.decodeJsonATS(serializedObject).toString();
     }
 
     private void stopReceiveCode() {

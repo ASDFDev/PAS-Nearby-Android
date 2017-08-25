@@ -31,6 +31,7 @@ import android.widget.TextView;
 
 
 import org.sp.attendance.R;
+import org.sp.attendance.models.JsonEncoderDecoder;
 import org.sp.attendance.models.MessageModel;
 import org.sp.attendance.service.sntp.SntpConsumer;
 import org.sp.attendance.utils.AccountCheck;
@@ -54,7 +55,6 @@ public class CodeBroadcastActivity extends AppCompatActivity {
     private final SntpConsumer sntpConsumer = new SntpConsumer(this);
 
     private TextView textView;
-    private String serializedMessage = "";
     private static final String TAG = "CodeBroadcastActivity";
 
     @Override
@@ -97,7 +97,8 @@ public class CodeBroadcastActivity extends AppCompatActivity {
         hideKeyboard();
         setContentView(R.layout.activity_attendance);
         Date timeStamp = sntpConsumer.getNtpTime();
-        codeManager.setupLecturerEnvironment(this, serializedMessage(code, timeStamp),
+        JsonEncoderDecoder jsonEncoderDecoder = new JsonEncoderDecoder();
+        codeManager.setupLecturerEnvironment(this, jsonEncoderDecoder.encodeJsonToString(jsonEncoderDecoder.jsonToEncode(code,timeStamp)),
                 DateTime.INSTANCE.convertSecondsToMins(intDuration));
         setTextView(intDuration);
         databaseManager.getStudent(code, timeStamp);
@@ -152,29 +153,10 @@ public class CodeBroadcastActivity extends AppCompatActivity {
         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
     }
 
-    private String serializedMessage(String code, Date timeStamp){
-        MessageModel messageModel = new MessageModel();
-        messageModel.setNearbyMessage(code);
-        messageModel.setTimeStamp(timeStamp);
-        messageModel.setUsername(AccountCheck.INSTANCE.areWeDemoAccountOrSpiceAccount());
-        try{
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-            objectOutputStream.writeObject(messageModel);
-            objectOutputStream.flush();
-            serializedMessage = byteArrayOutputStream.toString();
-        } catch (Exception exception){
-            /* This should *NEVER* happen. But weird things happen all the time...*/
-            Log.wtf(TAG,exception);
-        }
-        return serializedMessage;
-    }
-
     private String generateAttendanceCodeNow(){
         CodeGenerator codeGenerator = new CodeGenerator();
         return codeGenerator.trimATSCode(codeGenerator.generateATSCode(
                 codeGenerator.getMessageToGenerate(this)));
     }
-
 }
 

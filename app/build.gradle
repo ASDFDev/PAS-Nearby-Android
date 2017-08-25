@@ -76,10 +76,13 @@ dependencies {
     // Firebase
     compile "com.google.firebase:firebase-database:$play_services_version"
 
+    // UX enhancement
     compile 'com.github.ybq:Android-SpinKit:1.1.0'
-    compile 'com.heinrichreimersoftware:material-intro:1.6.2'
-    compile 'org.jsoup:jsoup:1.10.3'
     compile 'com.github.deano2390:MaterialShowcaseView:1.1.0'
+    compile 'com.heinrichreimersoftware:material-intro:1.6.2'
+
+    compile 'org.jsoup:jsoup:1.10.3'
+    compile 'com.google.code.gson:gson:2.8.0'
 
     // Testing
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
