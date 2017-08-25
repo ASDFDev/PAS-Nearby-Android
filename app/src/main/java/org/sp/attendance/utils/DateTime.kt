@@ -67,4 +67,6 @@ object DateTime {
         val timeStampInLong = timestamp()
         return timeStampInLong.asDateString()
     }
+
+    fun getEpochTime(): String = System.currentTimeMillis().toString()
 }
